@@ -26,10 +26,10 @@ const CP_bank_details = () => {
   return (
     <> 
       <div
-        className="bg-gradient-to-t  from-[#fce8e5]  to-[#eeecfb]   h-full"
+        className="bg-gradient-to-t  from-[#fce8e5]  to-[#eeecfb]   h-full flex flex-col"
       >
         <CP_Header />
-        <div className="px-3">
+        <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd] via-50%  to-[#e5e3f5]">
           {/* clinic details */}
           <div className="mt-[11.64px] bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
             <strong className="text-[16px] text-black font-semibold">
@@ -97,7 +97,7 @@ const CP_bank_details = () => {
               <Label
                 htmlFor="text"
                 disabled
-                className="text-[14px] text-gray-500 font-medium mb-2 mt-[22px]"
+                className="text-[14px] text-[#00000040] font-medium mb-2 mt-[22px]"
               >
                 Account Holder Number *
               </Label>
@@ -105,7 +105,7 @@ const CP_bank_details = () => {
                 type="text"
                 disabled
                 placeholder="Add Account Holder Name"
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
+                className="bg-[#ffffff10] rounded-[7.26px] placeholder:text-[14px] placeholder:text-[#00000040] font-semibold py-3 px-4 h-[39px]"
               />
             </div>
             <div className="">

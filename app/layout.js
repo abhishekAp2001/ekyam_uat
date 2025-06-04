@@ -1,5 +1,6 @@
 import { Quicksand } from "next/font/google";
 import "./globals.css";
+import { ToastContainer } from "react-toastify";
 
 const quicksand = Quicksand({
   variable: "--font-quicksand",
@@ -15,9 +16,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${quicksand.variable} bg-black antialiased max-w-[480px] mx-auto h-screen`}
+        className={`${quicksand.variable} bg-gradient-to-t from-[#eeecfb] to-[#fce8e5] md:bg-black md:bg-none md:from-transparent md:to-transparent antialiased max-w-[480px] mx-auto h-screen`}
       >
         {children}
+        <ToastContainer position="bottom-center" />
       </body>
     </html>
   );

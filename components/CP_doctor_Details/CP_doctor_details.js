@@ -27,9 +27,9 @@ const CP_doctor_details = () => {
   return (
     <>
       <div className="bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd;
-  ] via-50%  to-[#e5e3f5]   h-full">
+  ] via-50%  to-[#e5e3f5]   h-full flex flex-col">
         <CP_Header />
-        <div className="px-3">
+        <div className=" h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd] via-50%  to-[#e5e3f5]">
         {/* clinic details */}
           <div className="mt-3 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
               <strong className="text-[16px] text-black font-semibold">
@@ -61,7 +61,7 @@ const CP_doctor_details = () => {
               <Input
                 type="text"
                 placeholder="Ramesh"
-                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-black font-semibold py-3 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-black py-3 px-4 h-[39px]"
               />
               </div>
               </div>
@@ -75,8 +75,7 @@ const CP_doctor_details = () => {
                 <Input
                   type="text"
                   placeholder="Thakur"
-                  className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-black font-semibold 
- py-3 px-4 h-[39px]"
+                  className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-black py-3 px-4 h-[39px]"
                 />
                 </div>
                 <div className="">
@@ -89,7 +88,7 @@ const CP_doctor_details = () => {
               <Input
                 type="text"
                 placeholder="Case Sensitive"
-                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] font-semibold  py-3 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
               />
               </div>
                 <div className="mt-[22px]">
@@ -111,7 +110,7 @@ const CP_doctor_details = () => {
                     value={mobile}
                     // onChange={handleInputChange}
                      onChange={(e) => handleInputChange(e, setMobile1)}
-                    className="bg-white border rounded-[7.26px] rounded-l-none text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#000000] font-semibold  py-3 px-4 w-full h-[39px]"
+                    className="bg-white border rounded-[7.26px] rounded-l-none text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#000000]  py-3 px-4 w-full h-[39px]"
                     maxLength={10}
                     inputMode="numeric"
                     pattern="\d*"
@@ -170,7 +169,7 @@ const CP_doctor_details = () => {
                     value={emergency_mobile}
                     // onChange={handleInputChange}
                      onChange={(e) => handleInputChange(e, setMobile3)}
-                    className="bg-white border rounded-[7.26px] rounded-l-none text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-black font-semibold  py-3 px-4 w-full h-[39px]"
+                    className="bg-white border rounded-[7.26px] rounded-l-none text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-black py-3 px-4 w-full h-[39px]"
                     maxLength={10}
                     inputMode="numeric"
                     pattern="\d*"

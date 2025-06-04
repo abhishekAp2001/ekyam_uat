@@ -3,195 +3,427 @@
 import CP_Header from "@/components/CP_Header/CP_Header";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import CP_buttons from "@/components/CP_buttons/CP_buttons";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import CreatableSelect from "react-select/creatable";
+import axiosInstance from "@/lib/axiosInstance";
+import { toast } from "react-toastify";
+import { getCookie, setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 const CP_type = () => {
-    const [mobile, setMobile1] = useState("");
-  const [whatsapp_mobile, setMobile2] = useState("");
-  const [emergency_mobile, setMobile3] = useState("");
+  const axios = axiosInstance();
 
-  const handleInputChange = (e, setMobile) => {
-    const digitsOnly = e.target.value.replace(/\D/g, "");
-    if (digitsOnly.length <= 10) {
-      setMobile(digitsOnly);
+  const [search, setSearch] = useState("");
+  const [formData, setFormData] = useState({
+    type: "",
+    clinicName: "",
+    userName: "",
+    email: "",
+    primaryMobileNumber: "",
+    whatsappNumber: "",
+    emergencyNumber: "",
+  });
+  const [touched, setTouched] = useState({
+    type: false,
+    clinicName: false,
+    userName: false,
+    email: false,
+    primaryMobileNumber: false,
+    whatsappNumber: false,
+    emergencyNumber: false,
+  });
+  const [cp_list, setCp_List] = useState([]);
+  const [isUserNameAvailable, setIsUserNameAvailable] = useState(null);
+  const [isCheckingUserName, setIsCheckingUserName] = useState(false);
+  const [sameAsMobile, setSameAsMobile] = useState(false);
+  const router = useRouter();
+
+  // Load form data from cookie on component mount
+  useEffect(() => {
+    const savedData = getCookie("cp_type");
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setFormData(parsedData);
+        // If WhatsApp number matches primary mobile number, set sameAsMobile to true
+        if (parsedData.primaryMobileNumber === parsedData.whatsappNumber) {
+          setSameAsMobile(true);
+        }
+        // Trigger username availability check if userName exists
+        if (parsedData.userName) {
+          setTouched((prev) => ({ ...prev, userName: true }));
+          checkUserNameAvailability(parsedData.userName);
+        }
+      } catch (error) {
+        console.error("Error parsing cp_type cookie:", error);
+      }
+    }
+  }, []);
+
+  // Handle input change for mobile numbers (limit to 10 digits)
+  const handleInputChange = (e, field) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+    setFormData((prev) => {
+      const newFormData = { ...prev, [field]: value };
+      if (sameAsMobile && field === "primaryMobileNumber") {
+        newFormData.whatsappNumber = value;
+      }
+      return newFormData;
+    });
+  };
+
+  // Handle blur for input fields
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  // Fetch channel partner types based on search
+  const channelPartnerList = async (searchTerm) => {
+    try {
+      const response = await axios.get(`v2/cp/channelPartner/types?search=${searchTerm}`);
+      if (response?.data?.success === true) {
+        setCp_List(response?.data?.data);
+      }
+    } catch (error) {
+      console.log("error", error);
+      toast.error(error?.response?.data?.error?.message || "Something Went Wrong");
     }
   };
 
-  return (
-    <>
-      <div
-        className="bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd;
-  ] via-50%  to-[#e5e3f5]  h-full"
-      >
-        <CP_Header />
-        <div className="px-[17px] mt-3">
-          <div className="">
-            <Label htmlFor="email" className="text-[14px] text-gray-500 mb-2">
-              Type of Channel Partner *
-            </Label>
-            <div className="flex gap-2 item-center">
-              <Select className="">
-                <SelectTrigger className="w-full bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-black font-semibold px-3 h-[39px] flex items-center">
-                  <SelectValue
-                    placeholder="IVF / Fertility Clinic"
-                    className="placeholder:text-[14px] placeholder:text-black"
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">IVF / Fertility Clinic</SelectItem>
-                  <SelectItem value="dark">IVF / Fertility Clinic</SelectItem>
-                  <SelectItem value="system">IVF / Fertility Clinic</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+  // Add new channel partner type
+  const addChannelPartner = async (newType) => {
+    try {
+      const response = await axios.post("v2/cp/channelPartner/types", { name: newType });
+      if (response?.data?.success === true) {
+        toast.success("Channel Partner Type Added");
+        await channelPartnerList(search); // Refresh list with current search term
+      }
+    } catch (error) {
+      console.log("error", error);
+      toast.error(error?.response?.data?.error?.message || "Failed to add new type");
+      throw error; // Re-throw to handle in onCreateOption
+    }
+  };
 
-            {/* Clinic Details */}
-            <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4">
-              <strong className="text-[16px] text-black font-semibold">
-                Clinic Details
-              </strong>
-              <div className="">
+  // Check username availability
+  const checkUserNameAvailability = async (userName) => {
+    try {
+      setIsCheckingUserName(true);
+      const response = await axios.post(`v2/cp/channelPartner/check`, {
+        username: userName,
+      });
+      if (response?.data?.success) {
+        setIsUserNameAvailable(response?.data?.data?.available);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsUserNameAvailable(false);
+    } finally {
+      setIsCheckingUserName(false);
+    }
+  };
+
+  // Handle save and continue
+  const handleSave = () => {
+    if (isFormValid()) {
+      setCookie("cp_type",formData);
+      router.push("/sales/cp_clinic_details")
+    } else {
+      toast.error("Please fill all required fields correctly");
+    }
+  };
+
+  // Fetch types when search changes
+  useEffect(() => {
+    channelPartnerList(search);
+  }, [search]);
+
+  // Check username availability with debounce
+  useEffect(() => {
+    if (formData.userName && touched.userName) {
+      const timer = setTimeout(() => checkUserNameAvailability(formData.userName), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [formData.userName, touched.userName]);
+
+  // Validation functions
+  const isEmailValid = (email) => /\S+@\S+\.\S+/.test(email);
+  const isMobileValid = (mobile) => /^\d{10}$/.test(mobile);
+  const isFormValid = () => {
+    return (
+      formData.type &&
+      formData.clinicName &&
+      formData.userName &&
+      isUserNameAvailable === true &&
+      isEmailValid(formData.email) &&
+      isMobileValid(formData.primaryMobileNumber) &&
+      isMobileValid(formData.whatsappNumber) &&
+      isMobileValid(formData.emergencyNumber)
+    );
+  };
+
+  // Options for CreatableSelect
+  const options = cp_list.map((item) => ({ value: item.type, label: item.type }));
+
+  return (
+    <div className="bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5] h-full flex flex-col">
+      <CP_Header />
+      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
+        <div>
+          <Label htmlFor="type" className="text-[14px] text-gray-500 mb-2 mt-5">
+            Type of Channel Partner *
+          </Label>
+          <CreatableSelect
+            options={options}
+            value={formData.type ? { value: formData.type, label: formData.type } : null}
+            onChange={(selectedOption) =>
+              setFormData({ ...formData, type: selectedOption ? selectedOption.value : "" })
+            }
+            onInputChange={(inputValue) => setSearch(inputValue)}
+            onBlur={() => handleBlur("type")}
+            placeholder="Select or create type"
+            isClearable
+            formatCreateLabel={(inputValue) => `Create "${inputValue}"`}
+            onCreateOption={async (inputValue) => {
+              try {
+                await addChannelPartner(inputValue);
+                setFormData({ ...formData, type: inputValue });
+                setTouched((prev) => ({ ...prev, type: true }));
+              } catch (error) {
+                // Error is already toasted in addChannelPartner
+              }
+            }}
+            className="text-[14px]"
+          />
+          {touched.type && !formData.type && (
+            <span className="text-red-500 text-sm mt-1 block">Type is required</span>
+          )}
+
+          {/* Clinic Details */}
+          <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4">
+            <strong className="text-[16px] text-black font-semibold">Clinic Details</strong>
+            <div>
               <Label
-                htmlFor="email"
-                className="text-[14px] text-gray-500 mb-2 mt-5"
+                htmlFor="clinicName"
+                className={`text-[14px] mb-2 mt-5 ${formData.type ? "text-gray-500" : "text-[#00000040]"}`}
               >
                 Clinic Name *
               </Label>
               <Input
+                id="clinicName"
                 type="text"
                 placeholder="Gyno Clinic"
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-black font-semibold py-3 px-4 h-[39px]"
+                value={formData.clinicName}
+                onChange={(e) => setFormData({ ...formData, clinicName: e.target.value })}
+                onBlur={() => handleBlur("clinicName")}
+                disabled={!formData.type}
+                className={`rounded-[7.26px] font-semibold py-3 px-4 h-[39px] ${
+                  formData.type
+                    ? "bg-white placeholder:text-gray-500"
+                    : "bg-[#ffffff10] placeholder:text-[#00000040]"
+                }`}
               />
-              </div>
-              <div className="">
+              {touched.clinicName && !formData.clinicName && (
+                <span className="text-red-500 text-sm mt-1 block">Clinic name is required</span>
+              )}
+            </div>
+            <div>
               <Label
-                htmlFor="email"
-                className="text-[14px] text-gray-500 mb-2 mt-[22px]"
+                htmlFor="userName"
+                className={`text-[14px] mb-2 mt-[22px] ${formData.clinicName ? "text-gray-500" : "text-[#00000040]"}`}
               >
                 Unique URL *
               </Label>
               <div className="flex gap-[10px] items-center">
                 <span className="text-[14px] text-gray-600">ekyamm.com/</span>
                 <Input
+                  id="userName"
                   type="text"
                   placeholder="Enter URL Name"
-                  className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 py-3 px-4 h-[39px]"
+                  value={formData.userName}
+                  onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
+                  onBlur={() => handleBlur("userName")}
+                  disabled={!formData.clinicName}
+                  className={`rounded-[7.26px] placeholder:text-[14px] py-3 px-4 h-[39px] ${
+                    formData.clinicName
+                      ? "bg-white placeholder:text-gray-500"
+                      : "bg-[#ffffff10] placeholder:text-[#00000040]"
+                  }`}
                 />
-                </div>
               </div>
-              <div className="">
+              {touched.userName && isCheckingUserName && (
+                <span className="text-yellow-500 text-sm mt-1 block">Checking...</span>
+              )}
+              {touched.userName && !isCheckingUserName && isUserNameAvailable === false && (
+                <span className="text-red-500 text-sm mt-1 block">Username not available</span>
+              )}
+              {touched.userName && !formData.userName && (
+                <span className="text-red-500 text-sm mt-1 block">Username is required</span>
+              )}
+            </div>
+            <div>
               <Label
                 htmlFor="email"
-                className="text-[14px] text-gray-500 mb-2 mt-[22px]"
+                className={`text-[14px] mb-2 mt-[22px] ${
+                  formData.userName && isUserNameAvailable === true ? "text-gray-500" : "text-[#00000040]"
+                }`}
               >
                 Clinic Primary Email Address *
               </Label>
               <Input
+                id="email"
                 type="text"
                 placeholder="Case Sensitive"
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500  py-3 px-4 h-[39px]"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onBlur={() => handleBlur("email")}
+                disabled={!formData.userName || isUserNameAvailable !== true}
+                className={`rounded-[7.26px] placeholder:text-[14px] py-3 px-4 h-[39px] ${
+                  formData.userName && isUserNameAvailable === true
+                    ? "bg-white placeholder:text-gray-500"
+                    : "bg-[#ffffff10] placeholder:text-[#00000040]"
+                }`}
               />
-              </div>
-              <div className="mt-[22px]">
-                <Label
-                  htmlFor="mobile"
-                  className="text-[14px] text-gray-500 mb-2"
-                >
-                  Clinic Primary Mobile Number *
-                </Label>
-
-                <div className="flex items-center bg-white border rounded-[7.26px] h-[39px]">
-                  <span className="text-[14px] font-semibold py-3 px-2">
-                    +91
-                  </span>
-                  <Input
-                    id="mobile"
-                    type="text"
-                    placeholder="9876543210"
-                    value={mobile}
-                    // onChange={handleInputChange}
-                      onChange={(e) => handleInputChange(e, setMobile1)}
-                    className="bg-white border rounded-[7.26px] rounded-l-none placeholder:text-[14px] placeholder:text-gray-500  py-3 w-full h-[39px]"
-                    maxLength={10}
-                    inputMode="numeric"
-                    pattern="\d*"
-                  />
-                </div>
-              </div>
-              <div className="mt-[22px]">
-                <div className="flex items-center">
-                  <Label
-                    htmlFor="mobile"
-                    className="text-[14px] text-gray-500 w-[55%] mb-2"
-                  >
-                    Clinic Whatsapp Number *
-                  </Label>
-                  <div className="flex gap-[6px] items-center w-[45%]">
-                    <Checkbox className="w-4 h-4 border border-[#776EA5] rounded-[1.8px] ms-1" />
-                    <label htmlFor="" className="text-[12px] text-gray-500">
-                      Same as Mobile Number
-                    </label>
-                  </div>
-                </div>
-                <div className="flex items-center bg-white border rounded-[7.26px] h-[39px]">
-                  <span className="text-[14px] font-semibold py-3 px-2">
-                    +91
-                  </span>
-                  <Input
-                    id="Whatsapp_mobile"
-                    type="text"
-                    placeholder="9876543210"
-                    value={whatsapp_mobile}
-                    // onChange={handleInputChange}
-                     onChange={(e) => handleInputChange(e, setMobile2)}
-                    className="bg-white border rounded-[7.26px] rounded-l-none placeholder:text-[14px] placeholder:text-gray-500  py-3 px-4 w-full h-[39px]"
-                    maxLength={10}
-                    inputMode="numeric"
-                    pattern="\d*"
-                  />
-                </div>
-              </div>
-              <div className="mt-[22px]">
-                <Label
-                  htmlFor=""
-                  className="text-[14px] text-gray-500 mb-2"
-                >
-                  Clinic Emergency Number *
-                </Label>
-
-                <div className="flex items-center bg-white border rounded-[7.26px] h-[39px]">
-                  <span className="text-[14px] font-semibold py-3 px-2">
-                    +91
-                  </span>
-                  <Input
-                    id="emergency_mobile"
-                    type="text"
-                    placeholder="9876543210"
-                    value={emergency_mobile}
-                    // onChange={handleInputChange}
-                     onChange={(e) => handleInputChange(e, setMobile3)}
-                    className="bg-white border rounded-[7.26px] rounded-l-none text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-gray-500  py-3 px-4 w-full h-[39px]"
-                    maxLength={10}
-                    inputMode="numeric"
-                    pattern="\d*"
-                  />
-                </div>
-              </div>
+              {touched.email && formData.email && !isEmailValid(formData.email) && (
+                <span className="text-red-500 text-sm mt-1 block">Invalid email</span>
+              )}
+              {touched.email && !formData.email && (
+                <span className="text-red-500 text-sm mt-1 block">Email is required</span>
+              )}
             </div>
-            <CP_buttons />
+            <div className="mt-[22px]">
+              <Label
+                htmlFor="primaryMobileNumber"
+                className={`text-[14px] mb-2 ${
+                  isEmailValid(formData.email) ? "text-gray-500" : "text-[#00000040]"
+                }`}
+              >
+                Clinic Primary Mobile Number *
+              </Label>
+              <div className="flex items-center border rounded-[7.26px] h-[39px]">
+                <span className="text-[14px] font-semibold py-3 px-2">+91</span>
+                <Input
+                  id="primaryMobileNumber"
+                  type="number"
+                  placeholder="9876543210"
+                  value={formData.primaryMobileNumber}
+                  onChange={(e) => handleInputChange(e, "primaryMobileNumber")}
+                  onBlur={() => handleBlur("primaryMobileNumber")}
+                  disabled={!isEmailValid(formData.email)}
+                  className={`border rounded-[7.26px] rounded-l-none placeholder:text-[14px] py-3 w-full h-[39px] ${
+                    isEmailValid(formData.email)
+                      ? "bg-white placeholder:text-gray-500"
+                      : "bg-[#ffffff10] placeholder:text-[#00000040]"
+                  }`}
+                />
+              </div>
+              {touched.primaryMobileNumber &&
+                formData.primaryMobileNumber &&
+                !isMobileValid(formData.primaryMobileNumber) && (
+                  <span className="text-red-500 text-sm mt-1 block">Must be 10 digits</span>
+                )}
+              {touched.primaryMobileNumber && !formData.primaryMobileNumber && (
+                <span className="text-red-500 text-sm mt-1 block">Mobile number is required</span>
+              )}
+            </div>
+            <div className="mt-[22px]">
+              <div className="flex items-center">
+                <Label
+                  htmlFor="whatsappNumber"
+                  className={`text-[14px] w-[55%] mb-2 ${
+                    isMobileValid(formData.primaryMobileNumber) ? "text-gray-500" : "text-[#00000040]"
+                  }`}
+                >
+                  Clinic Whatsapp Number *
+                </Label>
+                <div className="flex gap-[6px] items-center w-[45%]">
+                  <Checkbox
+                    checked={sameAsMobile}
+                    onCheckedChange={(checked) => {
+                      setSameAsMobile(checked);
+                      if (checked) {
+                        setFormData((prev) => ({
+                          ...prev,
+                          whatsappNumber: prev.primaryMobileNumber,
+                        }));
+                        setTouched((prev) => ({ ...prev, whatsappNumber: true }));
+                      }
+                    }}
+                    className="w-4 h-4 border border-[#776EA5] rounded-[1.8px] ms-1"
+                  />
+                  <label htmlFor="" className="text-[12px] text-gray-500">
+                    Same as Mobile Number
+                  </label>
+                </div>
+              </div>
+              <div className="flex items-center border rounded-[7.26px] h-[39px]">
+                <span className="text-[14px] font-semibold py-3 px-2">+91</span>
+                <Input
+                  id="whatsappNumber"
+                  type="number"
+                  placeholder="9876543210"
+                  value={formData.whatsappNumber}
+                  onChange={(e) => handleInputChange(e, "whatsappNumber")}
+                  onBlur={() => handleBlur("whatsappNumber")}
+                  disabled={sameAsMobile || !isMobileValid(formData.primaryMobileNumber)}
+                  className={`border rounded-[7.26px] rounded-l-none placeholder:text-[14px] py-3 px-4 w-full h-[39px] ${
+                    sameAsMobile || !isMobileValid(formData.primaryMobileNumber)
+                      ? "bg-[#ffffff10] placeholder:text-[#00000040]"
+                      : "bg-white placeholder:text-gray-500"
+                  }`}
+                />
+              </div>
+              {touched.whatsappNumber &&
+                formData.whatsappNumber &&
+                !isMobileValid(formData.whatsappNumber) && (
+                  <span className="text-red-500 text-sm mt-1 block">Must be 10 digits</span>
+                )}
+              {touched.whatsappNumber && !formData.whatsappNumber && (
+                <span className="text-red-500 text-sm mt-1 block">WhatsApp number is required</span>
+              )}
+            </div>
+            <div className="mt-[22px]">
+              <Label
+                htmlFor="emergencyNumber"
+                className={`text-[14px] mb-2 ${
+                  isMobileValid(formData.whatsappNumber) ? "text-gray-500" : "text-[#00000040]"
+                }`}
+              >
+                Clinic Emergency Number *
+              </Label>
+              <div className="flex items-center border rounded-[7.26px] h-[39px]">
+                <span className="text-[14px] font-semibold py-3 px-2">+91</span>
+                <Input
+                  id="emergencyNumber"
+                  type="number"
+                  placeholder="9876543210"
+                  value={formData.emergencyNumber}
+                  onChange={(e) => handleInputChange(e, "emergencyNumber")}
+                  onBlur={() => handleBlur("emergencyNumber")}
+                  disabled={!isMobileValid(formData.whatsappNumber)}
+                  className={`border rounded-[7.26px] rounded-l-none placeholder:text-[14px] py-3 px-4 w-full h-[39px] ${
+                    isMobileValid(formData.whatsappNumber)
+                      ? "bg-white placeholder:text-gray-500"
+                      : "bg-[#ffffff10] placeholder:text-[#00000040]"
+                  }`}
+                />
+              </div>
+              {touched.emergencyNumber &&
+                formData.emergencyNumber &&
+                !isMobileValid(formData.emergencyNumber) && (
+                  <span className="text-red-500 text-sm mt-1 block">Must be 10 digits</span>
+                )}
+              {touched.emergencyNumber && !formData.emergencyNumber && (
+                <span className="text-red-500 text-sm mt-1 block">Emergency number is required</span>
+              )}
+            </div>
           </div>
+          <CP_buttons disabled={!isFormValid()} onSave={handleSave} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -10,10 +10,10 @@ const CP_billing_details = () => {
     <>
       <div
         className="bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd;
-  ] via-50%  to-[#e5e3f5]   h-full"
+  ] via-50%  to-[#e5e3f5]   h-full flex flex-col"
       >
         <CP_Header />
-        <div className="px-3">
+        <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd] via-50%  to-[#e5e3f5]">
           {/* clinic details */}
           <div className="mt-3 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
             <strong className="text-[16px] text-black font-semibold">
@@ -64,7 +64,7 @@ const CP_billing_details = () => {
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] font-semibold py-3 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
               />
                 </div>
               </RadioGroup>
@@ -85,7 +85,7 @@ const CP_billing_details = () => {
               <Input
                 type="text"
                 placeholder="Enter your Pan no."
-                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] font-semibold py-3 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
               />
             </div>
             <div className="mt-5">
@@ -98,7 +98,7 @@ const CP_billing_details = () => {
 
               <div className="flex justify-between items-center bg-white rounded-[7.26px] overflow-hidden h-[39px]">
                 <select
-                  className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-gray-500 font-semibold w-[16%]  h-[39px] px-2 outline-none text-gray-500"
+                  className="bg-white rounded-[7.26px] text-[14px]  font-semibold placeholder:text-[14px] placeholder:text-gray-500 w-[16%]  h-[39px] px-2 outline-none text-gray-500"
                   defaultValue="27"
                 >
                   <option value="27">27</option>
@@ -117,7 +117,7 @@ const CP_billing_details = () => {
                   type="text"
                   maxLength={3}
                   placeholder="Z5G"
-                  className="text-[14px] text-black font-semibold placeholder:text-[14px] font-semibold px-2 text-black outline-none w-[50px]"
+                  className="text-[14px] placeholder:text-[14px] font-semibold px-2 text-black outline-none w-[50px]"
                 />
               </div>
             </div>

@@ -37,13 +37,13 @@ const SalesDashboard = () => {
             className="w-[106px] pt-1.5"
             alt="ekyamm"
           />
-          <Avatar>
+          <Avatar>  
             <AvatarImage src="/images/user.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </div>
       </div>
-      <div className="px-3">
+      <div className="px-3 h-screen mb-[26%] overflow-auto">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className="text-[12px] text-gray-500">Good morning,</span>

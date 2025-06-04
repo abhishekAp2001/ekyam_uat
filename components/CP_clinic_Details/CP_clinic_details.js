@@ -7,16 +7,18 @@ import CP_buttons from "@/components/CP_buttons/CP_buttons";
 const CP_clinic_details = () => {
   return (
     <>
-      <div className="bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd;
-  ] via-50%  to-[#e5e3f5]   h-full">
+      <div
+        className="bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd;
+  ] via-50%  to-[#e5e3f5]   h-full flex flex-col"
+      >
         <CP_Header />
-        <div className="px-3">
-        {/* clinic details */}
-          <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
-              <strong className="text-[16px] text-black font-semibold">
-                Clinic Address Details
-              </strong>
-              <div className="">
+        <div className=" h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd] via-50%  to-[#e5e3f5]">
+          {/* clinic details */}
+          <div className=" bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
+            <strong className="text-[16px] text-black font-semibold">
+              Clinic Address Details
+            </strong>
+            <div className="">
               <Label
                 htmlFor="email"
                 className="text-[14px] text-gray-500 mb-2 mt-5"
@@ -26,37 +28,38 @@ const CP_clinic_details = () => {
               <Input
                 type="text"
                 placeholder="400053"
-                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-black font-semibold pt-3 pb-3.5 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-black pt-3 pb-3.5 px-4 h-[39px]"
               />
-              </div>
-              <div className="">
+            </div>
+            <div className="">
               <Label
                 htmlFor="email"
                 className="text-[14px] text-gray-500 mb-2 mt-[22px]"
               >
                 Area Name
               </Label>
-                <Input
-                  type="text"
-                  placeholder="Pimple Saudagar"
-                  className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] font-semibold 
+              <Input
+                type="text"
+                placeholder="Pimple Saudagar"
+                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066]
  pt-3 pb-3.5 px-4 h-[39px]"
-                /></div>
-                <div className="">
+              />
+            </div>
+            <div className="">
               <Label
                 htmlFor="email"
                 className="text-[14px] text-gray-500 mb-2 mt-[22px]"
               >
-                City 
+                City
               </Label>
               <Input
                 type="text"
                 placeholder="Mumbai"
-                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] font-semibold  pt-3 pb-3.5 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066]  pt-3 pb-3.5 px-4 h-[39px]"
               />
-              </div>
-              <div className="">
-               <Label
+            </div>
+            <div className="">
+              <Label
                 htmlFor="email"
                 className="text-[14px] text-gray-500 mb-2 mt-[22px]"
               >
@@ -65,12 +68,12 @@ const CP_clinic_details = () => {
               <Input
                 type="text"
                 placeholder="Maharashtra"
-                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] font-semibold  pt-3 pb-3.5 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066]  pt-3 pb-3.5 px-4 h-[39px]"
               />
-              </div>
             </div>
-             <CP_buttons/>
-            </div>
+          </div>
+          <CP_buttons />
+        </div>
       </div>
     </>
   );
