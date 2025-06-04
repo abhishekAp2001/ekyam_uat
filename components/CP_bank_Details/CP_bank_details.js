@@ -24,10 +24,9 @@ const CP_bank_details = () => {
     }
   };
   return (
-    <>
+    <> 
       <div
-        className="bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd;
-  ] via-50%  to-[#e5e3f5]   h-full"
+        className="bg-gradient-to-t  from-[#fce8e5]  to-[#eeecfb]   h-full"
       >
         <CP_Header />
         <div className="px-3">
@@ -47,7 +46,7 @@ const CP_bank_details = () => {
                 type="text"
                 placeholder="Add Bank Name"
                 className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold 
- pt-3 pb-3.5 px-4 h-[39px]"
+ py-3 px-4 h-[39px]"
               />
             </div>
             <div className="">
@@ -61,7 +60,7 @@ const CP_bank_details = () => {
                 <Input
                   type="text"
                   placeholder="Add Account Number"
-                  className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold  pt-3 pb-3.5 px-4 h-[39px]"
+                  className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
                 />
                 <Image
                   src="/images/green_check.png"
@@ -83,7 +82,7 @@ const CP_bank_details = () => {
               <Input
                 type="text"
                 placeholder="Enter Confirm Account Number"
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold  pt-3 pb-3.5 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
               />
                <Image
                   src="/images/error_circle.png"
@@ -97,14 +96,16 @@ const CP_bank_details = () => {
             <div className="">
               <Label
                 htmlFor="text"
+                disabled
                 className="text-[14px] text-gray-500 font-medium mb-2 mt-[22px]"
               >
                 Account Holder Number *
               </Label>
               <Input
                 type="text"
+                disabled
                 placeholder="Add Account Holder Name"
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold  pt-3 pb-3.5 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
               />
             </div>
             <div className="">
@@ -117,7 +118,7 @@ const CP_bank_details = () => {
               <Input
                 type="text"
                 placeholder="Add IFSC Code"
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold  pt-3 pb-3.5 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
               />
             </div>
           </div>

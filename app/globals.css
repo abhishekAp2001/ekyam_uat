@@ -1,6 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -122,4 +122,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+body{
+   font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
 }

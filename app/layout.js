@@ -1,15 +1,5 @@
-import { Geist, Geist_Mono, Quicksand } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const quicksand = Quicksand({
   variable: "--font-quicksand",
@@ -25,7 +15,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${quicksand.variable} ${geistSans.variable} ${geistMono.variable} bg-black antialiased max-w-[480px] mx-auto h-screen`}
+        className={`${quicksand.variable} bg-black antialiased max-w-[480px] mx-auto h-screen`}
       >
         {children}
       </body>

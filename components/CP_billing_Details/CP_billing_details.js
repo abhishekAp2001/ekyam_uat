@@ -20,7 +20,7 @@ const CP_billing_details = () => {
               Billing Details
             </strong>
             <div className="mt-5">
-              <label htmlFor="" className="text-[14px] text-gray-500">
+              <label htmlFor="" className="text-[14px] text-gray-500">  
                 Billing Type *
               </label>
               <RadioGroup defaultValue="comfortable">
@@ -64,7 +64,7 @@ const CP_billing_details = () => {
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-[#00000066] font-semibold pt-3 pb-3.5 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] font-semibold py-3 px-4 h-[39px]"
               />
                 </div>
               </RadioGroup>
@@ -85,7 +85,7 @@ const CP_billing_details = () => {
               <Input
                 type="text"
                 placeholder="Enter your Pan no."
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-[#00000066] font-semibold pt-3 pb-3.5 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] font-semibold py-3 px-4 h-[39px]"
               />
             </div>
             <div className="mt-5">
@@ -98,7 +98,7 @@ const CP_billing_details = () => {
 
               <div className="flex justify-between items-center bg-white rounded-[7.26px] overflow-hidden h-[39px]">
                 <select
-                  className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold w-[16%]  h-[39px] px-2 outline-none text-gray-500"
+                  className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-gray-500 font-semibold w-[16%]  h-[39px] px-2 outline-none text-gray-500"
                   defaultValue="27"
                 >
                   <option value="27">27</option>
@@ -111,13 +111,13 @@ const CP_billing_details = () => {
                   type="text"
                   value="ABCDE1234F"
                   readOnly
-                  className="bg-[#cecece] border-l border-r rounded-l-none rounded-r-none rounded-[7.26px] placeholder:text-[14px] placeholder:text-[#00000066] font-semibold pt-3 pb-3.5  h-[39px] px-2 text-gray-500 outline-none"
+                  className="bg-[#cecece] border-l border-r rounded-l-none rounded-r-none rounded-[7.26px] placeholder:text-[14px] placeholder:text-[#00000066] font-semibold py-3  h-[39px] px-2 text-gray-500 outline-none"
                 />
                 <input
                   type="text"
                   maxLength={3}
                   placeholder="Z5G"
-                  className="text-[14px] font-semibold px-2 text-black outline-none w-[50px]"
+                  className="text-[14px] text-black font-semibold placeholder:text-[14px] font-semibold px-2 text-black outline-none w-[50px]"
                 />
               </div>
             </div>
