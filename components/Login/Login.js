@@ -45,10 +45,9 @@ const Login = () => {
               </Link>
             </div>
             <Button    
-              className="mt-6 bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] h-[45px] mx-auto rounded-[8px] flex items-center justify-center"
-              style={{ width: "100% !important" }}
+              className="mt-6 bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] h-[45px] w-full rounded-[8px] flex items-center justify-center"
             >
-              <Link href={"/"}>
+              <Link href={"/sales"}>
               Login
               </Link>
             </Button>
