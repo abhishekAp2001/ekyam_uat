@@ -42,9 +42,11 @@ const Login = () => {
     }
 
     try {
+      const encodedPassword = customEncodeString(password);
+      const encryptedPassword = encryptData(encodedPassword);
       const payload = {
         email: userName,
-        password,
+        password: encryptedPassword,
       };
       const response = await axios.post("/v2/auth/user/signin", payload);
       if (response?.data?.success === true) {

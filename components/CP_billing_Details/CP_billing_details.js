@@ -1,132 +1,351 @@
-import React from "react";
-import CP_Header from "../CP_Header/CP_Header";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import CP_Header from "@/components/CP_Header/CP_Header";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import CP_buttons from "@/components/CP_buttons/CP_buttons";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { toast } from "react-toastify";
+import { getCookie, setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const CP_billing_details = () => {
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    billingEmail: "",
+    billingType: "", // "monthly" / "onSpot" / "patientPays"
+    panCard: "",
+    gstNumber: "",
+    gstStateCode: "27", // Default state code
+    gstSuffix: "",
+  });
+
+  const [touched, setTouched] = useState({
+    billingEmail: false,
+    billingType: false,
+    panCard: false,
+    gstNumber: false,
+  });
+
+  // Validation functions
+  const isEmailValid = (email) => /\S+@\S+\.\S+/.test(email);
+  const isPanCardValid = (pan) => /^[A-Z]{5}\d{4}[A-Z]$/.test(pan);
+  const isGstNumberValid = (gst) => /^[0-9]{2}[A-Z]{5}\d{4}[A-Z][A-Z0-9]{3}$/.test(gst);
+  const isFormValid = () =>
+    formData.billingType &&
+    formData.panCard &&
+    isPanCardValid(formData.panCard) &&
+    formData.gstNumber &&
+    isGstNumberValid(formData.gstNumber) &&
+    (formData.billingType !== "monthly" || (formData.billingEmail && isEmailValid(formData.billingEmail)));
+
+  // Load form data from cookie on component mount
+  useEffect(() => {
+    const savedData = getCookie("cp_billing_details");
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        // Extract gstStateCode and gstSuffix from gstNumber
+        if (parsedData.gstNumber && isGstNumberValid(parsedData.gstNumber)) {
+          parsedData.gstStateCode = parsedData.gstNumber.slice(0, 2);
+          parsedData.gstSuffix = parsedData.gstNumber.slice(-3);
+        }
+        setFormData(parsedData);
+        // Mark fields as touched if they have values
+        setTouched({
+          billingEmail: !!parsedData.billingEmail,
+          billingType: !!parsedData.billingType,
+          panCard: !!parsedData.panCard,
+          gstNumber: !!parsedData.gstNumber,
+        });
+      } catch (error) {
+        console.error("Error parsing cp_billing_details cookie:", error);
+      }
+    }
+  }, []);
+
+  // Handle input change for text fields
+  const handleTextInputChange = (e, field) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
+  // Handle PAN card input (uppercase, max 10 characters)
+  const handlePanCardChange = (e) => {
+    const value = e.target.value.toUpperCase().slice(0, 10);
+    setFormData((prev) => ({ ...prev, panCard: value }));
+  };
+
+  // Handle GST number components
+  const handleGstStateCodeChange = (value) => {
+    setFormData((prev) => ({
+      ...prev,
+      gstStateCode: value,
+      gstNumber: value + prev.panCard + prev.gstSuffix,
+    }));
+  };
+
+  const handleGstSuffixChange = (e) => {
+    const suffix = e.target.value.toUpperCase().slice(0, 3);
+    setFormData((prev) => ({
+      ...prev,
+      gstSuffix: suffix,
+      gstNumber: prev.gstStateCode + prev.panCard + suffix,
+    }));
+  };
+
+  // Handle blur for input fields
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  // Handle send invite for monthly billing
+  const sendInvite = async () => {
+    try {
+      // Placeholder for sending invite (e.g., API call)
+      console.log("Sending invite with data:", formData);
+      toast.success("Invite sent successfully");
+      router.push("/sales/next_page"); // Replace with actual next page route
+    } catch (error) {
+      console.error("Error sending invite:", error);
+      toast.error("Failed to send invite");
+    }
+  };
+
+  // Handle save and continue
+  const handleSave = () => {
+    if (isFormValid()) {
+      if (formData.billingType === "monthly") {
+        sendInvite();
+      } else {
+        setCookie("cp_billing_details", formData);
+        router.push("/sales/cp_bank_details");
+      }
+    } else {
+      setTouched({
+        billingEmail: formData.billingType === "monthly",
+        billingType: true,
+        panCard: true,
+        gstNumber: true,
+      });
+    }
+  };
+
   return (
-    <>
-      <div
-        className="bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd;
-  ] via-50%  to-[#e5e3f5]   h-full flex flex-col"
-      >
-        <CP_Header />
-        <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t  from-[#e5e3f5] via-[#f1effd] via-50%  to-[#e5e3f5]">
-          {/* clinic details */}
-          <div className="mt-3 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
-            <strong className="text-[16px] text-black font-semibold">
-              Billing Details
-            </strong>
-            <div className="mt-5">
-              <label htmlFor="" className="text-[14px] text-gray-500">  
-                Billing Type *
-              </label>
-              <RadioGroup defaultValue="comfortable">
-                <div className="flex items-center gap-3 mt-[10px]">
-                  <RadioGroupItem
-                    value="default"
-                    id="r1"
-                    className="w-5 h-5 flex itmes justify-center"
-                  />
-                  <Label htmlFor="r1" className="text-[16px]">
-                    Monthly Billing
-                  </Label>
-                </div>
-                <div className="flex items-center gap-3 my-1">
-                  <RadioGroupItem
-                    value="comfortable"
-                    id="r2"
-                    className="w-5 h-5 flex itmes justify-center"
-                  />
-                  <Label htmlFor="r2" className="text-[16px]">
-                    On-Spot Payment
-                  </Label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem
-                    value="compact"
-                    id="r3"
-                    className="w-5 h-5 flex itmes justify-center"
-                  />
-                  <Label htmlFor="r3" className="text-[16px]">
-                    Patient Pays
-                  </Label>
-                </div>
-                <div className="">
-                   <Label
-                htmlFor="Pan No."
-                className="text-[14px] text-gray-500 mb-2 mt-5"
-              >
-                Accounts Payable
-              </Label>
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
-              />
-                </div>
-              </RadioGroup>
-            </div>
-          </div>
-
-          <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
-            <strong className="text-[16px] text-black font-semibold">
-              KYC
-            </strong>
-            <div className="mt-5">
-              <Label
-                htmlFor="Pan No."
-                className="text-[14px] text-gray-500 mb-2"
-              >
-                PAN No.
-              </Label>
-              <Input
-                type="text"
-                placeholder="Enter your Pan no."
-                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
-              />
-            </div>
-            <div className="mt-5">
-              <Label
-                htmlFor="gst"
-                className="text-[14px] text-gray-500 mb-2 block"
-              >
-                GST No.
-              </Label>
-
-              <div className="flex justify-between items-center bg-white rounded-[7.26px] overflow-hidden h-[39px]">
-                <select
-                  className="bg-white rounded-[7.26px] text-[14px]  font-semibold placeholder:text-[14px] placeholder:text-gray-500 w-[16%]  h-[39px] px-2 outline-none text-gray-500"
-                  defaultValue="27"
-                >
-                  <option value="27">27</option>
-                  <option value="29">29</option>
-                  <option value="24">24</option>
-                  <option value="09">09</option>
-                </select>
-
-                <input
-                  type="text"
-                  value="ABCDE1234F"
-                  readOnly
-                  className="bg-[#cecece] border-l border-r rounded-l-none rounded-r-none rounded-[7.26px] placeholder:text-[14px] placeholder:text-[#00000066] font-semibold py-3  h-[39px] px-2 text-gray-500 outline-none"
+    <div className="bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5] h-full flex flex-col">
+      <CP_Header />
+      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
+        <div className="mt-3 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
+          <strong className="text-[16px] text-black font-semibold">
+            Billing Details
+          </strong>
+          <div className="mt-5">
+            <Label className="text-[14px] text-gray-500">
+              Billing Type *
+            </Label>
+            <RadioGroup
+              value={formData.billingType}
+              onValueChange={(value) =>
+                setFormData((prev) => ({ ...prev, billingType: value }))
+              }
+              onBlur={() => handleBlur("billingType")}
+              className="mt-[10px]"
+            >
+              <div className="flex items-center gap-3">
+                <RadioGroupItem
+                  value="monthly"
+                  id="r1"
+                  className="w-5 h-5 flex items-center justify-center"
                 />
-                <input
-                  type="text"
-                  maxLength={3}
-                  placeholder="Z5G"
-                  className="text-[14px] placeholder:text-[14px] font-semibold px-2 text-black outline-none w-[50px]"
-                />
+                <Label htmlFor="r1" className="text-[16px]">
+                  Monthly Billing
+                </Label>
               </div>
-            </div>
+              <div className="flex items-center gap-3 my-1">
+                <RadioGroupItem
+                  value="onSpot"
+                  id="r2"
+                  className="w-5 h-5 flex items-center justify-center"
+                />
+                <Label htmlFor="r2" className="text-[16px]">
+                  On-Spot Payment
+                </Label>
+              </div>
+              <div className="flex items-center gap-3">
+                <RadioGroupItem
+                  value="patientPays"
+                  id="r3"
+                  className="w-5 h-5 flex items-center justify-center"
+                />
+                <Label htmlFor="r3" className="text-[16px]">
+                  Patient Pays
+                </Label>
+              </div>
+            </RadioGroup>
+            {touched.billingType && !formData.billingType && (
+              <span className="text-red-500 text-sm mt-1 block">
+                Billing type is required
+              </span>
+            )}
+            {formData.billingType === "monthly" && (
+              <div className="mt-[22px]">
+                <Label
+                  htmlFor="billingEmail"
+                  className={`text-[14px] mb-2 ${
+                    formData.billingType ? "text-gray-500" : "text-[#00000040]"
+                  }`}
+                >
+                  Accounts Payable *
+                </Label>
+                <Input
+                  id="billingEmail"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={formData.billingEmail}
+                  onChange={(e) => handleTextInputChange(e, "billingEmail")}
+                  onBlur={() => handleBlur("billingEmail")}
+                  disabled={!formData.billingType}
+                  className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+                    formData.billingType
+                      ? "bg-white placeholder:text-gray-500"
+                      : "bg-[#ffffff10] placeholder:text-[#00000040]"
+                  }`}
+                />
+                {touched.billingEmail && !formData.billingEmail && (
+                  <span className="text-red-500 text-sm mt-1 block">
+                    Email is required
+                  </span>
+                )}
+                {touched.billingEmail &&
+                  formData.billingEmail &&
+                  !isEmailValid(formData.billingEmail) && (
+                    <span className="text-red-500 text-sm mt-1 block">
+                      Invalid email
+                    </span>
+                  )}
+              </div>
+            )}
           </div>
         </div>
-
-        <CP_buttons />
+        <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
+          <strong className="text-[16px] text-black font-semibold">
+            KYC
+          </strong>
+          <div className="mt-5">
+            <Label
+              htmlFor="panCard"
+              className={`text-[14px] mb-2 ${
+                formData.billingType ? "text-gray-500" : "text-[#00000040]"
+              }`}
+            >
+              PAN No. *
+            </Label>
+            <Input
+              id="panCard"
+              type="text"
+              placeholder="ABCDE1234F"
+              value={formData.panCard}
+              onChange={handlePanCardChange}
+              onBlur={() => handleBlur("panCard")}
+              disabled={!formData.billingType}
+              className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+                formData.billingType
+                  ? "bg-white placeholder:text-gray-500"
+                  : "bg-[#ffffff10] placeholder:text-[#00000040]"
+              }`}
+              maxLength={10}
+            />
+            {touched.panCard && !formData.panCard && (
+              <span className="text-red-500 text-sm mt-1 block">
+                PAN number is required
+              </span>
+            )}
+            {touched.panCard &&
+              formData.panCard &&
+              !isPanCardValid(formData.panCard) && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  Invalid PAN number (e.g., ABCDE1234F)
+                </span>
+              )}
+          </div>
+          <div className="mt-5">
+            <Label
+              htmlFor="gstNumber"
+              className={`text-[14px] mb-2 block ${
+                isPanCardValid(formData.panCard) ? "text-gray-500" : "text-[#00000040]"
+              }`}
+            >
+              GST No. *
+            </Label>
+            <div className="flex items-center bg-white rounded-[7.26px] overflow-hidden h-[39px]">
+              <Select
+                value={formData.gstStateCode}
+                onValueChange={handleGstStateCodeChange}
+                onOpenChange={(open) => !open && handleBlur("gstNumber")}
+                disabled={!isPanCardValid(formData.panCard)}
+              >
+                <SelectTrigger
+                  className={`w-[60px] rounded-l-[7.26px] text-[14px] font-semibold h-[39px] px-2 ${
+                    isPanCardValid(formData.panCard)
+                      ? "bg-white text-gray-500"
+                      : "bg-[#ffffff10] text-[#00000040]"
+                  }`}
+                >
+                  <SelectValue placeholder="State" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 38 }, (_, i) => {
+                    const value = (i + 1).toString().padStart(2, '0');
+                    return <SelectItem key={value} value={value}>{value}</SelectItem>;
+                  })}
+                </SelectContent>
+              </Select>
+              <input
+                type="text"
+                value={formData.panCard}
+                readOnly
+                className="bg-[#cecece] border-l border-r text-[14px] font-semibold py-3 h-[39px] px-2 text-gray-500 outline-none w-[180px]"
+              />
+              <input
+                type="text"
+                value={formData.gstSuffix}
+                onChange={handleGstSuffixChange}
+                onBlur={() => handleBlur("gstNumber")}
+                disabled={!isPanCardValid(formData.panCard)}
+                placeholder="Z5G"
+                className={`text-[14px] font-semibold px-2 text-black outline-none w-[70px] ${
+                  isPanCardValid(formData.panCard)
+                    ? "bg-white placeholder:text-gray-500"
+                    : "bg-[#ffffff10] placeholder:text-[#00000040]"
+                }`}
+                maxLength={3}
+              />
+            </div>
+            {touched.gstNumber && !formData.gstNumber && (
+              <span className="text-red-500 text-sm mt-1 block">
+                GST number is required
+              </span>
+            )}
+            {touched.gstNumber &&
+              formData.gstNumber &&
+              !isGstNumberValid(formData.gstNumber) && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  Invalid GST number (e.g., 27ABCDE1234FZ5G)
+                </span>
+              )}
+          </div>
+        </div>
+        <CP_buttons
+          disabled={!isFormValid()}
+          onSave={handleSave}
+          buttonText={
+            formData.billingType === "monthly" ? "Send Invite" : "Save & Continue"
+          }
+        />
       </div>
-    </>
+    </div>
   );
 };
 

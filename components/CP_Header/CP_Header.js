@@ -16,6 +16,8 @@ const CP_Header = () => {
       router.push("/sales/cp_clinic_details");
     } else if (pathname === "/sales/cp_billing_details") {
       router.push("/sales/cp_doctor_details");
+    } else if (pathname === "/sales/cp_bank_details") {
+      router.push("/sales/cp_billing_details");
     }
   };
   return (
