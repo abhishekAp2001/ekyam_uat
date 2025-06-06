@@ -7,13 +7,20 @@ import { Label } from "@/components/ui/label";
 import CP_buttons from "@/components/CP_buttons/CP_buttons";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "react-toastify";
-import { getCookie, setCookie } from "cookies-next";
+import { deleteCookie, getCookie, hasCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import axiosInstance from "@/lib/axiosInstance";
 
 const CP_billing_details = () => {
   const router = useRouter();
-
+  const axios = axiosInstance();
   const [formData, setFormData] = useState({
     billingEmail: "",
     billingType: "", // "monthly" / "onSpot" / "patientPays"
@@ -33,14 +40,16 @@ const CP_billing_details = () => {
   // Validation functions
   const isEmailValid = (email) => /\S+@\S+\.\S+/.test(email);
   const isPanCardValid = (pan) => /^[A-Z]{5}\d{4}[A-Z]$/.test(pan);
-  const isGstNumberValid = (gst) => /^[0-9]{2}[A-Z]{5}\d{4}[A-Z][A-Z0-9]{3}$/.test(gst);
+  const isGstNumberValid = (gst) =>
+    /^[0-9]{2}[A-Z]{5}\d{4}[A-Z][A-Z0-9]{3}$/.test(gst);
   const isFormValid = () =>
     formData.billingType &&
     formData.panCard &&
     isPanCardValid(formData.panCard) &&
     formData.gstNumber &&
     isGstNumberValid(formData.gstNumber) &&
-    (formData.billingType !== "monthly" || (formData.billingEmail && isEmailValid(formData.billingEmail)));
+    (formData.billingType !== "monthly" ||
+      (formData.billingEmail && isEmailValid(formData.billingEmail)));
 
   // Load form data from cookie on component mount
   useEffect(() => {
@@ -102,15 +111,85 @@ const CP_billing_details = () => {
   };
 
   // Handle send invite for monthly billing
-  const sendInvite = async () => {
+  const handleAddChannelPartner = async () => {
     try {
-      // Placeholder for sending invite (e.g., API call)
-      console.log("Sending invite with data:", formData);
-      toast.success("Invite sent successfully");
-      router.push("/sales/next_page"); // Replace with actual next page route
+      const cp_type = hasCookie("cp_type")
+        ? JSON.parse(getCookie("cp_type"))
+        : "";
+      const cp_doctor_details = hasCookie("cp_doctor_details")
+        ? JSON.parse(getCookie("cp_doctor_details"))
+        : "";
+      const cp_clinic_details = hasCookie("cp_clinic_details")
+        ? JSON.parse(getCookie("cp_clinic_details"))
+        : "";
+
+      const payload = {
+        channelPartnerDetails: {
+          type: cp_type?.type, // "IVF" / "Fertility Clinic"
+          clinicName: cp_type?.clinicName,
+          generalInformation: {
+            userName: cp_type?.userName,
+            // "profileImageUrl": "",
+            // "firstName": "Channel2",
+            // "lastName": "Partner2",
+            email: cp_type?.email,
+            countryCode_primary: cp_type?.countryCode_primary,
+            primaryMobileNumber: cp_type?.primaryMobileNumber,
+            countryCode_whatsapp: cp_type?.countryCode_whatsapp,
+            whatsappNumber: cp_type?.whatsappNumber,
+            countryCode_emergency: cp_type?.countryCode_emergency,
+            emergencyNumber: cp_type?.emergencyNumber,
+            // Clinic address
+            // "address": "",
+            pincode: cp_clinic_details?.pincode,
+            area: cp_clinic_details?.area,
+            city: cp_clinic_details?.city,
+            state: cp_clinic_details?.state,
+            // Billing details
+            billingEmail: formData?.billingEmail, // NOTE: required only for 'monthly' billingType
+            billingType: formData?.billingType, // "monthly" / "onSpot" / "patientPays"
+          },
+          doctorDetails: {
+            doNotDisplay: cp_doctor_details?.doNotDisplay, // true / false (boolean)
+            firstName: cp_doctor_details?.firstName, // Salutation + firstname
+            lastName: cp_doctor_details?.lastName,
+            email: cp_doctor_details?.email,
+            countryCode_primary: cp_doctor_details?.countryCode_primary,
+            primaryMobileNumber: cp_doctor_details?.primaryMobileNumber,
+            countryCode_whatsapp: cp_doctor_details?.countryCode_whatsapp,
+            whatsappNumber: cp_doctor_details?.whatsappNumber,
+            countryCode_emergency: cp_doctor_details?.countryCode_emergency,
+            emergencyNumber: cp_doctor_details?.emergencyNumber,
+          },
+        },
+        kycDetails: {
+          panCard: formData?.panCard,
+          gstNumber: formData?.gstNumber,
+        },
+        bankDetails: {
+          accountHolderName: "",
+          accountNumber: "",
+          ifscCode: "",
+          bankName: "",
+        },
+      };
+      const response = await axios.post(`v2/cp/channelPartner/invite`, payload);
+      if (response?.data?.success) {
+        router.push("/sales");
+        toast.success("Profile Created with Unique URL");
+        deleteCookie("cp_type");
+        deleteCookie("cp_clinic_details");
+        deleteCookie("cp_doctor_details");
+        deleteCookie("cp_billing_details");
+        deleteCookie("cp_bank_details");
+      }
     } catch (error) {
-      console.error("Error sending invite:", error);
-      toast.error("Failed to send invite");
+      console.error("Error Adding Channel Partner:", error);
+      if (error.forceLogout) {
+        router.push("/login");
+      } else {
+        toast.error(error?.response?.data?.error?.message);
+      }
     }
   };
 
@@ -118,7 +197,8 @@ const CP_billing_details = () => {
   const handleSave = () => {
     if (isFormValid()) {
       if (formData.billingType === "monthly") {
-        sendInvite();
+        setCookie("cp_billing_details", formData);
+        handleAddChannelPartner();
       } else {
         setCookie("cp_billing_details", formData);
         router.push("/sales/cp_bank_details");
@@ -142,9 +222,7 @@ const CP_billing_details = () => {
             Billing Details
           </strong>
           <div className="mt-5">
-            <Label className="text-[14px] text-gray-500">
-              Billing Type *
-            </Label>
+            <Label className="text-[14px] text-gray-500">Billing Type *</Label>
             <RadioGroup
               value={formData.billingType}
               onValueChange={(value) =>
@@ -230,9 +308,7 @@ const CP_billing_details = () => {
           </div>
         </div>
         <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
-          <strong className="text-[16px] text-black font-semibold">
-            KYC
-          </strong>
+          <strong className="text-[16px] text-black font-semibold">KYC</strong>
           <div className="mt-5">
             <Label
               htmlFor="panCard"
@@ -274,7 +350,9 @@ const CP_billing_details = () => {
             <Label
               htmlFor="gstNumber"
               className={`text-[14px] mb-2 block ${
-                isPanCardValid(formData.panCard) ? "text-gray-500" : "text-[#00000040]"
+                isPanCardValid(formData.panCard)
+                  ? "text-gray-500"
+                  : "text-[#00000040]"
               }`}
             >
               GST No. *
@@ -297,8 +375,12 @@ const CP_billing_details = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: 38 }, (_, i) => {
-                    const value = (i + 1).toString().padStart(2, '0');
-                    return <SelectItem key={value} value={value}>{value}</SelectItem>;
+                    const value = (i + 1).toString().padStart(2, "0");
+                    return (
+                      <SelectItem key={value} value={value}>
+                        {value}
+                      </SelectItem>
+                    );
                   })}
                 </SelectContent>
               </Select>
@@ -341,7 +423,9 @@ const CP_billing_details = () => {
           disabled={!isFormValid()}
           onSave={handleSave}
           buttonText={
-            formData.billingType === "monthly" ? "Send Invite" : "Save & Continue"
+            formData.billingType === "monthly"
+              ? "Send Invite"
+              : "Save & Continue"
           }
         />
       </div>

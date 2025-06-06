@@ -8,7 +8,7 @@ import CP_buttons from "@/components/CP_buttons/CP_buttons";
 import Image from "next/image";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-toastify";
-import { getCookie, hasCookie, setCookie } from "cookies-next";
+import { deleteCookie, getCookie, hasCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 
 const CP_bank_details = () => {
@@ -120,7 +120,7 @@ const CP_bank_details = () => {
   const handleSave = () => {
     if (isFormValid()) {
       setCookie("cp_bank_details", formData);
-      // handleAddChannelPartner();
+      handleAddChannelPartner();
     } else {
       toast.error("Please fill all required fields correctly");
       // Mark all fields as touched to show errors
@@ -159,11 +159,11 @@ const CP_bank_details = () => {
             // "firstName": "Channel2",
             // "lastName": "Partner2",
             email: cp_type?.email,
-            countryCode_primary: "🇮🇳 +91",
+            countryCode_primary: cp_type?.countryCode_primary,
             primaryMobileNumber: cp_type?.primaryMobileNumber,
-            countryCode_whatsapp: "🇮🇳 +91",
+            countryCode_whatsapp: cp_type?.countryCode_whatsapp,
             whatsappNumber: cp_type?.whatsappNumber,
-            countryCode_emergency: "🇮🇳 +91",
+            countryCode_emergency: cp_type?.countryCode_emergency,
             emergencyNumber: cp_type?.emergencyNumber,
             // Clinic address
             // "address": "",
@@ -180,11 +180,11 @@ const CP_bank_details = () => {
             firstName: cp_doctor_details?.firstName, // Salutation + firstname
             lastName: cp_doctor_details?.lastName,
             email: cp_doctor_details?.email,
-            countryCode_primary: "🇮🇳 +91",
+            countryCode_primary: cp_doctor_details?.countryCode_primary,
             primaryMobileNumber: cp_doctor_details?.primaryMobileNumber,
-            countryCode_whatsapp: "🇮🇳 +91",
+            countryCode_whatsapp: cp_doctor_details?.countryCode_whatsapp,
             whatsappNumber: cp_doctor_details?.whatsappNumber,
-            countryCode_emergency: "🇮🇳 +91",
+            countryCode_emergency: cp_doctor_details?.countryCode_emergency,
             emergencyNumber: cp_doctor_details?.emergencyNumber,
           },
         },
@@ -199,7 +199,16 @@ const CP_bank_details = () => {
           bankName: formData?.bankName,
         },
       };
-      console.log(payload)
+      const response = await axios.post(`v2/cp/channelPartner/invite`,payload)
+      if(response?.data?.success){
+        router.push("/sales")
+        toast.success("Profile Created with Unique URL");
+        deleteCookie("cp_type");
+        deleteCookie("cp_clinic_details");
+        deleteCookie("cp_doctor_details");
+        deleteCookie("cp_billing_details");
+        deleteCookie("cp_bank_details");
+      }
     } catch (error) {
       console.error("Error Adding Channel Partner:", error);
       if (error.forceLogout) {
@@ -432,7 +441,7 @@ const CP_bank_details = () => {
         <CP_buttons
           disabled={!isFormValid()}
           onSave={handleSave}
-          buttonText="Save & Continue"
+          buttonText="Send Invite"
         />
       </div>
     </div>

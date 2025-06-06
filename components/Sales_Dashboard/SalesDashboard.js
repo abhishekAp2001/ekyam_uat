@@ -14,7 +14,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Menu, Plus, X } from "lucide-react";
@@ -37,7 +37,7 @@ const SalesDashboard = () => {
             className="w-[106px] pt-1.5"
             alt="ekyamm"
           />
-          <Avatar>  
+          <Avatar>
             <AvatarImage src="/images/user.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
@@ -96,45 +96,42 @@ const SalesDashboard = () => {
             Add User
           </Button> */}
           <Drawer className="pt-[9.97px]">
-            <DrawerTrigger
-              className="mt-[10.8px] bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] h-[45px]  rounded-[8px] flex items-center justify-center w-full"
-            >
-              Add User   
-            </DrawerTrigger> 
-            <DrawerContent
-              className="bg-gradient-to-b  from-[#e7e4f8] via-[#f0e1df] via-70%  to-[#feedea]">
+            <DrawerTrigger className="mt-[10.8px] bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] h-[45px]  rounded-[8px] flex items-center justify-center w-full">
+              Add User
+            </DrawerTrigger>
+            <DrawerContent className="bg-gradient-to-b  from-[#e7e4f8] via-[#f0e1df] via-70%  to-[#feedea]">
               <DrawerHeader>
-                <DrawerTitle className='text-[16px] font-[600] text-center'>Add User</DrawerTitle>
-                <DrawerDescription  className='mt-6 flex flex-col gap-3'>
-                  <Button className='bg-gradient-to-r from-[#BBA3E450] to-[#EDA19750] text-black text-[16px] font-[600] py-[17px] px-4 flex  justify-between items-center w-full h-[50px]'>
-                    <Link href={"/cp_type"}>
-                    Channel Partner
-                    </Link>
-                     <Image
-                      src="/images/arrow.png"
-                      width={24}
-                      height={24}
-                      className="w-[24px]"
-                      alt="ekyamm"
-                    />
-                  </Button>
-                    <Button className='bg-gradient-to-r from-[#BBA3E450] to-[#EDA19750] text-black text-[16px] font-[600] py-[17px] px-4 flex  justify-between items-center w-full h-[50px]'>
-                    <Link href={""}>
-                    Individual Practitioner
-                    </Link>
-                     <Image
-                      src="/images/arrow.png"
-                      width={24}
-                      height={24}
-                      className="w-[24px]"
-                      alt="ekyamm"
-                    />
-                  </Button>
-                    <Button className='bg-gradient-to-r from-[#BBA3E450] to-[#EDA19750] text-black text-[16px] font-[600] py-[17px] px-4 flex  justify-between items-center w-full h-[50px]'>
-                    <Link href={""}>
-                   Clinic
-                    </Link>
-                     <Image
+                <DrawerTitle className="text-[16px] font-[600] text-center">
+                  Add User
+                </DrawerTitle>
+                <DrawerDescription className="mt-6 flex flex-col gap-3">
+                  <Link href={"/sales/cp_type"}>
+                    <Button className="bg-gradient-to-r from-[#BBA3E450] to-[#EDA19750] text-black text-[16px] font-[600] py-[17px] px-4 flex  justify-between items-center w-full h-[50px]">
+                      Channel Partner
+                      <Image
+                        src="/images/arrow.png"
+                        width={24}
+                        height={24}
+                        className="w-[24px]"
+                        alt="ekyamm"
+                      />
+                    </Button>
+                  </Link>
+                  <Link href={"/sales/ip_details"}>
+                    <Button className="bg-gradient-to-r from-[#BBA3E450] to-[#EDA19750] text-black text-[16px] font-[600] py-[17px] px-4 flex  justify-between items-center w-full h-[50px]">
+                      Individual Practitioner
+                      <Image
+                        src="/images/arrow.png"
+                        width={24}
+                        height={24}
+                        className="w-[24px]"
+                        alt="ekyamm"
+                      />
+                    </Button>
+                  </Link>
+                  <Button className="bg-gradient-to-r from-[#BBA3E450] to-[#EDA19750] text-black text-[16px] font-[600] py-[17px] px-4 flex  justify-between items-center w-full h-[50px]">
+                    <Link href={""}>Clinic</Link>
+                    <Image
                       src="/images/arrow.png"
                       width={24}
                       height={24}
@@ -144,10 +141,15 @@ const SalesDashboard = () => {
                   </Button>
                 </DrawerDescription>
               </DrawerHeader>
-              <DrawerFooter className='p-0'>
+              <DrawerFooter className="p-0">
                 {/* <Button>Submit</Button> */}
                 <DrawerClose>
-                  <Button variant="outline" className='absolute top-[10px] right-0'><X  className="w-2 h-2 text-black"/></Button>
+                  <Button
+                    variant="outline"
+                    className="absolute top-[10px] right-0"
+                  >
+                    <X className="w-2 h-2 text-black" />
+                  </Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
