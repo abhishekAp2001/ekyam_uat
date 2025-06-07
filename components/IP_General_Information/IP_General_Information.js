@@ -1,75 +1,145 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import IP_Header from "../IP_Header/IP_Header";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, X, ChevronDown, CirclePlus } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import Link from "next/link";
 import IP_Buttons from "../IP_Buttons/IP_Buttons";
+import { toast } from "react-toastify";
+import axiosInstance from "@/lib/axiosInstance";
+import { useRouter } from "next/navigation";
 
 const IP_General_Information = () => {
-  const specializations = [
-    "Fertility",
-    "Womens Health",
-    "PCOS",
-    "PCOD",
-    "Cardiology",
-    "Dermatology",
-    "Neurology",
-    "Pediatrics",
-    "Orthopedics",
-    "Gynecology",
-    "Endocrinology",
-    "Oncology",
-  ];
-  const [open, setOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
+  const axios = axiosInstance();
+  const router = useRouter();
+  const [languageList, setLanguageList] = useState([]);
+  const [specialisationInput, setSpecialisationInput] = useState("");
+  const [specialisationList, setSpecialisationList] = useState([]);
+  const [dontTreatInput, setDontTreatInput] = useState("");
+  const [dontTreatList, setDontTreatList] = useState([]);
+  const [languageInput, setLanguageInput] = useState("");
+  const [languageListFinal, setLanguageListFinal] = useState([]);
+  const [touched, setTouched] = useState({
+    yearsOfExperience: false,
+    specialization: false,
+    whatIDontTreat: false,
+    whatToExpectInSession: false,
+    languageProficiency: false,
+  });
 
-  // Optional: Filter logic for search
-  const filteredSpecializations = specializations?.filter((item) =>
-    item.name?.toLowerCase().includes(searchValue.toLowerCase())
-  );
+  const [formData, setFormData] = useState({
+    yearsOfExperience: "",
+    specialization: "",
+    whatIDontTreat: "",
+    whatToExpectInSession: "",
+    languageProficiency: "",
+    address: "",
+    googleMapAddress: "",
+  });
 
-  const handleSelect = (item) => {
-    setCurrentSelection(item);
-    setOpen(false);
+  // Load form data from cookie on component mount
+  useEffect(() => {
+    const savedData = localStorage.getItem("ip_general_information");
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setFormData(parsedData);
+        setSpecialisationList(parsedData.specialization ? parsedData.specialization.split(", ") : []);
+        setDontTreatList(parsedData.whatIDontTreat ? parsedData.whatIDontTreat.split(", ") : []);
+        setLanguageListFinal(parsedData.languageProficiency ? parsedData.languageProficiency.split(", ") : []);
+        if (parsedData.yearsOfExperience) setTouched((prev) => ({ ...prev, yearsOfExperience: true }));
+        if (parsedData.specialization) setTouched((prev) => ({ ...prev, specialization: true }));
+        if (parsedData.whatIDontTreat) setTouched((prev) => ({ ...prev, whatIDontTreat: true }));
+        if (parsedData.whatToExpectInSession) setTouched((prev) => ({ ...prev, whatToExpectInSession: true }));
+        if (parsedData.languageProficiency) setTouched((prev) => ({ ...prev, languageProficiency: true }));
+      } catch (error) {
+        console.error("Error parsing ip_general_information cookie:", error);
+      }
+    }
+  }, []);
+
+  const getLanguageList = async () => {
+    try {
+      const response = await axios.get("v2/cp/ip/languages");
+      if (response?.data?.success) {
+        setLanguageList(response?.data?.data);
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.forceLogout) {
+        router.push("/login");
+      } else {
+        toast.error(error?.response?.data?.error?.message || "Something Went Wrong");
+      }
+    }
   };
 
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [currentSelection, setCurrentSelection] = useState("Fertility");
+  useEffect(() => {
+    getLanguageList();
+  }, []);
 
-  const handleSelectItem = (item) => {
-    setCurrentSelection(item);
-    setOpen(false);
-    setSearchValue("");
+  const handleAddToList = (input, setInput, list, setList, field) => {
+    const trimmed = input.trim();
+    if (!trimmed || list.includes(trimmed)) return;
+    const newList = [...list, trimmed];
+    setList(newList);
+    setInput("");
+    setFormData((prev) => ({
+      ...prev,
+      [field]: newList.join(", "),
+    }));
+    setTouched((prev) => ({ ...prev, [field]: true }));
   };
 
-  const handleAddItem = () => {
-    if (currentSelection && !selectedItems.includes(currentSelection)) {
-      setSelectedItems((prev) => [...prev, currentSelection]);
+  const handleRemoveFromList = (indexToRemove, list, setList, field) => {
+    const newList = list.filter((_, index) => index !== indexToRemove);
+    setList(newList);
+    setFormData((prev) => ({
+      ...prev,
+      [field]: newList.join(", "),
+    }));
+  };
+
+  const handleInputChange = (e, field) => {
+    const value = e.target.value;
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  // Validation functions
+  const isYearsOfExperienceValid = () => /^\d+$/.test(formData.yearsOfExperience) && formData.yearsOfExperience !== "";
+  const isSpecializationValid = () => formData.specialization !== "";
+  const isWhatIDontTreatValid = () => formData.whatIDontTreat !== ""; // Valid if at least one item
+  const isWhatToExpectValid = () => formData.whatToExpectInSession !== "";
+  const isLanguageProficiencyValid = () => formData.languageProficiency !== "";
+
+  const isFormValid = () => {
+    return (
+      isYearsOfExperienceValid() &&
+      isSpecializationValid() &&
+      isWhatToExpectValid() &&
+      isLanguageProficiencyValid()
+    );
+  };
+
+  const handleSave = () => {
+    if (isFormValid()) {
+      localStorage.setItem("ip_general_information", JSON.stringify(formData));
+      router.push("/sales/ip_medical_association_details");
+    } else {
+      toast.error("Please fill all required fields correctly");
     }
   };
 
   return (
-    <div className="bg-gradient-to-t  from-[#fce8e5]  to-[#eeecfb]  h-full flex flex-col">
+    <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-full flex flex-col">
       <IP_Header text="Add Individual Practitioner Details" />
-      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3  bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
+      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
         {/* General Information */}
         <div className="bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
           <strong className="text-[16px] text-black font-semibold">
@@ -78,307 +148,238 @@ const IP_General_Information = () => {
 
           {/* Experience */}
           <div className="flex justify-between items-center">
-            <Label className="text-[14px] text-gray-500 mb-2 mt-[22px]">
+            <Label className="text-[14px] mb-2 mt-[22px] text-gray-500">
               Years of Experience *
             </Label>
             <div className="flex items-baseline gap-2">
               <Input
-                type="text"
+                type="number"
                 placeholder="10"
                 className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-gray-500 py-3 px-3 w-[46px] h-[38px]"
+                value={formData.yearsOfExperience}
+                onChange={(e) => handleInputChange(e, "yearsOfExperience")}
+                onBlur={() => handleBlur("yearsOfExperience")}
               />
-              <span className="text-[14px] text-gray-500 ">Years</span>
+              <span className="text-[14px] text-gray-500">Years</span>
             </div>
+            {touched.yearsOfExperience && !formData.yearsOfExperience && (
+              <span className="text-red-500 text-sm mt-1 block">Years of experience is required</span>
+            )}
+            {touched.yearsOfExperience && formData.yearsOfExperience && !isYearsOfExperienceValid() && (
+              <span className="text-red-500 text-sm mt-1 block">Must be a valid number</span>
+            )}
           </div>
 
           {/* Specialization selector */}
           <div className="w-full max-w-md mt-4">
-            <div className="relative">
-              <Label className="text-sm font-medium text-gray-500 mb-2">
+            <div>
+              <Label className={`text-sm font-medium mb-2 ${isYearsOfExperienceValid() ? "text-gray-500" : "text-[#00000040]"}`}>
                 Specialisation <span className="text-red-500">*</span>
               </Label>
-
-              <div className="flex gap-2">
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      className="flex-1 justify-between bg-white"
-                    >
-                      <span className="text-black text-sm font-semibold">
-                        {currentSelection}
-                      </span>
-                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-0" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0" align="start">
-                    <Command>
-                      <CommandInput
-                        placeholder="Search specialisation..."
-                        value={searchValue}
-                        onValueChange={setSearchValue}
-                      />
-                      <CommandList>
-                        <CommandEmpty>No specialisation found.</CommandEmpty>
-                        <CommandGroup>
-                          {filteredSpecializations.map((spec) => (
-                            <CommandItem
-                              key={spec}
-                              value={spec}
-                              onSelect={() => handleSelectItem(spec)}
-                            >
-                              {spec}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-
-                <Button
-                  onClick={handleAddItem}
-                  size="icon"
-                  variant="outline"
-                  className=" bg-transparent border-none absolute right-0"
-                >
-                  <CirclePlus size={20} className="w-5 h-5 text-gray-500" />
-                </Button>
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Fertility"
+                  className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-3 h-[38px] ${isYearsOfExperienceValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  value={specialisationInput}
+                  onChange={(e) => setSpecialisationInput(e.target.value)}
+                  disabled={!isYearsOfExperienceValid()}
+                />
+                <CirclePlus
+                  size={20}
+                  className={`w-5 h-5 absolute top-2 right-2 ${isYearsOfExperienceValid() ? "text-gray-500" : "text-[#00000040]"}`}
+                  onClick={() =>
+                    isYearsOfExperienceValid() &&
+                    handleAddToList(
+                      specialisationInput,
+                      setSpecialisationInput,
+                      specialisationList,
+                      setSpecialisationList,
+                      "specialization"
+                    )
+                  }
+                />
               </div>
-            </div>
-
-            {/* Selected tags */}
-            {selectedItems.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-2">
-                {selectedItems.map((item) => (
-                  <Badge
-                    key={item}
-                    variant="secondary"
-                    className="flex items-center gap-[2px] py-0 px-1 bg-white rounded-[5px] text-[14px] text-gray-500 hover:bg-gray-200"
+              <ul className="flex flex-wrap gap-[10px] mt-2">
+                {specialisationList.map((item, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center gap-[5px] py-0 px-1 bg-white rounded-[5px] text-[14px] text-gray-500 hover:bg-gray-200"
                   >
                     {item}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-[11px] h-[11px] hover:bg-transparent"
-                      onClick={() => handleRemoveItem(item)}
-                    >
-                      <X className="w-[11px] h-[11px] border border-gray-500 rounded-full Specialisation " />
-                    </Button>
-                  </Badge>
+                    <X
+                      className="w-[11px] h-[11px] text-[#776EA5] border border-[#776EA5] rounded-full"
+                      onClick={() =>
+                        handleRemoveFromList(
+                          index,
+                          specialisationList,
+                          setSpecialisationList,
+                          "specialization"
+                        )
+                      }
+                    />
+                  </li>
                 ))}
-              </div>
-            )}
-          </div>
+              </ul>
+              {touched.specialization && !formData.specialization && (
+                <span className="text-red-500 text-sm mt-1 block">At least one specialisation is required</span>
+              )}
+            </div>
 
-          {/* don't treat */}
-          <div className="w-full max-w-md mt-4">
-            <div className="relative">
-              <Label className="text-sm font-medium text-gray-500 mb-2">
-                What I don’t Treat <span className="text-red-500">*</span>
+            <div className="mt-[22px]">
+              <Label className={`text-sm font-medium mb-2 ${isSpecializationValid() ? "text-gray-500" : "text-[#00000040]"}`}>
+                What I don’t Treat
               </Label>
-
-              <div className="flex gap-2">
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      className="flex-1 justify-between bg-white"
-                    >
-                      <span className="text-black text-sm font-semibold">
-                        {currentSelection}
-                      </span>
-                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-0" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0" align="start">
-                    <Command>
-                      <CommandInput
-                        placeholder="Search specialisation..."
-                        value={searchValue}
-                        onValueChange={setSearchValue}
-                      />
-                      <CommandList>
-                        <CommandEmpty>No specialisation found.</CommandEmpty>
-                        <CommandGroup>
-                          {filteredSpecializations.map((spec) => (
-                            <CommandItem
-                              key={spec}
-                              value={spec}
-                              onSelect={() => handleSelectItem(spec)}
-                            >
-                              {spec}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-
-                <Button
-                  onClick={handleAddItem}
-                  size="icon"
-                  variant="outline"
-                  className=" bg-transparent border-none absolute right-0"
-                >
-                  <CirclePlus size={20} className="w-5 h-5 text-gray-500" />
-                </Button>
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Gambling"
+                  className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-3 h-[38px] ${isSpecializationValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  value={dontTreatInput}
+                  onChange={(e) => setDontTreatInput(e.target.value)}
+                  disabled={!isSpecializationValid()}
+                />
+                <CirclePlus
+                  size={20}
+                  className={`w-5 h-5 absolute top-2 right-2 ${isSpecializationValid() ? "text-gray-500" : "text-[#00000040]"}`}
+                  onClick={() =>
+                    isSpecializationValid() &&
+                    handleAddToList(
+                      dontTreatInput,
+                      setDontTreatInput,
+                      dontTreatList,
+                      setDontTreatList,
+                      "whatIDontTreat"
+                    )
+                  }
+                />
               </div>
-            </div>
-
-            {/* Selected tags */}
-            {selectedItems.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-2">
-                {selectedItems.map((item) => (
-                  <Badge
-                    key={item}
-                    variant="secondary"
-                    className="flex items-center gap-[2px] py-0 px-1 bg-white rounded-[5px] text-[14px] text-gray-500 hover:bg-gray-200"
+              <ul className="flex flex-wrap gap-[10px] mt-2">
+                {dontTreatList.map((item, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center gap-[5px] py-0 px-1 bg-white rounded-[5px] text-[14px] text-gray-500 hover:bg-gray-200"
                   >
                     {item}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-[11px] h-[11px] hover:bg-transparent"
-                      onClick={() => handleRemoveItem(item)}
-                    >
-                      <X className="w-[11px] h-[11px] border border-gray-500 rounded-full Specialisation " />
-                    </Button>
-                  </Badge>
+                    <X
+                      className="w-[11px] h-[11px] text-[#776EA5] border border-[#776EA5] rounded-full"
+                      onClick={() =>
+                        handleRemoveFromList(
+                          index,
+                          dontTreatList,
+                          setDontTreatList,
+                          "whatIDontTreat"
+                        )
+                      }
+                    />
+                  </li>
                 ))}
-              </div>
-            )}
+              </ul>
+            </div>
           </div>
 
           {/* textarea */}
           <div className="mt-4">
-            <Label className="text-sm font-medium text-gray-500 mb-2">
-              What to Expect in the Session *
+            <Label className={`text-sm font-medium mb-2 ${isWhatIDontTreatValid() ? "text-gray-500" : "text-[#00000040]"}`}>
+              What to Expect in the Session <span className="text-red-500">*</span>
             </Label>
             <Textarea
-              placeholder="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rem exercitationem harum id ab illum optio nisi nulla molestias assumenda recusandae, a facilis labore velit iste hic, eligendi animi nostrum nam"
-              className="bg-white text-[14px] text-gray-500"
+              placeholder="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rem exercitationem harum id ab illum optio nisi nulla molestias assumenda recusandae, a facilis labore velit ficam, eligendi animi nostrum nam"
+              className={`text-[14px] text-black font-semibold ${isWhatIDontTreatValid() ? "bg-white" : "bg-[#ffffff10] text-[#00000040]"}`}
+              value={formData.whatToExpectInSession}
+              onChange={(e) => handleInputChange(e, "whatToExpectInSession")}
+              onBlur={() => handleBlur("whatToExpectInSession")}
+              disabled={!isWhatIDontTreatValid()}
             />
+            {touched.whatToExpectInSession && !formData.whatToExpectInSession && (
+              <span className="text-red-500 text-sm mt-1 block">Session expectations are required</span>
+            )}
           </div>
 
           {/* select language */}
-          {/* don't treat */}
           <div className="w-full max-w-md mt-4">
-            <div className="relative">
-              <Label className="text-sm font-medium text-gray-500 mb-2">
-                Language Proficiency * <span className="text-red-500">*</span>
+            <div className="mt-[22px]">
+              <Label className={`text-sm font-medium mb-2 ${isWhatToExpectValid() ? "text-gray-500" : "text-[#00000040]"}`}>
+                Language Proficiency <span className="text-red-500">*</span>
               </Label>
-
-              <div className="flex gap-2">
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      className="flex-1 justify-between bg-white"
-                    >
-                      <span className="text-black text-sm font-semibold">
-                        {currentSelection}
-                      </span>
-                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-0" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0" align="start">
-                    <Command>
-                      <CommandInput
-                        placeholder="Search specialisation..."
-                        value={searchValue}
-                        onValueChange={setSearchValue}
-                      />
-                      <CommandList>
-                        <CommandEmpty>No specialisation found.</CommandEmpty>
-                        <CommandGroup>
-                          {filteredSpecializations.map((spec) => (
-                            <CommandItem
-                              key={spec}
-                              value={spec}
-                              onSelect={() => handleSelectItem(spec)}
-                            >
-                              {spec}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-
-                <Button
-                  onClick={handleAddItem}
-                  size="icon"
-                  variant="outline"
-                  className=" bg-transparent border-none absolute right-0"
-                >
-                  <CirclePlus size={20} className="w-5 h-5 text-gray-500" />
-                </Button>
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Telugu"
+                  className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-3 h-[38px] ${isWhatToExpectValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  value={languageInput}
+                  onChange={(e) => setLanguageInput(e.target.value)}
+                  disabled={!isWhatToExpectValid()}
+                />
+                <CirclePlus
+                  size={20}
+                  className={`w-5 h-5 absolute top-2 right-2 ${isWhatToExpectValid() ? "text-gray-500" : "text-[#00000040]"}`}
+                  onClick={() =>
+                    isWhatToExpectValid() &&
+                    handleAddToList(
+                      languageInput,
+                      setLanguageInput,
+                      languageListFinal,
+                      setLanguageListFinal,
+                      "languageProficiency"
+                    )
+                  }
+                />
               </div>
-            </div>
-
-            {/* Selected tags */}
-            {selectedItems.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-2">
-                {selectedItems.map((item) => (
-                  <Badge
-                    key={item}
-                    variant="secondary"
-                    className="flex items-center gap-[2px] py-0 px-1 bg-white rounded-[5px] text-[14px] text-gray-500 hover:bg-gray-200"
+              <ul className="flex flex-wrap gap-[10px] mt-2">
+                {languageListFinal.map((item, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center gap-[5px] py-0 px-1 bg-white rounded-[5px] text-[14px] text-gray-500 hover:bg-gray-200"
                   >
                     {item}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-[11px] h-[11px] hover:bg-transparent"
-                      onClick={() => handleRemoveItem(item)}
-                    >
-                      <X className="w-[11px] h-[11px] border border-gray-500 rounded-full Specialisation " />
-                    </Button>
-                  </Badge>
+                    <X
+                      className="w-[11px] h-[11px] text-[#776EA5] border border-[#776EA5] rounded-full"
+                      onClick={() =>
+                        handleRemoveFromList(
+                          index,
+                          languageListFinal,
+                          setLanguageListFinal,
+                          "languageProficiency"
+                        )
+                      }
+                    />
+                  </li>
                 ))}
-              </div>
-            )}
+              </ul>
+              {touched.languageProficiency && !formData.languageProficiency && (
+                <span className="text-red-500 text-sm mt-1 block">At least one language is required</span>
+              )}
+            </div>
             <div className="">
               <Label
                 htmlFor="text"
-                className="text-[14px] text-gray-500 font-medium mb-2 mt-[22px]"
+                className="text-[14px] font-medium mb-2 mt-[22px] text-gray-500"
               >
                 Suggested Languages
               </Label>
-              <div className="flex gap-2 items-center">
-                <Button className="bg-[#776EA5] rounded-[5px] h-6 flex itmes-center text-sm font-medium px-0">
-                  Kannada
-                  <CirclePlus
-                    size={11}
-                    className="w-[11px] h-[11px] text-white suggested_anguages ml-[-4px]"
-                  />
-                </Button>
-                <Button className="bg-[#776EA5] rounded-[5px] h-6 flex itmes-center text-sm font-medium px-0">
-                  Konkani
-                  <CirclePlus
-                    size={11}
-                    className="w-[11px] h-[11px] text-white suggested_anguages ml-[-4px]"
-                  />
-                </Button>
-                <Button
-                  className="bg-[#776EA5] rounded-[5px] h-6 flex itmes-center text-sm font-medium"
-                  px-0
-                >
-                  Tamil
-                  <CirclePlus
-                    size={11}
-                    className="w-[11px] h-[11px] text-white suggested_anguages ml-[-4px]"
-                  />
-                </Button>
+              <div className="flex gap-2 flex-wrap items-center">
+                {languageList?.map((language, index) => (
+                  <Button
+                    key={index}
+                    className="bg-[#776EA5] rounded-[5px] h-6 flex items-center text-sm font-medium px-0"
+                    onClick={() =>
+                      handleAddToList(
+                        language,
+                        setLanguageInput,
+                        languageListFinal,
+                        setLanguageListFinal,
+                        "languageProficiency"
+                      )
+                    }
+                  >
+                    {language}
+                    <CirclePlus
+                      size={11}
+                      className="w-[11px] h-[11px] text-white suggested_languages ml-[-4px]"
+                    />
+                  </Button>
+                ))}
               </div>
             </div>
           </div>
@@ -392,7 +393,7 @@ const IP_General_Information = () => {
           <div className="mt-5">
             <Label
               htmlFor="text"
-              className="text-[14px] text-gray-500 font-medium mb-2"
+              className="text-[14px] font-medium mb-2 text-gray-500"
             >
               Address
             </Label>
@@ -400,12 +401,14 @@ const IP_General_Information = () => {
               type="text"
               placeholder="Type Full Address"
               className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
+              value={formData.address}
+              onChange={(e) => handleInputChange(e, "address")}
             />
           </div>
           <div className="mt-5">
             <Label
               htmlFor="text"
-              className="text-[14px] text-gray-500 font-medium mb-2"
+              className="text-[14px] font-medium mb-2 text-gray-500"
             >
               Add Google Maps
             </Label>
@@ -413,12 +416,14 @@ const IP_General_Information = () => {
               type="text"
               placeholder="Add Google Maps Link"
               className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
+              value={formData.googleMapAddress}
+              onChange={(e) => handleInputChange(e, "googleMapAddress")}
             />
           </div>
         </div>
 
         {/* Button footer */}
-        <IP_Buttons />
+        <IP_Buttons disabled={!isFormValid()} onSave={handleSave} buttonText="Save & Continue" />
       </div>
     </div>
   );

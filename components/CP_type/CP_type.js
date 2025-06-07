@@ -120,7 +120,7 @@ const CP_type = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message || "Failed碟to add new type");
+        toast.error(error?.response?.data?.error?.message || "Failed to add new channel partner type");
         throw error;
       }
     }

@@ -24,7 +24,6 @@ import { Button } from "../ui/button";
 import { isMobile } from "react-device-detect";
 import IP_Buttons from "../IP_Buttons/IP_Buttons";
 import IP_Header from "../IP_Header/IP_Header";
-import { getCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Select from "react-select";
@@ -36,7 +35,7 @@ const IP_Details = () => {
   const router = useRouter();
   const axios = axiosInstance();
   const [formData, setFormData] = useState({
-    profileImageUrl: "",
+    profileImageBase64: "", // Store base64 string instead of URL
     title: "Dr.",
     firstName: "",
     lastName: "",
@@ -94,9 +93,19 @@ const IP_Details = () => {
     }
   };
 
-  // Load form data from cookie on component mount
+  // Convert file to base64
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Load form data from localStorage on component mount
   useEffect(() => {
-    const savedData = getCookie("ip_details");
+    const savedData = localStorage.getItem("ip_details");
     if (savedData) {
       try {
         const parsedData = JSON.parse(savedData);
@@ -109,12 +118,18 @@ const IP_Details = () => {
             break;
           }
         }
-        parsedData.firstName = rawFirstName;
         setFormData({
-          ...parsedData,
+          profileImageBase64: parsedData.profileImageBase64 || "",
+          title: parsedData.title || "Dr.",
+          firstName: rawFirstName || "",
+          lastName: parsedData.lastName || "",
+          email: parsedData.email || "",
           countryCode_primary: parsedData.countryCode_primary || "🇮🇳 +91",
+          primaryMobileNumber: parsedData.primaryMobileNumber || "",
           countryCode_whatsapp: parsedData.countryCode_whatsapp || "🇮🇳 +91",
+          whatsappNumber: parsedData.whatsappNumber || "",
           countryCode_emergency: parsedData.countryCode_emergency || "🇮🇳 +91",
+          emergencyNumber: parsedData.emergencyNumber || "",
         });
         if (parsedData.primaryMobileNumber === parsedData.whatsappNumber) {
           setSameAsMobile(true);
@@ -129,27 +144,29 @@ const IP_Details = () => {
           emergencyNumber: !!parsedData.emergencyNumber,
         });
       } catch (error) {
-        console.error("Error parsing ip_details cookie:", error);
+        console.error("Error parsing ip_details from localStorage:", error);
       }
     }
     getCountryList();
   }, [countrySearch]);
 
   // Handle file selection for photo upload or capture
-  const handlePhotoUpload = (event) => {
+  const handlePhotoUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setFormData((prev) => ({ ...prev, profileImageUrl: imageUrl }));
+      try {
+        const base64 = await fileToBase64(file);
+        setFormData((prev) => ({ ...prev, profileImageBase64: base64 }));
+      } catch (error) {
+        console.error("Error converting file to base64:", error);
+        toast.error("Failed to upload profile image");
+      }
     }
   };
 
   // Handle photo deletion
   const handlePhotoDelete = () => {
-    setFormData((prev) => ({ ...prev, profileImageUrl: "" }));
-    if (formData.profileImageUrl) {
-      URL.revokeObjectURL(formData.profileImageUrl);
-    }
+    setFormData((prev) => ({ ...prev, profileImageBase64: "" }));
   };
 
   // Trigger camera input
@@ -198,16 +215,21 @@ const IP_Details = () => {
   };
 
   // Handle save and continue
-  const handleSave = () => {
+  const handleSave = async () => {
     if (isFormValid()) {
-      const saveData = {
-        ...formData,
-        firstName: formData.title
-          ? `${formData.title} ${formData.firstName}`
-          : formData.firstName,
-      };
-      setCookie("ip_details", saveData);
-      router.push("/sales/ip_general_information");
+      try {
+        const saveData = {
+          ...formData,
+          firstName: formData.title
+            ? `${formData.title} ${formData.firstName}`
+            : formData.firstName,
+        };
+        localStorage.setItem("ip_details", JSON.stringify(saveData));
+        router.push("/sales/ip_general_information");
+      } catch (error) {
+        console.error("Error saving data:", error);
+        toast.error("Failed to save details");
+      }
     } else {
       setTouched({
         title: true,
@@ -236,7 +258,7 @@ const IP_Details = () => {
       <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
         <div className="flex justify-center w-[140.8px] h-fit rounded-[17.63px] mx-auto relative mb-6">
           <Image
-            src={formData.profileImageUrl || "/images/profile.png"}
+            src={formData.profileImageBase64 || "/images/profile.png"}
             width={100}
             height={90}
             className="w-full h-fit object-cover"

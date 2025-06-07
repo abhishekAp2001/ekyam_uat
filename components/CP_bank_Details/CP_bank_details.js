@@ -93,7 +93,7 @@ const CP_bank_details = () => {
   };
 
   useEffect(() => {
-    if (formData.ifscCode.length === 11 && isIfscValid(formData.ifscCode)) {
+    if (formData?.ifscCode?.length === 11 && isIfscValid(formData.ifscCode)) {
       fetchBankDetailsByIfsc();
     } else {
       setFormData((prev) => ({ ...prev, bankName: "" }));
