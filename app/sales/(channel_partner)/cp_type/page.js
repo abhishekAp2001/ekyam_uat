@@ -1,5 +1,7 @@
-import CP_type from '@/components/CP_type/CP_type'
+'use client'
+import dynamic from 'next/dynamic'
 import React from 'react'
+const CP_type = dynamic(() => import('@/components/CP_type/CP_type'),{ssr: false})
 
 const page = () => {
   return (

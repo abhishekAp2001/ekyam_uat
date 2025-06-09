@@ -1,17 +1,41 @@
+"use client";
 import { ChevronLeft } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
 const CP_Header = () => {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const handleBack = () => {
+    if (pathname === "/sales/cp_type") {
+      router.push("/sales");
+    } else if (pathname === "/sales/cp_clinic_details") {
+      router.push("/sales/cp_type");
+    } else if (pathname === "/sales/cp_doctor_details") {
+      router.push("/sales/cp_clinic_details");
+    } else if (pathname === "/sales/cp_billing_details") {
+      router.push("/sales/cp_doctor_details");
+    } else if (pathname === "/sales/cp_bank_details") {
+      router.push("/sales/cp_billing_details");
+    }
+  };
   return (
     <>
-    <div  className="">
-      <div className="flex items-center p-4 gap-[9px]">
-        <ChevronLeft size={24} className=" text-black-700" />
-        <div className="flex-1 text-[14px] font-semibold text-gray-800">
-          Add Channel Partner Details
+      <div className="">
+        <div className="flex items-center p-4 gap-[9px]">
+          <ChevronLeft
+            size={24}
+            className=" text-black-700"
+            onClick={() => {
+              handleBack();
+            }}
+          />
+          <div className="flex-1 text-[14px] font-semibold text-gray-800">
+            Add Channel Partner Details
+          </div>
+          <div className="h-6 w-6" /> {/* Space */}
         </div>
-        <div className="h-6 w-6" /> {/* Space */}
-      </div>
       </div>
     </>
   );
