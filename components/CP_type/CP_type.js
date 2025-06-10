@@ -20,7 +20,6 @@ const CP_type = () => {
 
   const [search, setSearch] = useState("");
   const [formData, setFormData] = useState({
-    type: "",
     clinicName: "",
     userName: "",
     email: "",

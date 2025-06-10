@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
 import axiosInstance from "@/lib/axiosInstance";
 import { Loader2Icon } from "lucide-react";
+import axios from "axios";
 
 const OTP_Send = ({ type }) => {
   const [selectedMethod, setSelectedMethod] = useState("email");
@@ -26,14 +27,14 @@ const OTP_Send = ({ type }) => {
   const [isLoading, setLoading] = useState(false);
   const [channelPartnerData, setChannelPartnerData] = useState(null);
   const router = useRouter();
-  const axios = axiosInstance();
+  const customAxios = axiosInstance();
 
   const sendOtp = async () => {
     if (isLoading) return;
     setLoading(true);
     try {
       if (selectedMethod === "mobile") {
-        if (await verifyMobile()) {
+        if (await sendMobileOtp()) {
           setOtpSendStatus(true);
           setResendTimer(120);
           setIsResendDisabled(true);
@@ -41,17 +42,7 @@ const OTP_Send = ({ type }) => {
           showSuccessToast(`OTP sent to your verified mobile number.`);
         }
       } else {
-        // Email OTP logic (API call)
-        // const response = await fetch("/api/send-otp", {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify({ type: "email" }),
-        // });
-
-        // if (!response.ok) {
-        //   throw new Error("Failed to send OTP");
-        // }
-        if (await verifyEmail()) {
+        if (await sendEmailOtp()) {
           setOtpSendStatus(true);
           setResendTimer(120);
           setIsResendDisabled(true);
@@ -66,35 +57,38 @@ const OTP_Send = ({ type }) => {
     }
   };
 
+  function redirectAfterOtpValidate(type) {
+    showSuccessToast("OTP verified successfully!");
+    setTimeout(() => {
+      router.push(`/channel-partner/${type}/verified_successfully`);
+    }, 100);
+  }
   const verifyOtp = async () => {
     if (otp.length !== 6) {
-      showToast("Please enter a valid 6-digit OTP", "error");
+      showErrorToast("Please enter a valid 6-digit OTP");
       return;
     }
 
     setLoading(true);
     try {
       if (selectedMethod === "mobile") {
-
-      }else if (selectedMethod === "email") {
-
+        if (await validateMobileOtp(otp)) {
+          redirectAfterOtpValidate(type);
+          return;
+        } else {
+          // showErrorToast("Invalid OTP. Please try again.");
+          return;
+        }
+      } else if (selectedMethod === "email") {
+        if (await validateEmailOtp(otp)) {
+          redirectAfterOtpValidate(type);
+        } else {
+          // showErrorToast("Invalid OTP. Please try again.");
+          return;
+        }
       }
-      // const response = await fetch("/api/verify-otp", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ otp, type: selectedMethod }),
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error("Invalid OTP");
-      // }
-
-      showSuccessToast("OTP verified successfully!");
-      setTimeout(() => {
-        router.push("/channel-partner/cloudnine/verified_successfully");
-      }, 1000);
     } catch (error) {
-      showErrorToast("Invalid OTP. Please try again.", "error");
+      showErrorToast("Invalid OTP. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -114,26 +108,25 @@ const OTP_Send = ({ type }) => {
     setIsResendDisabled(false);
   };
 
-  const verifyMobile = async () => {
+  const sendEmailOtp = async () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`v2/cp/mobile/verify`, {
-        channelPartnerUsername: type,
-        mobileNumber: channelPartnerData?.primaryMobileNumber,
-        countryCode: channelPartnerData?.countryCode_primary,
-        type: "createProfile",
+      const response = await customAxios.post(`v2/cp/email/otpGenerate`, {
+        email: channelPartnerData?.email,
+        verificationToken: channelPartnerData?.verificationToken,
+        type: "firstTimeSignupOTP",
       });
 
       if (response?.data?.success === true) {
         return true;
       } else {
-        showErrorToast(response?.data?.error?.message || "Verification failed");
+        showErrorToast(response?.data?.error?.message || "Otp Not Sent.");
       }
     } catch (err) {
       showErrorToast(
         err?.response?.data?.error?.message ||
-          "An error occurred while verifying"
+          "An error occurred while sending."
       );
     } finally {
       setLoading(false);
@@ -141,20 +134,112 @@ const OTP_Send = ({ type }) => {
     return false;
   };
 
-  const verifyEmail = async () => {
+  const sendMobileOtp = async () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`v2/cp/email/verify`, {
-        channelPartnerUsername: type,
+      const apiUrl = "http://india.smscloudhub.com/generateOtp.jsp";
+      const mobileNumber =
+        channelPartnerData.primaryMobileNumber?.trim() || null;
+      let countryCode = "+91";
+      if (channelPartnerData.countryCode_primary) {
+        const countryCodeParts =
+          channelPartnerData.countryCode_primary.split("+");
+        if (countryCodeParts.length > 1 && countryCodeParts[1]) {
+          countryCode = `+${countryCodeParts[1].trim()}`;
+        } else {
+          console.warn(
+            `Invalid country code format: ${channelPartnerData.countryCode_primary}. Falling back to ${defaultCountryCode}`
+          );
+        }
+      }
+      const params = {
+        userid: "Radicle",
+        key: "7f0853aec2XX", // Note: In production, store this in .env
+        mobileno: `${countryCode}${mobileNumber}`,
+        timetoalive: 200,
+        message:
+          "Your Ekyamm registration verification code is {otp}. Please enter this code on your app to complete your registration.",
+        senderid: "EKYAMM",
+        accusage: 1,
+        entityid: "1701171698144140417",
+        tempid: "1707171767456458609",
+      };
+      const result = await axios.get(apiUrl, { params });
+
+      if (result.data.result === "success") {
+        return true;
+      } else {
+        showErrorToast(`Failed to generate OTP`);
+      }
+    } catch (err) {
+      showErrorToast(
+        err.response?.data?.reason || "An error occurred while generating OTP"
+      );
+    } finally {
+      setLoading(false);
+    }
+    return false;
+  };
+
+  const validateMobileOtp = async (otp) => {
+    setLoading(true);
+
+    try {
+      const apiUrl = "http://india.smscloudhub.com/validateOtpApi.jsp";
+
+      const mobileNumber =
+        channelPartnerData.primaryMobileNumber?.trim() || null;
+      let countryCode = "+91";
+      if (channelPartnerData.countryCode_primary) {
+        const countryCodeParts =
+          channelPartnerData.countryCode_primary.split("+");
+        if (countryCodeParts.length > 1 && countryCodeParts[1]) {
+          countryCode = `+${countryCodeParts[1].trim()}`;
+        } else {
+          console.warn(
+            `Invalid country code format: ${channelPartnerData.countryCode_primary}. Falling back to ${defaultCountryCode}`
+          );
+        }
+      }
+
+      const params = {
+        mobileno: `${countryCode}${mobileNumber}`,
+        otp: otp,
+      };
+
+      const result = await axios.get(apiUrl, { params });
+      if (result.data.result === "success") {
+        return true;
+      } else {
+        console.log(result);
+        showErrorToast("Invalid Otp");
+      }
+      return false;
+    } catch (err) {
+      showErrorToast(
+        err.response?.data?.reason || "An error occurred while generating OTP"
+      );
+    } finally {
+      setLoading(false);
+    }
+    return false;
+  };
+
+  const validateEmailOtp = async (otp) => {
+    setLoading(true);
+
+    try {
+      const response = await customAxios.post(`v2/cp/email/otpValidate`, {
         email: channelPartnerData?.email,
-        type: "createProfile",
+        otp: otp,
       });
 
       if (response?.data?.success === true) {
+        // showErrorToast("Verified successfully");
         return true;
       } else {
-        showErrorToast(response?.data?.error?.message || "Verification failed");
+        showErrorToast(response?.data?.error?.message || "Invalid otp");
       }
     } catch (err) {
       showErrorToast(
@@ -302,12 +387,11 @@ const OTP_Send = ({ type }) => {
                   <></>
                 )}
                 <Button
-                  type="button"
                   onClick={otpSendStatus ? verifyOtp : sendOtp}
                   disabled={
                     isLoading || (otpSendStatus && isResendDisabled && !otp)
                   }
-                  className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white border py-[14.5px] rounded-[8px] flex items-center justify-center w-full h-[45px] mt-[15px]"
+                  className="cursor-pointer bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white border py-[14.5px] rounded-[8px] flex items-center justify-center w-full h-[45px] mt-[15px]"
                 >
                   {isLoading ? (
                     <Loader2Icon className="animate-spin" />
