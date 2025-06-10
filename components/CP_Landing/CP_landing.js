@@ -1,17 +1,55 @@
-"use client"
-import React from "react";
-import { Button } from "@/components/ui/button";;
+"use client";
+import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import axiosInstance from "@/lib/axiosInstance";
+import { showErrorToast } from "@/lib/toast";
+import { getCookie, setCookie } from "cookies-next";
 
-const CP_landing = ({type}) =>  {
+const CP_landing = ({ type }) => {
+  const [channelPartnerData, setChannelPartnerData] = useState(null);
+  const [loading, setLoading] = useState(null);
+  const [error, setError] = useState(null);
+  const axios = axiosInstance();
+
+  useEffect(() => {
+    const verifyChannelPartner = async (username) => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await axios.post(`v2/cp/channelPartner/verify`, {
+          username: type,
+        });
+
+        if (response?.data?.success === true) {
+          setCookie("channelPartnerData", JSON.stringify(response.data.data));
+          setChannelPartnerData(response.data.data);
+        } else {
+          showErrorToast(
+            response?.data?.error?.message || "Verification failed"
+          );
+        }
+      } catch (err) {
+        console.log(err);
+        showErrorToast(
+          err?.response?.data?.error?.message ||
+            "An error occurred while verifying"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    verifyChannelPartner(type); // Replace 'apollo' with dynamic username if needed
+  }, [type]);
   return (
     <>
       <div className="bg-white h-screen">
         <div className="flex flex-col items-center h-full text-center">
           <div className="">
             <h1 className="text-[32px] text-[#776EA5] font-semibold mt-[30%]">
-              Cloudnine Hospital
+              {channelPartnerData?.clinicName || "Greetings Hospital"} 
             </h1>
             <div className="flex justify-center items-center gap-[2px]">
               <Image
@@ -22,7 +60,7 @@ const CP_landing = ({type}) =>  {
                 alt="location"
               />
               <span className="text-sm text-[#776EA5] font-medium">
-                Pimple Saudagar
+                {channelPartnerData?.area} 
               </span>
             </div>
           </div>

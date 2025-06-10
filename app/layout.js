@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
         className={`${quicksand.variable} bg-gradient-to-t from-[#eeecfb] to-[#fce8e5] md:bg-black md:bg-none md:from-transparent md:to-transparent antialiased max-w-[480px] mx-auto h-screen`}
       >
         {children}
-        <ToastContainer position="top-center" />
+        <ToastContainer position="bottom-center" closeButton={false}/>
       </body>
     </html>
   );

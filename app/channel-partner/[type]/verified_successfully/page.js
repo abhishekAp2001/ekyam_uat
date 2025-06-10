@@ -1,12 +1,14 @@
-import Verified_Successfully from '@/components/Verified_Successfully/Verified_Successfully'
-import React from 'react'
+import Verified_Successfully from "@/components/Verified_Successfully/Verified_Successfully";
+import React from "react";
 
-const page = () => {
+const page = async ({ params }) => {
+  const { type } = await params;
+
   return (
     <>
-    <Verified_Successfully/>
+      <Verified_Successfully type={type}/>
     </>
-  )
-}
+  );
+};
 
-export default page
+export default page;

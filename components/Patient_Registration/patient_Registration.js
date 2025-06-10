@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
@@ -7,29 +7,135 @@ import { Button } from "../ui/button";
 import PR_Header from "../PR_Header/PR_Header";
 import Footer_bar from "../Footer_bar/Footer_bar";
 import Link from "next/link";
+import { getCookie, setCookie } from "cookies-next";
+import Select from "react-select";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import axiosInstance from "@/lib/axiosInstance";
+import { useRouter } from "next/navigation";
+import { Loader2Icon } from "lucide-react";
+import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+polyfillCountryFlagEmojis()
 
-const Patient_Registration = ({type}) => {
-  const [mobile, setMobile] = useState("");
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState({
-    code: "+91",
-    name: "India",
-    flag: "/images/india.png",
+const Patient_Registration = ({ type }) => {
+  const axios = axiosInstance();
+  const router = useRouter();
+  const [channelPartnerData, setChannelPartnerData] = useState(null);
+  const [countryList, setCountryList] = useState([]);
+  const [countrySearch, setCountrySearch] = useState("");
+  const [loading, setLoading] = useState("");
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    primaryMobileNumber: "",
+    countryCode_primary: "🇮🇳 +91",
+    sessionCreditCount: "",
+    sessionPrice: "",
   });
 
-  const countries = [
-    { code: "+91", name: "India", flag: "/images/india.png" },
-    { code: "+1", name: "USA", flag: "/images/usa.png" },
-    { code: "+44", name: "UK", flag: "/images/uk.png" },
-    { code: "+61", name: "Australia", flag: "/images/aus.png" },
-  ];
+  const [touched, setTouched] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    primaryMobileNumber: false,
+    countryCode_primary: false,
+  });
 
-  const handleInputChange = (e) => {
-    const digitsOnly = e.target.value.replace(/\D/g, "");
-    if (digitsOnly.length <= 10) {
-      setMobile(digitsOnly);
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const isEmailValid = (email) => /\S+@\S+\.\S+/.test(email);
+  const isMobileValid = (mobile) => /^\d{10}$/.test(mobile);
+  const isFormValid = () => {
+    return (
+      formData.firstName &&
+      formData.lastName &&
+      formData.countryCode_primary &&
+      isEmailValid(formData.email) &&
+      isMobileValid(formData.primaryMobileNumber)
+    );
+  };
+
+  const countryOptions = useMemo(
+    () =>
+      countryList.map((country) => ({
+        value: `${country.flag} ${country.code}`,
+        label: `${country.flag} ${country.code}`,
+        name: country.name,
+      })),
+    [countryList]
+  );
+
+  const getCountryList = async () => {
+    try {
+      const response = await axios.get(`v2/country?search=${countrySearch}`);
+      if (response?.data?.success === true) {
+        setCountryList(response?.data?.data);
+      }
+    } catch (error) {
+      console.log("error", error);
+      if (error.forceLogout) {
+        router.push("/login");
+      } else {
+        showErrorToast(
+          error?.response?.data?.error?.message || "Something Went Wrong"
+        );
+      }
     }
   };
+
+  const handlePatientHistoryClick = async () => {
+    setLoading(true);
+    if (!type) {
+      showErrorToast("Username must be provided.");
+    }
+
+    try {
+      const response = await axios.post(`v2/cp/patient/invite`, {
+        channelPartnerUsername: type,
+        patientDetails: formData,
+      });
+
+      if (response?.data?.success === true) {
+        setCookie("invitePatientInfo", JSON.stringify(response?.data?.data?.patient));
+        showSuccessToast("Patient added.");
+        router.push(`/channel-partner/${type}/patient-history`);
+      } else {
+        showErrorToast(
+          response?.data?.error?.message || "Something went wrong."
+        );
+      }
+    } catch (err) {
+      console.log(err);
+      showErrorToast(
+        err?.response?.data?.error?.message ||
+          "An error occurred while inviting"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getCountryList();
+  }, []);
+
+  useEffect(() => {
+    const cookieData = getCookie("channelPartnerData");
+    if (cookieData) {
+      try {
+        const parsedData = JSON.parse(cookieData);
+        setChannelPartnerData(parsedData);
+      } catch (error) {
+        setChannelPartnerData(null);
+      }
+    } else {
+      setChannelPartnerData(null);
+      router.push(`/channel-partner/${type}`);
+    }
+  }, [type]);
 
   return (
     <>
@@ -37,7 +143,7 @@ const Patient_Registration = ({type}) => {
         <PR_Header />
         <div className="h-full overflow-auto px-[17px] mt-[22px]">
           <div className="w-full h-[25px] text-[#776EA5] font-semibold text-[20px] leading-[25px] mb-6 text-center">
-            Cloudnine Hospital
+            {channelPartnerData?.clinicName || "Greetings Hospital"}
           </div>
           <div className="bg-[#FFFFFFB2] rounded-[12px] p-5 mt-[45px] relative">
             <div>
@@ -46,21 +152,42 @@ const Patient_Registration = ({type}) => {
               </Label>
               <Input
                 type="text"
+                value={formData.firstName}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
+                onBlur={() => handleBlur("firstName")}
                 placeholder="Enter First Name"
                 className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
               />
             </div>
+            {touched.firstName && !formData.firstName && (
+              <span className="text-red-500 text-sm mt-1 block">
+                First name is required
+              </span>
+            )}
             <div>
               <Label className="text-[14px] text-gray-500 font-medium mb-2 mt-[22px]">
                 Last Name <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
+                  disabled={!formData.firstName}
+                  value={formData.lastName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, lastName: e.target.value })
+                  }
+                  onBlur={() => handleBlur("lastName")}
                   type="text"
                   placeholder="Enter Last Name"
                   className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
                 />
               </div>
+              {touched.lastName && !formData.lastName && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  Last name is required
+                </span>
+              )}
             </div>
 
             <div>
@@ -68,10 +195,21 @@ const Patient_Registration = ({type}) => {
                 Email Address
               </Label>
               <Input
+                disabled={!formData.lastName}
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                onBlur={() => handleBlur("email")}
                 type="text"
                 placeholder="Enter Email Address"
                 className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
               />
+              {touched.email && !formData.email && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  Email is required
+                </span>
+              )}
             </div>
 
             <div>
@@ -80,85 +218,103 @@ const Patient_Registration = ({type}) => {
               </Label>
               <div className="flex items-center gap-2 relative">
                 {/* Custom Country Dropdown */}
-                <div className="relative w-[121px]">
-                  <div
-                    onClick={() => setOpen(!open)}
-                    className="flex items-center justify-between pl-2 pr-2 py-2 bg-white border border-gray-300 rounded-[7.26px] h-[38px] cursor-pointer w-full"
-                  >
-                    <div className="flex items-center gap-[6px]">
-                      <Image
-                        src={selected.flag}
-                        alt={selected.name}
-                        width={16}
-                        height={16}
-                        className="w-[16px] h-[16px] object-cover"
-                      />
-                      <span className="font-semibold text-[16px] leading-[100%]">
-                        {selected.code}
-                      </span>
-                    </div>
-                    <Image
-                      src="/images/arrow.png"
-                      alt="dropdown"
-                      width={12}
-                      height={13}
-                      className="w-[12.53px] h-[13px] rotate-90 ml-[2px]"
-                    />
-                  </div>
-
-                  {open && (
-                    <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-[7.26px] shadow-md">
-                      {countries.map((item) => (
-                        <li
-                          key={item.code}
-                          onClick={() => {
-                            setSelected(item);
-                            setOpen(false);
-                          }}
-                          className="flex items-center gap-2 px-2 py-2 cursor-pointer hover:bg-gray-100"
-                        >
-                          <Image
-                            src={item.flag}
-                            alt={item.name}
-                            width={16}
-                            height={16}
-                            className="w-[16px] h-[16px] object-cover"
-                          />
-                          <span className="font-semibold text-[16px] leading-[100%]">
-                            {item.code}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                <Select
+                  options={countryOptions}
+                  value={countryOptions.find(
+                    (option) => option.value === formData.countryCode_primary
                   )}
-                </div>
+                  onChange={(selectedOption) => {
+                    const newCountryCode = selectedOption
+                      ? selectedOption.value
+                      : "🇮🇳 +91";
+                    setFormData((prev) => ({
+                      ...prev,
+                      countryCode_primary: newCountryCode,
+                    }));
+                    setTouched((prev) => ({
+                      ...prev,
+                      countryCode_primary: true,
+                    }));
+                  }}
+                  isDisabled={!isEmailValid(formData.email)}
+                  className="w-[100px]"
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      borderRadius: "7.26px 0 0 7.26px",
+                      borderRightWidth: 0,
+                      height: "39px",
+                      minHeight: "39px",
+                      width: "max-content",
+                    }),
+                    menu: (base) => ({ ...base, width: "200px" }),
+                  }}
+                  formatOptionLabel={(option, { context }) =>
+                    context === "menu"
+                      ? `${option.label} - ${option.name}`
+                      : option.label
+                  }
+                  menuPlacement="top"
+                />
 
-                <input
+                <Input
                   type="text"
-                  value={mobile}
-                  onChange={handleInputChange}
+                  value={formData.primaryMobileNumber}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      primaryMobileNumber: e.target.value,
+                    })
+                  }
+                  onBlur={() => handleBlur("primaryMobileNumber")}
+                  disabled={!isEmailValid(formData.email)}
                   placeholder="Enter Mobile Number"
                   className="bg-white border border-gray-300 rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-2 px-4 h-[38px] w-full"
                 />
               </div>
+              {touched.primaryMobileNumber &&
+                formData.primaryMobileNumber &&
+                !isMobileValid(formData.primaryMobileNumber) && (
+                  <span className="text-red-500 text-sm mt-1 block">
+                    Must be 10 digits
+                  </span>
+                )}
+              {touched.primaryMobileNumber && !formData.primaryMobileNumber && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  Mobile number is required
+                </span>
+              )}
             </div>
           </div>
 
           <div className="flex justify-center items-center gap-[18px] mt-[25px] px-1 ml-[31px] mr-[31px]">
             <Button className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px]">
-               <Link href={`/channel-partner/${type}/existing-patient`} className="text-[14px] ">
-                Existing Patient 
+              <Link
+                disabled={loading}
+                href={`/channel-partner/${type}/existing-patient`}
+                className="text-[14px] "
+              >
+                Existing Patient
               </Link>
             </Button>
-            <Button className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px] opacity-30">
-                <Link href={`/channel-partner/${type}/patient-history`} className="text-[14px] ">
-                + Patient History
-              </Link> 
+            <Button
+              disabled={!isFormValid() || loading}
+              type="button"
+              className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px] "
+              onClick={handlePatientHistoryClick}
+            >
+              {/* <Link
+                href={`/channel-partner/${type}/patient-history`}
+                className="text-[14px] "
+              > */}
+              {loading ? (<Loader2Icon className="animate-spin" />) : '+ Patient History'}
+              
+              {/* </Link> */}
             </Button>
           </div>
         </div>
         <div className="bg-gradient-to-t from-[#fce8e5] to-[#fce8e5] flex flex-col justify-between items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-4">
-         <Footer_bar/>
+          <Footer_bar />
         </div>
       </div>
     </>
