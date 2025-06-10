@@ -1,16 +1,24 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Patient_Header from "../Patient_Header/Patient_Header";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-const Verified_Successfully = () => {
+const Verified_Successfully = ({ type }) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    setTimeout(() => {
+      router.push(`/channel-partner/${type}/patient-registration`);
+    }, 1000);
+  }, [type]);
   return (
     <>
       <div className=" bg-gradient-to-b  from-[#DFDAFB] to-[#F9CCC5] h-full flex flex-col px-3">
         <div className="hidden">
-        <Patient_Header />
+          <Patient_Header />
         </div>
         <div className="h-full flex flex-col justify-around items-center">
           <div className="flex flex-col items-center w-full mt-[70px]">

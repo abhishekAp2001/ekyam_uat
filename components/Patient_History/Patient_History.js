@@ -1,48 +1,199 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label"
+import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
 import PR_Header from "../PR_Header/PR_Header";
 import { Textarea } from "../ui/textarea";
 import Footer_bar from "../Footer_bar/Footer_bar";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
+import Select from "react-select";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import axiosInstance from "@/lib/axiosInstance";
+import { Loader2Icon } from "lucide-react";
+import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+polyfillCountryFlagEmojis();
 
-const Patient_History = ({type}) => {
+const Patient_History = ({ type }) => {
   const router = useRouter();
-  const [mobile, setMobile] = useState("");
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState({
-    code: "+91",
-    name: "India",
-    flag: "/images/india.png",
+  const axios = axiosInstance();
+
+  const [fullName, setFullName] = useState("");
+  const [countrySearch, setCountrySearch] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [patientPreviousData, setPatientPreviousData] = useState({
+    _id: "",
+    firstName: "",
+    lastName: "",
+    primaryMobileNumber: "",
   });
 
-  const countries = [
-    { code: "+91", name: "India", flag: "/images/india.png" },
-    { code: "+1", name: "USA", flag: "/images/usa.png" },
-    { code: "+44", name: "UK", flag: "/images/uk.png" },
-    { code: "+61", name: "Australia", flag: "/images/aus.png" },
-  ];
+  const [formData, setFormData] = useState({
+    channelPartnerUsername: type,
+    cp_patientId: patientPreviousData?._id,
+    history: "",
+  });
 
-  const handleInputChange = (e) => {
-    const digitsOnly = e.target.value.replace(/\D/g, "");
-    if (digitsOnly.length <= 10) {
-      setMobile(digitsOnly);
+  const isFormValid = () => {
+    console.log("formData", formData);
+    return (
+      formData.channelPartnerUsername &&
+      formData.cp_patientId &&
+      formData.history
+    );
+  };
+
+  const [touched, setTouched] = useState({
+    history: false,
+  });
+  const [channelPartnerData, setChannelPartnerData] = useState(null);
+  const [countryList, setCountryList] = useState([]);
+
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const handleSelectPackage = async () => {
+    if (!isFormValid()) {
+      showErrorToast("All Fields Are Required");
+      return;
+    }
+    setLoading(true);
+    try {      
+      const response = await axios.post(`v2/cp/patient/history`, formData);
+
+      if (response?.data?.success === true) {
+        showSuccessToast(response?.data?.data?.message || "Patient added.");
+        setCookie(
+          "invitePatientInfo",
+          JSON.stringify(response?.data?.data?.patient)
+        );
+        router.push(`/channel-partner/${type}/sessions-selection`);
+      } else {
+        showErrorToast(
+          response?.data?.error?.message || "Something went wrong."
+        );
+      }
+    } catch (err) {
+      console.log(err);
+      showErrorToast(
+        err?.response?.data?.error?.message ||
+          "An error occurred while inviting"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleCancel = async () => {
+    setCancelLoading(true);
+    const confirmChange = window.confirm(`Are you sure?`);
+    if (!confirmChange) {
+      setCancelLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.delete(`v2/cp/patient/delete`, {
+        data: {
+          channelPartnerUsername: type,
+          cp_patientId: patientPreviousData?._id,
+        },
+      });
+
+      if (response?.data?.success === true) {
+        showSuccessToast(response?.data?.data?.message || "Patient deleted.");
+        deleteCookie("invitePatientInfo");
+        router.push(`/channel-partner/${type}/patient-registration`);
+      } else {
+        showErrorToast(
+          response?.data?.error?.message || "Something went wrong."
+        );
+      }
+    } catch (err) {
+      console.log(err);
+      showErrorToast(
+        err?.response?.data?.error?.message || "An error occurred while cancel"
+      );
+    } finally {
+      setCancelLoading(false);
     }
   };
 
-  const isDisabled = true;
+  const countryOptions = useMemo(
+    () =>
+      countryList.map((country) => ({
+        value: `${country.flag} ${country.code}`,
+        label: `${country.flag} ${country.code}`,
+        name: country.name,
+      })),
+    [countryList]
+  );
+  useEffect(() => {
+    const getCountryList = async () => {
+      try {
+        const response = await axios.get(`v2/country?search=${countrySearch}`);
+        if (response?.data?.success === true) {
+          setCountryList(response?.data?.data);
+        }
+      } catch (error) {
+        console.log("error", error);
+        if (error.forceLogout) {
+          router.push("/login");
+        } else {
+          showErrorToast(
+            error?.response?.data?.error?.message || "Something Went Wrong"
+          );
+        }
+      }
+    };
+    getCountryList();
+  }, []);
+
+  useEffect(() => {
+    const cookieData = getCookie("channelPartnerData");
+    const patientData = getCookie("invitePatientInfo");
+    if (cookieData) {
+      try {
+        const parsedData = JSON.parse(cookieData);
+        console.log("parsedData", parsedData);
+        setChannelPartnerData(parsedData);
+      } catch (error) {
+        setChannelPartnerData(null);
+      }
+    } else {
+      setChannelPartnerData(null);
+      router.push(`/channel-partner/${type}`);
+    }
+
+    if (patientData) {
+      try {
+        const parsedData = JSON.parse(patientData);
+        setFullName(`${parsedData?.firstName} ${parsedData?.lastName}`);
+        setPatientPreviousData(parsedData);
+        setFormData((prev) => ({
+          ...prev,
+          cp_patientId: parsedData?._id || "",
+        }));
+        console.log("patient", parsedData);
+      } catch (error) {
+        setPatientPreviousData(null);
+      }
+    } else {
+      setPatientPreviousData(null);
+      router.push(`/channel-partner/${type}`);
+    }
+  }, [type]);
 
   return (
     <>
       <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-full flex flex-col">
         <PR_Header />
-         <div className="h-full mt-[22px] mb-[40%] overflow-auto px-[17px] mt-3bg-gradient-to-t  from-[#fce8e5]  to-[#eeecfb]">
+        <div className="h-full mt-[22px] mb-[40%] overflow-auto px-[17px] mt-3bg-gradient-to-t  from-[#fce8e5]  to-[#eeecfb]">
           <div className="w-full h-[25px] text-[#776EA5] font-semibold text-[20px] leading-[25px] mb-6 text-center">
-            Cloudnine Hospital
+            {channelPartnerData?.clinicName || "Greetings Hospital"}
           </div>
           {/* Patient Number and Mobile */}
           <div className="bg-[#ffffff66] rounded-[12px] p-5 mt-[45px] relative">
@@ -53,85 +204,53 @@ const Patient_History = ({type}) => {
               </Label>
               <Input
                 disabled
+                value={fullName}
                 type="text"
                 placeholder="Enter First Name"
                 className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]  opacity-50 cursor-not-allowed"
               />
             </div>
 
-            {/* Primary Mobile Number Input */}
             <div>
               <Label className="text-[14px] text-gray-500 font-medium mb-2 mt-[22px]">
                 Primary Mobile Number <span className="text-red-500">*</span>
               </Label>
               <div className="flex items-center gap-2 relative">
-                {/* Country Code Dropdown (Disabled) */}
-                <div className="relative w-[82px]">
-                  <div
-                    onClick={() => {
-                      if (!isDisabled) setOpen(!open);
-                    }}
-                    className={`flex items-center gap-1 pl-2 pr-4 py-2 bg-white border border-gray-300 rounded-[7.26px] h-[38px] ${
-                      isDisabled
-                        ? "cursor-not-allowed opacity-50"
-                        : "cursor-pointer"
-                    }`}
-                  >
-                    <Image
-                      src={selected.flag}
-                      alt={selected.name}
-                      width={16}
-                      height={16}
-                      className="w-[16px] h-[16px] object-cover"
-                    />
-                    <span className="ml-1 font-semibold text-sm leading-[100%]">
-                      {selected.code}
-                    </span>
-                    <Image
-                      src="/images/arrow.png"
-                      alt="dropdown"
-                      width={12}
-                      height={13}
-                      className="w-[12.53px] h-[13px] rotate-90 ml-[2px]"
-                    />
-                  </div>
-
-                  {/* Dropdown options only if not disabled */}
-                  {!isDisabled && open && (
-                    <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-[7.26px] shadow-md">
-                      {countries.map((item) => (
-                        <li
-                          key={item.code}
-                          onClick={() => {
-                            setSelected(item);
-                            setOpen(false);
-                          }}
-                          className="flex items-center gap-2 px-2 py-2 cursor-pointer hover:bg-gray-100"
-                        >
-                          <Image
-                            src={item.flag}
-                            alt={item.name}
-                            width={16}
-                            height={16}
-                            className="w-[16px] h-[16px] object-cover"
-                          />
-                          <span className="font-semibold text-sm leading-[100%]">
-                            {item.code}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                {/* Custom Country Dropdown */}
+                <Select
+                  options={countryOptions}
+                  value={countryOptions.find(
+                    (option) =>
+                      option.value ===
+                      (patientPreviousData?.countryCode_primary || "🇮🇳 +91")
                   )}
-                </div>
+                  isDisabled={true}
+                  className="w-[100px]"
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      borderRadius: "7.26px 0 0 7.26px",
+                      borderRightWidth: 0,
+                      height: "39px",
+                      minHeight: "39px",
+                      width: "max-content",
+                    }),
+                    menu: (base) => ({ ...base, width: "200px" }),
+                  }}
+                  formatOptionLabel={(option, { context }) =>
+                    context === "menu"
+                      ? `${option.label} - ${option.name}`
+                      : option.label
+                  }
+                  menuPlacement="top"
+                />
 
-                {/* Mobile Number Input (Disabled) */}
-                <input
-                  disabled
+                <Input
                   type="text"
-                  value={mobile}
-                  onChange={handleInputChange}
+                  value={patientPreviousData.primaryMobileNumber}
+                  disabled={true}
                   placeholder="Enter Mobile Number"
-                  className="bg-white border border-gray-300 rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-2 px-4 h-[38px] w-[227px] opacity-50 cursor-not-allowed"
+                  className="bg-white border border-gray-300 rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-2 px-4 h-[38px] w-full"
                 />
               </div>
             </div>
@@ -145,26 +264,52 @@ const Patient_History = ({type}) => {
               </Label>
               <div className="flex items-center justify-center ">
                 <Textarea
-                  placeholder="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rem exercitationem harum id ab illum optio nisi nulla molestias assumenda recusandae, a facilis labore velit iste hic, eligendi animi nostrum nam"
+                  onChange={(e) =>
+                    setFormData({ ...formData, history: e.target.value })
+                  }
+                  onBlur={() => handleBlur("history")}
+                  placeholder="Patient History...."
                   className=" bg-white text-[14px] text-[#000000] placeholder:text-gray-500 shadow-none"
                 />
               </div>
+              {touched.history && !formData.history && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  History field is required
+                </span>
+              )}
             </div>
           </div>
 
           {/* Buttons */}
-          <div className="bg-gradient-to-t from-[#fce8e5] to-[#fce8e5] flex flex-col justify-between items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-4"> 
+          <div className="bg-gradient-to-t from-[#fce8e5] to-[#fce8e5] flex flex-col justify-between items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-4">
             <div className="w-full flex gap-[12.2px]">
-            <Button className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px]">
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] mx-auto rounded-[8px] flex items-center justify-center w-[48%] h-[45px]" >
-              <Link href={`/channel-partner/${type}/cloudnine_hospital`}>
-               Select Package
-              </Link>
-            </Button>
+              <Button
+                onClick={handleCancel}
+                disabled={cancelLoading}
+                className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
+              >
+                {cancelLoading ? (
+                  <Loader2Icon className="animate-spin" />
+                ) : (
+                  "Cancel"
+                )}
+              </Button>
+              <Button
+                onClick={handleSelectPackage}
+                disabled={loading}
+                className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] mx-auto rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
+              >
+                {/* <Link href={`/channel-partner/${type}/cloudnine_hospital`}> */}
+                {loading ? (
+                  <Loader2Icon className="animate-spin" />
+                ) : (
+                  "Select Package"
+                )}
+
+                {/* </Link> */}
+              </Button>
             </div>
-              <Footer_bar/>
+            <Footer_bar />
           </div>
         </div>
       </div>
