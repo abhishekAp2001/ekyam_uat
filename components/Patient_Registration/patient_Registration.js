@@ -258,14 +258,15 @@ const Patient_Registration = ({ type }) => {
                 />
 
                 <Input
-                  type="text"
+                  type="number"
                   value={formData.primaryMobileNumber}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      primaryMobileNumber: e.target.value,
+                      primaryMobileNumber: e.target.value.replace(/\D/g, "").slice(0, 10),
                     })
                   }
+                  
                   onBlur={() => handleBlur("primaryMobileNumber")}
                   disabled={!isEmailValid(formData.email)}
                   placeholder="Enter Mobile Number"
