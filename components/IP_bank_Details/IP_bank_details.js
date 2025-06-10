@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import IP_Header from "../IP_Header/IP_Header";
 import IP_Buttons from "../IP_Buttons/IP_Buttons";
 import { Button } from "../ui/button";
+import { base64ToFile } from "@/lib/utils";
 
 const IP_bank_details = () => {
   const axios = axiosInstance();
@@ -33,6 +34,8 @@ const IP_bank_details = () => {
     confirmAccountNumber: false,
     accountHolderName: false,
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // Validation functions
   const isIfscValid = (ifsc) => /^[A-Z]{4}0\d{6}$/.test(ifsc);
@@ -137,21 +140,174 @@ const IP_bank_details = () => {
     }
   };
 
-  const handleAddIndividualPractitioner = async () => {
+  const uploadImage = async (filename, type) => {
     try {
-      // const payload={};
-      // const response = await axios.post(`v2/sales/invite/individualPractitioner`,payload)
-      // if(response?.data?.success){
-      //   router.push("/sales")
-      //   toast.success("Invite Sent");
-      // }
+      const file = base64ToFile(filename, "myImage.png");
+      const form = new FormData();
+      form.append("filename", file);
+      const response = await axios.post(`v2/psychiatrist/uploadImage`, form);
+      if (response?.data?.success) {
+        const imageUrl = response?.data?.image;
+        // Save to localStorage based on type
+        if (type === "profile") {
+          localStorage.setItem("profileImageUrl", imageUrl);
+        } else if (type === "certificates") {
+          let existingCertificates =
+            JSON.parse(localStorage.getItem("certificates")) || [];
+          existingCertificates.push(imageUrl);
+          localStorage.setItem(
+            "certificates",
+            JSON.stringify(existingCertificates)
+          );
+        }
+        return imageUrl;
+      }
     } catch (error) {
-      console.error("Error Adding Individual racttioner:", error);
       if (error.forceLogout) {
         router.push("/login");
       } else {
         toast.error(error?.response?.data?.error?.message);
       }
+      return null;
+    }
+  };
+
+  const handleAddIndividualPractitioner = async () => {
+    setIsLoading(true);
+    try {
+      const ip_details = JSON.parse(localStorage.getItem("ip_details"));
+      const ip_medical_association_details = JSON.parse(
+        localStorage.getItem("ip_medical_association_details")
+      );
+      const ip_general_information = JSON.parse(
+        localStorage.getItem("ip_general_information")
+      );
+      const ip_single_session_fees = JSON.parse(
+        localStorage.getItem("ip_single_session_fees")
+      );
+
+      // Check for existing profile image URL in localStorage
+      let profileImageUrl = localStorage.getItem("profileImageUrl") || "";
+      if (ip_details?.profileImageBase64 && !profileImageUrl) {
+        profileImageUrl =
+          (await uploadImage(ip_details?.profileImageBase64, "profile")) || "";
+      }
+
+      // Check for existing certificates in localStorage
+      let certificates = JSON.parse(localStorage.getItem("certificates")) || [];
+      if (
+        ip_medical_association_details?.certificates?.length > 0 &&
+        certificates.length === 0
+      ) {
+        const uploadPromises = ip_medical_association_details.certificates.map(
+          (element) => uploadImage(element?.base64, "certificates")
+        );
+        certificates = (await Promise.all(uploadPromises)).filter(Boolean);
+      }
+
+      const packages = ip_single_session_fees?.packages
+        ?.filter((item) => item?.enabled)
+        .map((item) => {
+          return {
+            sessions: item?.sessions,
+            rate: Number(item?.rate),
+          };
+        });
+
+      const payload = {
+        practitionerDetails: {
+          generalInformation: {
+            profileImageUrl: profileImageUrl, // Optional - same as entityDetails.logoUrl
+            firstName: ip_details?.firstName,
+            lastName: ip_details?.lastName,
+            email: ip_details?.email,
+            countryCode_primary: ip_details?.countryCode_primary,
+            primaryMobileNumber: ip_details?.primaryMobileNumber,
+            countryCode_whatsapp: ip_details?.countryCode_whatsapp,
+            whatsappNumber: ip_details?.whatsappNumber,
+            countryCode_emergency: ip_details?.countryCode_emergency,
+            emergencyNumber: ip_details?.emergencyNumber,
+            residentialAddress: "", // Optional
+            googleMapAddress: "", // Optional
+          },
+          practiceDetails: {
+            logoUrl: profileImageUrl,
+            yearsOfExperience: ip_general_information?.yearsOfExperience,
+            specialization: ip_general_information?.specialization,
+            whatIDontTreat: ip_general_information?.whatIDontTreat,
+            whatToExpectInSession:
+              ip_general_information?.whatToExpectInSession,
+            languageProficiency: ip_general_information?.languageProficiency, // Fetch launguage options from Local V2 > Sales > Get languages API
+            // Medical Association Details
+            medicalAssociations: [
+              {
+                name: ip_medical_association_details?.name,
+                medicalAssociationNumber:
+                  ip_medical_association_details?.medicalAssociationNumber,
+                certificates: certificates,
+              },
+            ],
+            address: ip_general_information?.address, // Same as generalInformation.address
+            googleMapAddress: ip_general_information?.googleMapAddress, // Same as generalInformation.googleMapAddress
+            fees: {
+              singleSession: Number(ip_single_session_fees?.singleSession),
+              packages: packages,
+            },
+          },
+        },
+        entityDetails: {
+          type: "practice", // Static field for Individual-Practitioner form (Do not change)
+          logoUrl: profileImageUrl, // Optional - same as generalInformation.profileImageUrl
+          entityLocations: [
+            {
+              default: true, // Static field (Do not change)
+              // Contact details (copy below 9 fields from practitionerDetails.generalInformation
+              email: ip_details?.email,
+              countryCode_primary: ip_details?.countryCode_primary,
+              primaryMobileNumber: ip_details?.primaryMobileNumber,
+              countryCode_whatsapp: ip_details?.countryCode_whatsapp,
+              whatsappNumber: ip_details?.whatsappNumber,
+              countryCode_emergency: ip_details?.countryCode_emergency,
+              emergencyNumber: ip_details?.emergencyNumber,
+              address: "", // Optional (just change the field name from "residentialAddress" > "address")
+              googleMapAddress: "", // Optional
+            },
+          ],
+        },
+        kycDetails: {
+          panCard: ip_single_session_fees?.panCard,
+          gstNumber: ip_single_session_fees?.gstNumber,
+        },
+        bankDetails: {
+          accountHolderName: formData?.accountHolderName,
+          accountNumber: formData?.accountNumber,
+          ifscCode: formData?.ifscCode,
+          bankName: formData?.bankName,
+        },
+      };
+      console.log("payload", payload);
+      const response = await axios.post(
+        `v2/sales/invite/individualPractitioner`,
+        payload
+      );
+      if (response?.data?.success) {
+        localStorage.removeItem("ip_details");
+        localStorage.removeItem("ip_bank_details");
+        localStorage.removeItem("ip_general_information");
+        localStorage.removeItem("ip_medical_association_details");
+        localStorage.removeItem("ip_single_session_fees");
+        router.push("/sales");
+        toast.success("Invite Sent");
+      }
+    } catch (error) {
+      console.error("Error Adding Individual Practitioner:", error);
+      if (error.forceLogout) {
+        router.push("/login");
+      } else {
+        toast.error(error?.response?.data?.error?.message);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -389,17 +545,44 @@ const IP_bank_details = () => {
             onClick={() => {
               handleCancel();
             }}
+            disabled={isLoading}
           >
             Cancel
           </Button>
           <Button
-            disabled={!isFormValid()}
+            disabled={!isFormValid() || isLoading}
             onClick={() => {
               handleSave();
             }}
-            className="bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px]  mx-auto rounded-[8px] flex items-center justify-center w-[42%] h-[45px]"
+            className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] mx-auto rounded-[8px] flex items-center justify-center w-[42%] h-[45px]"
           >
-            Send Invite
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Sending Invite...
+              </div>
+            ) : (
+              "Send Invites"
+            )}
           </Button>
         </div>
       </div>

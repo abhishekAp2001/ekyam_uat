@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   DrawerClose,
@@ -23,8 +24,36 @@ import Dashboard_card from "../Dashboard_card/Dashboard_card";
 import Link from "next/link";
 import All_clinics from "../All_clinics/All_clinics";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import axiosInstance from "@/lib/axiosInstance";
 
 const SalesDashboard = () => {
+  const axios = axiosInstance()
+  const [channelPartnerList, setChannelPartnerList] = useState([]);
+  const [individualPractitionerList, setIndividualPractitionerList] = useState(
+    []
+  );
+
+  const fectchAllList = async () => {
+    try {
+      const [resp1,resp2] = await Promise.all([
+        axios.get(`v2/cp/channelPartner`),
+        axios.get(`v2/sales/individualPractitioner`),
+      ])
+      setChannelPartnerList(resp1)
+      setIndividualPractitionerList(resp2)
+    } catch (error) {
+      if (error.forceLogout) {
+        router.push("/login");
+      } else {
+        toast.error(error?.response?.data?.error?.message);
+      }
+    }
+  };
+
+  useEffect(()=>{
+    fectchAllList()
+  },[])
+
   return (
     <>
       <div className="h-[102px]  bg-gradient-to-r  from-[#B0A4F5] to-[#EDA197] rounded-bl-3xl rounded-br-3xl px-3 pt-12">
