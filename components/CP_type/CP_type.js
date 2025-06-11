@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { getCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 polyfillCountryFlagEmojis()
 
 const CP_type = () => {
@@ -101,7 +102,7 @@ const CP_type = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message || "Something Went Wrong");
+        showErrorToast(error?.response?.data?.error?.message || "Something Went Wrong");
       }
     }
   };
@@ -111,7 +112,7 @@ const CP_type = () => {
     try {
       const response = await axios.post("v2/cp/channelPartner/types", { name: newType });
       if (response?.data?.success === true) {
-        toast.success("Channel Partner Type Added");
+        showSuccessToast("Channel Partner Type Added");
         await channelPartnerList(search);
       }
     } catch (error) {
@@ -119,7 +120,7 @@ const CP_type = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message || "Failed to add new channel partner type");
+        showErrorToast(error?.response?.data?.error?.message || "Failed to add new channel partner type");
         throw error;
       }
     }
@@ -151,7 +152,7 @@ const CP_type = () => {
       setCookie("cp_type", formData);
       router.push("/sales/cp_clinic_details");
     } else {
-      toast.error("Please fill all required fields correctly");
+      showErrorToast("Please fill all required fields correctly");
     }
   };
 
@@ -166,7 +167,7 @@ const CP_type = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message || "Something Went Wrong");
+        showErrorToast(error?.response?.data?.error?.message || "Something Went Wrong");
       }
     }
   };

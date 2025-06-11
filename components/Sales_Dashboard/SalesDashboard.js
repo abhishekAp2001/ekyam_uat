@@ -25,6 +25,7 @@ import Link from "next/link";
 import All_clinics from "../All_clinics/All_clinics";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import axiosInstance from "@/lib/axiosInstance";
+import { showErrorToast } from "@/lib/toast";
 
 const SalesDashboard = () => {
   const axios = axiosInstance()
@@ -45,7 +46,7 @@ const SalesDashboard = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message);
+        showErrorToast(error?.response?.data?.error?.message);
       }
     }
   };

@@ -29,6 +29,7 @@ import { toast } from "react-toastify";
 import Select from "react-select";
 import axiosInstance from "@/lib/axiosInstance";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+import { showErrorToast } from "@/lib/toast";
 polyfillCountryFlagEmojis();
 
 const IP_Details = () => {
@@ -88,7 +89,7 @@ const IP_Details = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message || "Something Went Wrong");
+        showErrorToast(error?.response?.data?.error?.message || "Something Went Wrong");
       }
     }
   };
@@ -159,7 +160,7 @@ const IP_Details = () => {
         setFormData((prev) => ({ ...prev, profileImageBase64: base64 }));
       } catch (error) {
         console.error("Error converting file to base64:", error);
-        toast.error("Failed to upload profile image");
+        showErrorToast("Failed to upload profile image");
       }
     }
   };
@@ -228,7 +229,7 @@ const IP_Details = () => {
         router.push("/sales/ip_general_information");
       } catch (error) {
         console.error("Error saving data:", error);
-        toast.error("Failed to save details");
+        showErrorToast("Failed to save details");
       }
     } else {
       setTouched({
@@ -240,7 +241,7 @@ const IP_Details = () => {
         whatsappNumber: true,
         emergencyNumber: true,
       });
-      toast.error("Please fill all required fields correctly");
+      showErrorToast("Please fill all required fields correctly");
     }
   };
 

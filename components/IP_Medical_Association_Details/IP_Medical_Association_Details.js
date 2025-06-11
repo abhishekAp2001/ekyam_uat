@@ -27,6 +27,7 @@ import IP_Header from "../IP_Header/IP_Header";
 import { toast } from "react-toastify";
 import { isMobile } from "react-device-detect";
 import { useRouter } from "next/navigation";
+import { showErrorToast } from "@/lib/toast";
 
 
 const IP_Medical_Association_Details = () => {
@@ -122,7 +123,7 @@ const IP_Medical_Association_Details = () => {
         setTouched((prev) => ({ ...prev, certificates: true }));
       } catch (error) {
         console.error("Error converting file to base64:", error);
-        toast.error("Failed to upload certificate");
+        showErrorToast("Failed to upload certificate");
       }
     }
   };
@@ -170,10 +171,10 @@ const IP_Medical_Association_Details = () => {
         router.push("/sales/ip_medical_association_certificate")
       } catch (error) {
         console.error("Error saving data:", error);
-        toast.error("Failed to save details");
+        showErrorToast("Failed to save details");
       }
     } else {
-      toast.error("Please fill all required fields and upload at least one certificate");
+      showErrorToast("Please fill all required fields and upload at least one certificate");
     }
   };
 
