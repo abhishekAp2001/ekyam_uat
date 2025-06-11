@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 import Select_Header from "../Select_Header/Select_header";
 import Footer_bar from "../Footer_bar/Footer_bar";
 import Link from "next/link";
-import { deleteCookie, getCookie } from "cookies-next";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
 import axiosInstance from "@/lib/axiosInstance";
@@ -56,7 +56,27 @@ const Cloudnine_Hospital = ({ type }) => {
     );
   };
 
-  const handleGenerateInvoice = async () => {};
+  const handleGenerateInvoice = async () => {
+    try {
+      const payload = {
+        channelPartnerUsername: formData?.channelPartnerUsername,
+        cp_patientId: formData?.cp_patientId,
+        sessionCreditCount: formData?.sessionCreditCount,
+        sessionPrice: String(formData?.sessionPrice),
+      };
+      const resposne = await axios.post(
+        `v2/cp/patient/sessionCredits`,
+        payload
+      );
+      if (resposne?.data?.success) {
+        setCookie("sessions_selection",JSON.stringify(formData))
+        showSuccessToast("Patient Invited & Invoice Sent")
+        router.push(`/channel-partner/${type}/invoice_sent`)
+      }
+    } catch (error) {
+      showErrorToast(response?.data?.error?.message || "Something went wrong.");
+    }
+  };
 
   const [touched, setTouched] = useState({
     sessionCreditCount: false,
@@ -66,9 +86,9 @@ const Cloudnine_Hospital = ({ type }) => {
   const [countryList, setCountryList] = useState([]);
 
   const sessions = [
-    { count: 4, name: "4 Sessions" },
-    { count: 8, name: "8 Sessions" },
-    { count: 12, name: "12 Sessions" },
+    { count: "4", name: "4 Sessions" },
+    { count: "8", name: "8 Sessions" },
+    { count: "12", name: "12 Sessions" },
   ];
 
   const handleFeeChange = (value) => {
@@ -375,7 +395,6 @@ const Cloudnine_Hospital = ({ type }) => {
               <div className="text-[14px] text-gray-500 font-[500] mb-3">
                 Session Fee (Hourly):{" "}
                 <span className="font-[700]">
-                  
                   ₹{formData.sessionPrice || "None"} per session
                 </span>
               </div>
@@ -392,8 +411,8 @@ const Cloudnine_Hospital = ({ type }) => {
                 handleBlur={"sessionPrice"}
               />
               <div className="flex justify-between mt-2 text-[14px] text-[#776EA5] font-[600]">
-                <span>-</span>
-                <span>-</span>
+                <span>&#8377;{feesData.min}/-</span>
+                <span>&#8377;{feesData.max}/-</span>
               </div>
             </div>
             {touched.sessionCreditCount && !formData.sessionCreditCount && (
@@ -408,7 +427,7 @@ const Cloudnine_Hospital = ({ type }) => {
           <div className="w-full flex gap-[12.2px]">
             <Button
               onClick={handleCancel}
-              disabled={cancelLoading}              
+              disabled={cancelLoading}
               className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
             >
               {cancelLoading ? (
