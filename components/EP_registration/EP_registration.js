@@ -363,7 +363,7 @@ const EP_registration = ({ type }) => {
                   <div
                     key={index}
                     onClick={() => {
-                      console.log('profil2e',profile)
+                      // console.log('profil2e',profile)
                       handleUserClick(profile);
                       setSearchUsers([]);
                     }}
