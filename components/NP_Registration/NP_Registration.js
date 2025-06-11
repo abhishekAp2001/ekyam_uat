@@ -7,6 +7,7 @@ import Link from "next/link";
 import NP_Header from "../NP_Header/NP_Header";
 import Image from "next/image";
 import Footer_bar from "../Footer_bar/Footer_bar";
+import { getCookie, hasCookie } from "cookies-next";
 
 const NP_Registration = () => {
   const [mobile, setMobile1] = useState("");
@@ -19,6 +20,9 @@ const NP_Registration = () => {
       setMobile(digitsOnly);
     }
   };
+  const sessions_selection = hasCookie("sessions_selection") ? JSON.parse(getCookie("sessions_selection")) : null;
+  const channelPartnerData = hasCookie("channelPartnerData") ? JSON.parse(getCookie("channelPartnerData")) : null;
+  const invitePatientInfo = hasCookie("invitePatientInfo") ? JSON.parse(getCookie("invitePatientInfo")) : null;
 
   return (
     <>
@@ -26,7 +30,7 @@ const NP_Registration = () => {
         <NP_Header />
         <div className="h-full flex flex-col justify-between overflow-auto px-[13px] mt-[22px] bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
           <div className="w-full h-[25px] text-[#776EA5] font-semibold text-[20px] leading-[25px] mb-6 text-center">
-            Cloudnine Hospital
+            {channelPartnerData?.clinicName}
           </div>
 
           <div className="bg-[#FFFFFF] rounded-[9px] p-5 relative">
@@ -38,7 +42,7 @@ const NP_Registration = () => {
                 Patient Name:
               </span>
               <div className="text-[14px] font-[600] text-black ml-1">
-                Shubham Naik
+                {invitePatientInfo?.firstName} {invitePatientInfo?.lastName}
               </div>
             </div>
             <div className="mb-3 bg-gradient-to-r from-[#BBA3E433] to-[#EDA19733] rounded-[12px] p-2">
@@ -47,16 +51,16 @@ const NP_Registration = () => {
                   Number of Sessions:
                 </span>
                 <span className="text-[14px] font-[600] text-black mr-1">
-                  04
+                  {sessions_selection?.sessionCreditCount}
                 </span>
               </div>
 
               <div className=" flex justify-between ">
                 <span className="text-[14px] font-[400] text-[#000000] ml-1">
-                  Session Fee (Hourly):
+                  Session Fee (Hourly): {sessions_selection?.sessionCreditCount}
                 </span>
                 <span className="text-[14px] font-[700] text-black mr-1">
-                  <span className="mx-8">₹</span>1,500.00
+                  <span className="mx-8">₹</span>{sessions_selection?.sessionPrice}
                 </span>
               </div>
             </div>
@@ -65,7 +69,7 @@ const NP_Registration = () => {
                 Total:
               </span>
               <span className="text-[14px] font-[700] text-black mr-1">
-                <span className="mx-8">₹</span>6,000.00
+                <span className="mx-8">₹</span>{Number(sessions_selection?.sessionPrice)*Number(sessions_selection?.sessionCreditCount)}
               </span>
             </div>
           </div>
