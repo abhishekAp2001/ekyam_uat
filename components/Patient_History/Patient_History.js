@@ -176,7 +176,7 @@ const Patient_History = ({ type }) => {
         setPatientPreviousData(parsedData);
         setFormData((prev) => ({
           ...prev,
-          cp_patientId: parsedData?.cp_patientId || "",
+          cp_patientId: parsedData?._id || "",
           history: parsedData?.history?.details,
         }));
         // console.log("patient", parsedData);

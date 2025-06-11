@@ -36,7 +36,7 @@ const EP_registration = ({ type }) => {
   const [searchUsers, setSearchUsers] = useState([]);
   const [loading, setLoading] = useState(false); // Track API loading state
   const [formData, setFormData] = useState({
-    cp_patientId:"",
+    _id: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -113,7 +113,7 @@ const EP_registration = ({ type }) => {
       firstName: "",
       lastName: "",
       email: "",
-      countryCode_primary: "🇮🇳 +91",      
+      countryCode_primary: "🇮🇳 +91",
     }));
     if (searchString.length < 2) {
       setSearchUsers([]);
@@ -155,9 +155,8 @@ const EP_registration = ({ type }) => {
   };
 
   const handleUserClick = (profile) => {
-
     setFormData({
-      cp_patientId: profile?._id || "",
+      _id: profile?._id || "",
       firstName: profile.firstName || "",
       lastName: profile.lastName || "",
       email: profile.email || "",
@@ -184,7 +183,6 @@ const EP_registration = ({ type }) => {
     // console.log('formData',formData)
     //   return
     try {
-      
       setCookie("invitePatientInfo", JSON.stringify(formData));
       showSuccessToast("Patient added.");
       router.push(`/channel-partner/${type}/patient-history`);
@@ -371,9 +369,17 @@ const EP_registration = ({ type }) => {
                   >
                     <div className="flex items-center gap-[12px]">
                       <Avatar>
-                          <AvatarImage src={profile.image} />
-                          <AvatarFallback>{` ${profile.firstName ? profile.firstName?.charAt(0).toUpperCase() : ""}${profile.lastName ? profile.lastName.charAt(0).toUpperCase() : ""}`}</AvatarFallback>
-                        </Avatar>
+                        <AvatarImage src={profile.image} />
+                        <AvatarFallback>{` ${
+                          profile.firstName
+                            ? profile.firstName?.charAt(0).toUpperCase()
+                            : ""
+                        }${
+                          profile.lastName
+                            ? profile.lastName.charAt(0).toUpperCase()
+                            : ""
+                        }`}</AvatarFallback>
+                      </Avatar>
 
                       <div className="flex flex-col justify-center gap-[5px]">
                         <Label className="text-sm text-black font-semibold leading-[16px]">
