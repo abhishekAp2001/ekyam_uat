@@ -93,7 +93,7 @@ const OTP_Verify = ({type}) =>  {
         <div className="flex flex-col justify-center items-center gap-[4.75px] pb-5">
           <div className="flex gap-1 items-center">
           <span className="text-[10px] text-gray-500 font-medium">
-            Copyright © 2025
+            Copyright © {new Date().getFullYear()}
           </span>
           <Image
             src="/images/ekyamm.png"

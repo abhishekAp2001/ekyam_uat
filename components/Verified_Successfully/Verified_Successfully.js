@@ -44,7 +44,7 @@ const Verified_Successfully = ({ type }) => {
           "
           >
             <span className="text-[10px] text-gray-500 font-medium">
-              Copyright © 2025
+              Copyright © {new Date().getFullYear()}
             </span>
             <Image
               src="/images/ekyamm.png"

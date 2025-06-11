@@ -55,7 +55,7 @@ const Reset_password = () => {
 
         <div className="flex gap-1 items-center mt-[54px]">
           <span className="text-[10px] text-gray-500 font-medium">
-            Copyright © 2024
+            Copyright © {new Date().getFullYear()}
           </span>
           <Image
             src="/images/ekyamm.png"
