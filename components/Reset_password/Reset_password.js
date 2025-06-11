@@ -8,6 +8,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { whatsappUrl } from "@/lib/constants";
 
 const Reset_password = () => {
   const [value, setValue] = React.useState("");
@@ -20,18 +21,19 @@ const Reset_password = () => {
           </strong>
           <div className="pt-6">
             <div className="relative">
-            <Input
-              type="text"
-              placeholder="Enter New Password"
-              className="bg-white rounded-[7.26px] placeholder:text-[12px] placeholder:text-gray-400 pt-3 pb-3.5 px-4 h-[39px]"
-            />
-             <Image
+              <Input
+                type="text"
+                placeholder="Enter New Password"
+                className="bg-white rounded-[7.26px] placeholder:text-[12px] placeholder:text-gray-400 pt-3 pb-3.5 px-4 h-[39px]"
+              />
+              <Image
                 src="/images/visibility.png"
                 width={14}
                 height={10}
                 className="w-[14.67px] absolute top-4 right-[14.83px]"
                 alt="ekyamm"
-              /></div>
+              />
+            </div>
             <div className="relative">
               <Input
                 type="text"
@@ -72,13 +74,15 @@ const Reset_password = () => {
             <span className="text-[10px] text-gray-500 font-medium">
               Any technical support
             </span>
-            <Image
-              src="/images/chat_icon.png"
-              width={54}
-              height={49}
-              className="w-[54px]"
-              alt="ekyamm"
-            />
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+              <Image
+                src="/images/chat_icon.png"
+                width={54}
+                height={49}
+                className="w-[54px]"
+                alt="ekyamm"
+              />
+            </a>
           </div>
         </div>
       </div>
