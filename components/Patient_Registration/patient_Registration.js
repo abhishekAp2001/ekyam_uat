@@ -75,7 +75,7 @@ const Patient_Registration = ({ type }) => {
         setCountryList(response?.data?.data);
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       if (error.forceLogout) {
         router.push("/login");
       } else {
@@ -108,7 +108,7 @@ const Patient_Registration = ({ type }) => {
         );
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       showErrorToast(
         err?.response?.data?.error?.message ||
           "An error occurred while inviting"

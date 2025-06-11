@@ -38,7 +38,7 @@ const Patient_History = ({ type }) => {
   });
 
   const isFormValid = () => {
-    console.log("formData", formData);
+    // console.log("formData", formData);
     return (
       formData.channelPartnerUsername &&
       formData.cp_patientId &&
@@ -62,7 +62,7 @@ const Patient_History = ({ type }) => {
       return;
     }
     setLoading(true);
-    try {      
+    try {
       const response = await axios.post(`v2/cp/patient/history`, formData);
 
       if (response?.data?.success === true) {
@@ -78,7 +78,7 @@ const Patient_History = ({ type }) => {
         );
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       showErrorToast(
         err?.response?.data?.error?.message ||
           "An error occurred while inviting"
@@ -113,7 +113,7 @@ const Patient_History = ({ type }) => {
         );
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       showErrorToast(
         err?.response?.data?.error?.message || "An error occurred while cancel"
       );
@@ -139,7 +139,7 @@ const Patient_History = ({ type }) => {
           setCountryList(response?.data?.data);
         }
       } catch (error) {
-        console.log("error", error);
+        // console.log("error", error);
         if (error.forceLogout) {
           router.push("/login");
         } else {
@@ -158,7 +158,7 @@ const Patient_History = ({ type }) => {
     if (cookieData) {
       try {
         const parsedData = JSON.parse(cookieData);
-        console.log("parsedData", parsedData);
+        // console.log("parsedData", parsedData);
         setChannelPartnerData(parsedData);
       } catch (error) {
         setChannelPartnerData(null);
@@ -172,12 +172,14 @@ const Patient_History = ({ type }) => {
       try {
         const parsedData = JSON.parse(patientData);
         setFullName(`${parsedData?.firstName} ${parsedData?.lastName}`);
+        // console.log('parsedData_history_patient',parsedData)
         setPatientPreviousData(parsedData);
         setFormData((prev) => ({
           ...prev,
           cp_patientId: parsedData?._id || "",
+          history: parsedData?.history?.details,
         }));
-        console.log("patient", parsedData);
+        // console.log("patient", parsedData);
       } catch (error) {
         setPatientPreviousData(null);
       }
@@ -267,6 +269,7 @@ const Patient_History = ({ type }) => {
                   onChange={(e) =>
                     setFormData({ ...formData, history: e.target.value })
                   }
+                  value={formData.history}
                   onBlur={() => handleBlur("history")}
                   placeholder="Patient History...."
                   className=" bg-white text-[14px] text-[#000000] placeholder:text-gray-500 shadow-none"

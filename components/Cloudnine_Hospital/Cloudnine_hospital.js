@@ -41,9 +41,9 @@ const Cloudnine_Hospital = ({ type }) => {
   });
 
   const [feesData, setFeesData] = useState({
-    fees: [1],
-    min: 1,
-    max: 1,
+    fees: [],
+    min: 0,
+    max: 0,
   });
 
   const isFormValid = () => {

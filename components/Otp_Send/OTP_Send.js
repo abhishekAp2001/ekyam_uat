@@ -17,6 +17,7 @@ import { getCookie } from "cookies-next";
 import axiosInstance from "@/lib/axiosInstance";
 import { Loader2Icon } from "lucide-react";
 import axios from "axios";
+import { whatsappUrl } from "@/lib/constants";
 
 const OTP_Send = ({ type }) => {
   const [selectedMethod, setSelectedMethod] = useState("email");
@@ -212,7 +213,7 @@ const OTP_Send = ({ type }) => {
       if (result.data.result === "success") {
         return true;
       } else {
-        console.log(result);
+        // console.log(result);
         showErrorToast("Invalid Otp");
       }
       return false;
@@ -425,7 +426,7 @@ const OTP_Send = ({ type }) => {
         <div className="flex flex-col justify-center items-center gap-[4.75px] pb-5">
           <div className="flex gap-1 items-center">
             <span className="text-[10px] text-gray-500 font-medium">
-              Copyright © 2025
+              Copyright © {new Date().getFullYear()}
             </span>
             <Image
               src="/images/ekyamm.png"
@@ -439,13 +440,15 @@ const OTP_Send = ({ type }) => {
             <span className="text-[10px] text-gray-500 font-medium">
               Any technical support
             </span>
-            <Image
-              src="/images/chat_icon.png"
-              width={54}
-              height={49}
-              className="w-[54px]"
-              alt="ekyamm"
-            />
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+              <Image
+                src="/images/chat_icon.png"
+                width={54}
+                height={49}
+                className="w-[54px]"
+                alt="ekyamm"
+              />
+            </a>
           </div>
         </div>
       </div>

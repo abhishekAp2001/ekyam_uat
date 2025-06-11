@@ -9,9 +9,13 @@ import Footer_bar from "../Footer_bar/Footer_bar";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axiosInstance";
-import { getCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next";
 import Select from "react-select";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+import axios from "axios";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import { Loader2Icon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 // Custom debounce function
 const customDebounce = (func, delay) => {
@@ -26,12 +30,13 @@ polyfillCountryFlagEmojis();
 
 const EP_registration = ({ type }) => {
   const router = useRouter();
-  const axios = axiosInstance();
+  const customAxios = axiosInstance();
   const [channelPartnerData, setChannelPartnerData] = useState(null);
   const [countryList, setCountryList] = useState([]);
   const [searchUsers, setSearchUsers] = useState([]);
   const [loading, setLoading] = useState(false); // Track API loading state
   const [formData, setFormData] = useState({
+    _id: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -39,7 +44,16 @@ const EP_registration = ({ type }) => {
     countryCode_primary: "🇮🇳 +91",
     sessionCreditCount: "",
     sessionPrice: "",
+    history: {
+      updatedBy: {
+        userId: "",
+        userType: "",
+      },
+      details: "",
+      updatedOn: "",
+    },
   });
+
   const [touched, setTouched] = useState({
     firstName: false,
     lastName: false,
@@ -76,23 +90,32 @@ const EP_registration = ({ type }) => {
 
   const getCountryList = async () => {
     try {
-      const response = await axios.get(`v2/country`);
+      const response = await customAxios.get(`v2/country`);
       if (response?.data?.success === true) {
         setCountryList(response?.data?.data);
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       if (error.forceLogout) {
         router.push("/login");
       } else {
         // Assuming showErrorToast is defined elsewhere
-        console.error(error?.response?.data?.error?.message || "Something Went Wrong");
+        // console.error(
+        //   error?.response?.data?.error?.message || "Something Went Wrong"
+        // );
       }
     }
   };
 
   const searchPatients = async (searchString) => {
-    if (searchString.length < 3) {
+    setFormData((prev) => ({
+      ...prev,
+      firstName: "",
+      lastName: "",
+      email: "",
+      countryCode_primary: "🇮🇳 +91",
+    }));
+    if (searchString.length < 2) {
       setSearchUsers([]);
       return;
     }
@@ -102,20 +125,72 @@ const EP_registration = ({ type }) => {
         channelPartnerUsername: type,
         searchString,
       };
-      const response = await axios.get(`v2/cp/patient/search`, { params });
+      const response = await axios.get(
+        `https://dev.ekyamm.com/v2/cp/patient/search`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          params: params,
+        }
+      );
       if (response?.data?.success === true) {
-        const users = response?.data?.data?.map((user) => ({
-          name: `${user.firstName} ${user.lastName}`,
-          image: user.image || "/default-profile.png",
-          mobile: `${user.countryCode_primary} ${user.primaryMobileNumber}`,
-        }));
-        setSearchUsers(users);
+        // const users = response?.data?.data?.map((user) => ({
+        //   name: `${user.firstName} ${user.lastName}`,
+        //   image: user.image || "/default-profile.png",
+        //   primaryMobileNumber: `${user.countryCode_primary} ${user.primaryMobileNumber}`,
+        // }));
+        setSearchUsers(response?.data?.data);
       } else {
         setSearchUsers([]);
       }
     } catch (error) {
-      console.error("Error fetching search results:", error);
+      showErrorToast(
+        error?.response?.data?.error?.message || "Something Went Wrong"
+      );
       setSearchUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUserClick = (profile) => {
+    setFormData({
+      _id: profile?._id || "",
+      firstName: profile.firstName || "",
+      lastName: profile.lastName || "",
+      email: profile.email || "",
+      primaryMobileNumber: profile.primaryMobileNumber || "",
+      countryCode_primary: profile.countryCode_primary || "🇮🇳 +91",
+      sessionCreditCount: profile.availableCredits?.toString() || "0",
+      sessionPrice: "", // still not in the profile
+      history: {
+        updatedBy: {
+          userId: profile.history?.updatedBy?.userId || "",
+          userType: profile.history?.updatedBy?.userType || "",
+        },
+        details: profile.history?.details || "",
+        updatedOn: profile.history?.updatedOn || "",
+      },
+    });
+  };
+
+  const handlePatientHistoryClick = async () => {
+    setLoading(true);
+    if (!type) {
+      showErrorToast("Username must be provided.");
+    }
+    // console.log('formData',formData)
+    //   return
+    try {
+      setCookie("invitePatientInfo", JSON.stringify(formData));
+      showSuccessToast("Patient added.");
+      router.push(`/channel-partner/${type}/patient-history`);
+    } catch (err) {
+      showErrorToast(
+        err?.response?.data?.error?.message ||
+          "An error occurred while inviting"
+      );
     } finally {
       setLoading(false);
     }
@@ -134,7 +209,7 @@ const EP_registration = ({ type }) => {
       ...prev,
       primaryMobileNumber: value,
     }));
-    if (value.length >= 3) {
+    if (value.length >= 1) {
       debouncedSearch(value);
     } else {
       setSearchUsers([]);
@@ -181,7 +256,9 @@ const EP_registration = ({ type }) => {
                   (option) => option.value === formData.countryCode_primary
                 )}
                 onChange={(selectedOption) => {
-                  const newCountryCode = selectedOption ? selectedOption.value : "🇮🇳 +91";
+                  const newCountryCode = selectedOption
+                    ? selectedOption.value
+                    : "🇮🇳 +91";
                   setFormData((prev) => ({
                     ...prev,
                     countryCode_primary: newCountryCode,
@@ -204,7 +281,9 @@ const EP_registration = ({ type }) => {
                   menu: (base) => ({ ...base, width: "200px" }),
                 }}
                 formatOptionLabel={(option, { context }) =>
-                  context === "menu" ? `${option.label} - ${option.name}` : option.label
+                  context === "menu"
+                    ? `${option.label} - ${option.name}`
+                    : option.label
                 }
                 menuPlacement="top"
               />
@@ -221,10 +300,14 @@ const EP_registration = ({ type }) => {
             {touched.primaryMobileNumber &&
               formData.primaryMobileNumber &&
               !isMobileValid(formData.primaryMobileNumber) && (
-                <span className="text-red-500 text-sm mt-1 block">Must be 10 digits</span>
+                <span className="text-red-500 text-sm mt-1 block">
+                  Must be 10 digits
+                </span>
               )}
             {touched.primaryMobileNumber && !formData.primaryMobileNumber && (
-              <span className="text-red-500 text-sm mt-1 block">Mobile number is required</span>
+              <span className="text-red-500 text-sm mt-1 block">
+                Mobile number is required
+              </span>
             )}
           </div>
 
@@ -236,6 +319,8 @@ const EP_registration = ({ type }) => {
             <Input
               type="text"
               placeholder="Enter First Name"
+              value={formData.firstName}
+              disabled={true}
               className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
             />
           </div>
@@ -247,6 +332,8 @@ const EP_registration = ({ type }) => {
             </Label>
             <Input
               type="text"
+              value={formData.lastName}
+              disabled={true}
               placeholder="Enter Last Name"
               className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
             />
@@ -259,6 +346,8 @@ const EP_registration = ({ type }) => {
             </Label>
             <Input
               type="text"
+              value={formData.email}
+              disabled={true}
               placeholder="Enter Email Address"
               className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
             />
@@ -271,22 +360,33 @@ const EP_registration = ({ type }) => {
                 {searchUsers.map((profile, index) => (
                   <div
                     key={index}
+                    onClick={() => {
+                      // console.log('profil2e',profile)
+                      handleUserClick(profile);
+                      setSearchUsers([]);
+                    }}
                     className="w-full h-[58px] bg-white/50 rounded-[12px] px-[12px] py-[8px] flex items-center justify-between gap-[118px]"
                   >
                     <div className="flex items-center gap-[12px]">
-                      <Image
-                        alt="profile"
-                        src={profile.image}
-                        width={42}
-                        height={42}
-                        className="rounded-full h-[42px] w-[42px]"
-                      />
+                      <Avatar>
+                        <AvatarImage src={profile.image} />
+                        <AvatarFallback>{` ${
+                          profile.firstName
+                            ? profile.firstName?.charAt(0).toUpperCase()
+                            : ""
+                        }${
+                          profile.lastName
+                            ? profile.lastName.charAt(0).toUpperCase()
+                            : ""
+                        }`}</AvatarFallback>
+                      </Avatar>
+
                       <div className="flex flex-col justify-center gap-[5px]">
                         <Label className="text-sm text-black font-semibold leading-[16px]">
-                          {profile.name}
+                          {`${profile.firstName} ${profile.lastName}`}
                         </Label>
                         <Label className="text-[11px] text-[#6D6A5D] font-medium leading-[14px]">
-                          {profile.mobile}
+                          {profile.primaryMobileNumber}
                         </Label>
                       </div>
                     </div>
@@ -300,10 +400,32 @@ const EP_registration = ({ type }) => {
         {/* Buttons */}
         <div className="flex justify-center items-center gap-[18px] mt-[25px] px-1 ml-[31px] mr-[31px]">
           <Button className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[141px] h-[45px]">
-            <Link href={`/channel-partner/${type}/patient-registration`}>New Patient</Link>
+            <Link href={`/channel-partner/${type}/patient-registration`}>
+              New Patient
+            </Link>
           </Button>
-          <Button className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[141px] h-[45px] opacity-30">
-            <Link href={`/channel-partner/${type}/patient-history`}>+ Patient History</Link>
+          {/* <Button className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[141px] h-[45px] opacity-30">
+            <Link href={`/channel-partner/${type}/patient-history`}>
+              + Patient History
+            </Link>
+          </Button> */}
+          <Button
+            disabled={!isFormValid() || loading}
+            type="button"
+            className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px] "
+            onClick={handlePatientHistoryClick}
+          >
+            {/* <Link
+                          href={`/channel-partner/${type}/patient-history`}
+                          className="text-[14px] "
+                        > */}
+            {loading ? (
+              <Loader2Icon className="animate-spin" />
+            ) : (
+              "+ Patient History"
+            )}
+
+            {/* </Link> */}
           </Button>
         </div>
       </div>
