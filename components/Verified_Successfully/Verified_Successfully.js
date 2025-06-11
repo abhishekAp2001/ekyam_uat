@@ -5,6 +5,7 @@ import Image from "next/image";
 import Patient_Header from "../Patient_Header/Patient_Header";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { whatsappUrl } from "@/lib/constants";
 
 const Verified_Successfully = ({ type }) => {
   const router = useRouter();
@@ -58,13 +59,15 @@ const Verified_Successfully = ({ type }) => {
             <span className="text-[10px] text-gray-500 font-medium">
               Any technical support
             </span>
-            <Image
-              src="/images/chat_icon.png"
-              width={54}
-              height={49}
-              className="w-[54px]"
-              alt="ekyamm"
-            />
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+              <Image
+                src="/images/chat_icon.png"
+                width={54}
+                height={49}
+                className="w-[54px]"
+                alt="ekyamm"
+              />
+            </a>
           </div>
         </div>
       </div>

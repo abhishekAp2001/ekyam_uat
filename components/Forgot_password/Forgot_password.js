@@ -8,6 +8,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { whatsappUrl } from "@/lib/constants";
 
 const Forgot_password = () => {
   const [value, setValue] = React.useState("");
@@ -80,6 +81,7 @@ const Forgot_password = () => {
             <span className="text-[10px] text-gray-500 font-medium">
               Any technical support
             </span>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
             <Image
               src="/images/chat_icon.png"
               width={54}
@@ -87,6 +89,7 @@ const Forgot_password = () => {
               className="w-[54px]"
               alt="ekyamm"
             />
+            </a>
           </div>
         </div>
       </div>

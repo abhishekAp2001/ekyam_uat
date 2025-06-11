@@ -11,6 +11,7 @@ import { customEncodeString, encryptData } from "@/lib/utils";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import { whatsappUrl } from "@/lib/constants";
 
 const Login = () => {
   const axios = axiosInstance();
@@ -160,13 +161,15 @@ const Login = () => {
             <span className="text-[10px] text-gray-500 font-medium">
               Any technical support
             </span>
-            <Image
-              src="/images/chat_icon.png"
-              width={54}
-              height={49}
-              className="w-[54px]"
-              alt="ekyamm"
-            />
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+              <Image
+                src="/images/chat_icon.png"
+                width={54}
+                height={49}
+                className="w-[54px]"
+                alt="ekyamm"
+              />
+            </a>
           </div>
         </div>
       </div>
