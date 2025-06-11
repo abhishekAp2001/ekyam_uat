@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { showErrorToast } from "@/lib/toast";
 
 const IP_Single_Session_Fees = () => {
   const router = useRouter();
@@ -147,7 +148,7 @@ const IP_Single_Session_Fees = () => {
         router.push("/sales/ip_bank_details");
       } catch (error) {
         console.error("Error saving data:", error);
-        toast.error("Failed to save details");
+        showErrorToast("Failed to save details");
       }
     } else {
       setTouched({
@@ -155,7 +156,7 @@ const IP_Single_Session_Fees = () => {
         panCard: true,
         gstNumber: true,
       });
-      toast.error("Please fill all required fields correctly");
+      showErrorToast("Please fill all required fields correctly");
     }
   };
 

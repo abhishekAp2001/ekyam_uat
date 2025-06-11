@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { customEncodeString, encryptData } from "@/lib/utils";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 const Login = () => {
   const axios = axiosInstance();
@@ -50,7 +51,7 @@ const Login = () => {
       };
       const response = await axios.post("/v2/auth/user/signin", payload);
       if (response?.data?.success === true) {
-        toast.success("Login Successful");
+        showSuccessToast("Login Successful");
         if (
           response?.data?.data?.userType === "superAdmin" &&
           response?.data?.data?.status === "active"
@@ -67,7 +68,7 @@ const Login = () => {
         setError(
           error?.response?.data?.error?.message || "Wrong Username/Password"
         );
-        toast.error(error?.response?.data?.error?.message || "Login Failed");
+        showErrorToast(error?.response?.data?.error?.message || "Login Failed");
       }
     }
   };

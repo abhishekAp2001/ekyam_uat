@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { getCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { showErrorToast } from "@/lib/toast";
 
 const CP_clinic_details = () => {
   const router = useRouter();
@@ -88,11 +89,11 @@ const CP_clinic_details = () => {
             city: "",
             state: "",
           }));
-          toast.error("Invalid PIN code");
+          showErrorToast("Invalid PIN code");
         }
       } catch (error) {
         console.error("Error fetching location data:", error);
-        toast.error("Failed to fetch location data");
+        showErrorToast("Failed to fetch location data");
         setFormData((prev) => ({
           ...prev,
           area: "",

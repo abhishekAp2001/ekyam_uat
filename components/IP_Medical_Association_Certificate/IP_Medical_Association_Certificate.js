@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import IP_Header from "../IP_Header/IP_Header";
 import { toast } from "react-toastify";
 import { DrawerTitle } from "../ui/drawer";
+import { showErrorToast } from "@/lib/toast";
 
 const IP_Medical_Association_Certificate = () => {
   const [formData, setFormData] = useState({
@@ -35,7 +36,7 @@ const IP_Medical_Association_Certificate = () => {
           "Error parsing ip_medical_association_details from localStorage:",
           error
         );
-        toast.error("Failed to load medical association details");
+        showErrorToast("Failed to load medical association details");
       }
     }
   }, []);

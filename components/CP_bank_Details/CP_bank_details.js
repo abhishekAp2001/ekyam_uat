@@ -10,6 +10,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-toastify";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 const CP_bank_details = () => {
   const axios = axiosInstance();
@@ -84,7 +85,7 @@ const CP_bank_details = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(
+        showErrorToast(
           error?.response?.data?.error?.message ||
             "Failed to fetch bank details"
         );
@@ -122,7 +123,7 @@ const CP_bank_details = () => {
       setCookie("cp_bank_details", formData);
       handleAddChannelPartner();
     } else {
-      toast.error("Please fill all required fields correctly");
+      showErrorToast("Please fill all required fields correctly");
       // Mark all fields as touched to show errors
       setTouched({
         ifscCode: true,
@@ -202,7 +203,7 @@ const CP_bank_details = () => {
       const response = await axios.post(`v2/cp/channelPartner/invite`,payload)
       if(response?.data?.success){
         router.push("/sales")
-        toast.success("Profile Created with Unique URL");
+        showSuccessToast("Profile Created with Unique URL");
         deleteCookie("cp_type");
         deleteCookie("cp_clinic_details");
         deleteCookie("cp_doctor_details");
@@ -214,7 +215,7 @@ const CP_bank_details = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message);
+        showErrorToast(error?.response?.data?.error?.message);
       }
     }
   };

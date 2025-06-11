@@ -14,6 +14,7 @@ import IP_Header from "../IP_Header/IP_Header";
 import IP_Buttons from "../IP_Buttons/IP_Buttons";
 import { Button } from "../ui/button";
 import { base64ToFile } from "@/lib/utils";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 const IP_bank_details = () => {
   const axios = axiosInstance();
@@ -90,7 +91,7 @@ const IP_bank_details = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(
+        showErrorToast(
           error?.response?.data?.error?.message ||
             "Failed to fetch bank details"
         );
@@ -128,7 +129,7 @@ const IP_bank_details = () => {
       localStorage.setItem("ip_bank_details", JSON.stringify(formData));
       handleAddIndividualPractitioner();
     } else {
-      toast.error("Please fill all required fields correctly");
+      showErrorToast("Please fill all required fields correctly");
       // Mark all fields as touched to show errors
       setTouched({
         ifscCode: true,
@@ -166,7 +167,7 @@ const IP_bank_details = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message);
+        showErrorToast(error?.response?.data?.error?.message);
       }
       return null;
     }
@@ -297,14 +298,14 @@ const IP_bank_details = () => {
         localStorage.removeItem("ip_medical_association_details");
         localStorage.removeItem("ip_single_session_fees");
         router.push("/sales");
-        toast.success("Invite Sent");
+        showSuccessToast("Invite Sent");
       }
     } catch (error) {
       console.error("Error Adding Individual Practitioner:", error);
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message);
+        showErrorToast(error?.response?.data?.error?.message);
       }
     } finally {
       setIsLoading(false);

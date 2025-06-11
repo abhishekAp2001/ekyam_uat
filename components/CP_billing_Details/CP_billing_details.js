@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import axiosInstance from "@/lib/axiosInstance";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 const CP_billing_details = () => {
   const router = useRouter();
@@ -176,7 +177,7 @@ const CP_billing_details = () => {
       const response = await axios.post(`v2/cp/channelPartner/invite`, payload);
       if (response?.data?.success) {
         router.push("/sales");
-        toast.success("Profile Created with Unique URL");
+        showSuccessToast("Profile Created with Unique URL");
         deleteCookie("cp_type");
         deleteCookie("cp_clinic_details");
         deleteCookie("cp_doctor_details");
@@ -188,7 +189,7 @@ const CP_billing_details = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message);
+        showErrorToast(error?.response?.data?.error?.message);
       }
     }
   };

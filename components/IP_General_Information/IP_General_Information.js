@@ -10,6 +10,7 @@ import IP_Buttons from "../IP_Buttons/IP_Buttons";
 import { toast } from "react-toastify";
 import axiosInstance from "@/lib/axiosInstance";
 import { useRouter } from "next/navigation";
+import { showErrorToast } from "@/lib/toast";
 
 const IP_General_Information = () => {
   const axios = axiosInstance();
@@ -71,7 +72,7 @@ const IP_General_Information = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message || "Something Went Wrong");
+        showErrorToast(error?.response?.data?.error?.message || "Something Went Wrong");
       }
     }
   };
@@ -132,7 +133,7 @@ const IP_General_Information = () => {
       localStorage.setItem("ip_general_information", JSON.stringify(formData));
       router.push("/sales/ip_medical_association_details");
     } else {
-      toast.error("Please fill all required fields correctly");
+      showErrorToast("Please fill all required fields correctly");
     }
   };
 

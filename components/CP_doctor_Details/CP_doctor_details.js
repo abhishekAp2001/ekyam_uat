@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 import { getCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+import { showErrorToast } from "@/lib/toast";
 polyfillCountryFlagEmojis();
 
 const CP_doctor_details = () => {
@@ -77,7 +78,7 @@ const CP_doctor_details = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        toast.error(error?.response?.data?.error?.message || "Something Went Wrong");
+        showErrorToast(error?.response?.data?.error?.message || "Something Went Wrong");
       }
     }
   };
@@ -173,7 +174,7 @@ const CP_doctor_details = () => {
         whatsappNumber: true,
         emergencyNumber: true,
       });
-      toast.error("Please fill all required fields correctly");
+      showErrorToast("Please fill all required fields correctly");
     }
   };
 
