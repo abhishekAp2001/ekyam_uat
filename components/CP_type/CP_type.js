@@ -110,7 +110,7 @@ const CP_type = () => {
   // Add new channel partner type
   const addChannelPartner = async (newType) => {
     try {
-      const response = await axios.post("v2/cp/channelPartner/types", { name: newType });
+      const response = await axios.post("v2/cp/channelPartner/types", { type: newType });
       if (response?.data?.success === true) {
         showSuccessToast("Channel Partner Type Added");
         await channelPartnerList(search);
