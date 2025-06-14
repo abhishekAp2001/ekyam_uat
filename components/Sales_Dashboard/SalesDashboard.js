@@ -10,50 +10,15 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Menu, Plus, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Dashboard_card from "../Dashboard_card/Dashboard_card";
 import Link from "next/link";
-import All_clinics from "../All_clinics/All_clinics";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import axiosInstance from "@/lib/axiosInstance";
-import { showErrorToast } from "@/lib/toast";
 
 const SalesDashboard = () => {
-  const axios = axiosInstance();
-  const [channelPartnerList, setChannelPartnerList] = useState([]);
-  const [individualPractitionerList, setIndividualPractitionerList] = useState(
-    []
-  );
-
-  const fectchAllList = async () => {
-    try {
-      const [resp1, resp2] = await Promise.all([
-        axios.get(`v2/cp/channelPartner`),
-        axios.get(`v2/sales/individualPractitioner`),
-      ]);
-      setChannelPartnerList(resp1);
-      setIndividualPractitionerList(resp2);
-    } catch (error) {
-      if (error.forceLogout) {
-        router.push("/login");
-      } else {
-        showErrorToast(error?.response?.data?.error?.message);
-      }
-    }
-  };
-
-  useEffect(() => {
-    fectchAllList();
-  }, []);
 
   return (
     <>
@@ -98,21 +63,7 @@ const SalesDashboard = () => {
         {/* Channel Partner */}
         <div className="mt-[12.35px] pt-[8.21px] pb-3.5 border=[1.47px] border-[#FFFFFF4D] rounded-2xl">
           <div className="flex justify-between items-center ps-2 pe-[16.93px]">
-            {/* <div className="flex items-center gap-1">
-              <Image
-                src="/images/bx_clinic.png"
-                width={24}
-                height={24}
-                className="w-[24px]"
-                alt="ekyamm"
-              />
-              <span className="text-[15px] text-black font-semibold">
-                Channel Partner
-              </span>
-            </div> */}
-            {/* <Link href={""} className="text-[12px] text-gray-400">
-              View All
-            </Link> */}
+            
           </div>
           <div className="">
             <div className=" flex flex-col gap-3">
