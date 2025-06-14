@@ -23,7 +23,7 @@ const Clinic_List = () => {
           <div className="flex justify-between items-center ps-2 pe-[16.93px]">            
           </div>
           <div className="px-[10px] ">
-            <All_clinics />
+            <All_clinics list={channelPartnerList} />
           </div>
         </div>
         </div>
