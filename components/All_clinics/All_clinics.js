@@ -5,7 +5,7 @@ const All_clinics = ({ list }) => {
   return (
     <>
       <div className="flex justify-between flex-wrap mt-[10.9px]">
-        {list.map((list, index) => (
+        {list?.map((list, index) => (
           <div
             key={index}
             className="w-1/3 rounded-[65px] flex flex-col items-center gap-1 mb-3.5"
