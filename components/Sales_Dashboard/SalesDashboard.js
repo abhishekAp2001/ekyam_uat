@@ -28,7 +28,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { showErrorToast } from "@/lib/toast";
 
 const SalesDashboard = () => {
-  const axios = axiosInstance()
+  const axios = axiosInstance();
   const [channelPartnerList, setChannelPartnerList] = useState([]);
   const [individualPractitionerList, setIndividualPractitionerList] = useState(
     []
@@ -36,12 +36,12 @@ const SalesDashboard = () => {
 
   const fectchAllList = async () => {
     try {
-      const [resp1,resp2] = await Promise.all([
+      const [resp1, resp2] = await Promise.all([
         axios.get(`v2/cp/channelPartner`),
         axios.get(`v2/sales/individualPractitioner`),
-      ])
-      setChannelPartnerList(resp1)
-      setIndividualPractitionerList(resp2)
+      ]);
+      setChannelPartnerList(resp1);
+      setIndividualPractitionerList(resp2);
     } catch (error) {
       if (error.forceLogout) {
         router.push("/login");
@@ -51,20 +51,20 @@ const SalesDashboard = () => {
     }
   };
 
-  useEffect(()=>{
-    fectchAllList()
-  },[])
+  useEffect(() => {
+    fectchAllList();
+  }, []);
 
   return (
     <>
-      <div className="h-[102px]  bg-gradient-to-r  from-[#B0A4F5] to-[#EDA197] rounded-bl-3xl rounded-br-3xl px-3 pt-12">
+      <div className="bg-gradient-to-r  from-[#B0A4F5] to-[#EDA197] rounded-bl-3xl rounded-br-3xl px-3 py-5 mb-0">
         <div className="flex justify-between items-center">
           <Menu color="white" width={24} />
           <Image
             src="/images/ekyamm.png"
             width={100}
             height={49}
-            className="w-[106px] pt-1.5"
+            className="w-[106px] pt-1.5 mix-blend-multiply"
             alt="ekyamm"
           />
           <Avatar>
@@ -73,7 +73,7 @@ const SalesDashboard = () => {
           </Avatar>
         </div>
       </div>
-      <div className="px-3 h-screen mb-[26%] overflow-auto">
+      <div className="px-3 h-[81%] pb-[13%] overflow-auto pt-3">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className="text-[12px] text-gray-500">Good morning,</span>
@@ -96,9 +96,9 @@ const SalesDashboard = () => {
         </div>
 
         {/* Channel Partner */}
-        <div className="bg-[#FFFFFF80] mt-[12.35px] pt-[8.21px] pb-3.5 border=[1.47px] border-[#FFFFFF4D] rounded-2xl">
+        <div className="mt-[12.35px] pt-[8.21px] pb-3.5 border=[1.47px] border-[#FFFFFF4D] rounded-2xl">
           <div className="flex justify-between items-center ps-2 pe-[16.93px]">
-            <div className="flex items-center gap-1">
+            {/* <div className="flex items-center gap-1">
               <Image
                 src="/images/bx_clinic.png"
                 width={24}
@@ -106,16 +106,73 @@ const SalesDashboard = () => {
                 className="w-[24px]"
                 alt="ekyamm"
               />
-              <span className="text-[12px] text-black font-medium">
+              <span className="text-[15px] text-black font-semibold">
                 Channel Partner
               </span>
-            </div>
-            <Link href={""} className="text-[10.32px] text-gray-400">
+            </div> */}
+            {/* <Link href={""} className="text-[12px] text-gray-400">
               View All
-            </Link>
+            </Link> */}
           </div>
-          <div className="px-[10px] ">
-            <All_clinics />
+          <div className="">
+            <div className=" flex flex-col gap-3">
+              <div className="bg-[#FFFFFF80] text-black text-[16px] font-[600] py-[17px] p-[8px] flex  justify-between items-center w-full h-[44px] rounded-[8.62px]">
+                <div className="flex items-center gap-[7px]">
+                <Image
+                  src="/images/bx_clinic.png"
+                  width={24}
+                  height={24}
+                  className="w-[24px]"
+                  alt="ekyamm"
+                />
+                Channel Partner
+                </div>
+                <Link
+                  href={"/sales/cp_list"}
+                  className="text-[12px] text-gray-500"
+                >
+                  View All
+                </Link>
+              </div>
+
+               <div className="bg-[#FFFFFF80] text-black text-[16px] font-[600] py-[17px] p-[8px] flex  justify-between items-center w-full h-[44px] rounded-[8.62px]">
+                <div className="flex items-center gap-[7px]">
+                <Image
+                  src="/images/bx_clinic.png"
+                  width={24}
+                  height={24}
+                  className="w-[24px]"
+                  alt="ekyamm"
+                />
+                Individual Practitioner
+                </div>
+                <Link
+                  href={"/sales/ip_list"}
+                  className="text-[12px] text-gray-500"
+                >
+                  View All
+                </Link>
+              </div>
+
+               <div className="bg-[#FFFFFF80] text-black text-[16px] font-[600] py-[17px] p-[8px] flex  justify-between items-center w-full h-[44px] rounded-[8.62px]">
+                <div className="flex items-center gap-[7px]">
+                <Image
+                  src="/images/bx_clinic.png"
+                  width={24}
+                  height={24}
+                  className="w-[24px]"
+                  alt="ekyamm"
+                />
+                Clinic
+                </div>
+                <Link
+                  href={"/sales/clinic_list"}
+                  className="text-[12px] text-gray-500"
+                >
+                  View All
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
         <div className="">
@@ -126,7 +183,7 @@ const SalesDashboard = () => {
             Add User
           </Button> */}
           <Drawer className="pt-[9.97px]">
-            <DrawerTrigger className="mt-[10.8px] bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] h-[45px]  rounded-[8px] flex items-center justify-center w-full">
+            <DrawerTrigger className="mt-[10.8px] bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white py-[14.5px] h-[45px]  rounded-[8px] flex items-center justify-center w-full">
               Add User
             </DrawerTrigger>
             <DrawerContent className="bg-gradient-to-b  from-[#e7e4f8] via-[#f0e1df] via-70%  to-[#feedea]">
@@ -188,12 +245,12 @@ const SalesDashboard = () => {
       </div>
 
       {/* footer */}
-      <div className="footer_bar bg-[#FFFFFFB2] h-[58px] fixed bottom-[23px] left-0 right-0 flex items-center">
+      <div className="footer_bar bg-[#FFFFFFB2] h-[58px] fixed bottom-0 left-0 right-0 flex items-center">
         <Tabs defaultValue="account" className="">
           <TabsList className="w-100 bg-transparent p-0  h-[58px]">
             <TabsTrigger
               value="dashboard"
-              className="active:border-t active:border-t-[#000] focus:border-t focus:border-t-[#000] active:shadow-none focus:shadow-none"
+              className=" shadow-none active:shadow-none focus:shadow-none"
             >
               <Image
                 src="/images/dashboard-icon.png"
@@ -205,7 +262,7 @@ const SalesDashboard = () => {
             </TabsTrigger>
             <TabsTrigger
               value="add"
-              className="active:border-t active:border-t-[#000] focus:border-t focus:border-t-[#000] active:shadow-none focus:shadow-none"
+              className=" shadow-none active:shadow-none focus:shadow-none"
             >
               <Image
                 src="/images/communication.png"
@@ -217,7 +274,7 @@ const SalesDashboard = () => {
             </TabsTrigger>
             <TabsTrigger
               value="search"
-              className="active:border-t active:border-t-[#000] focus:border-t focus:border-t-[#000] active:shadow-none focus:shadow-none"
+              className="shadow-none active:shadow-none focus:shadow-none"
             >
               <Image
                 src="/images/alerts.png"

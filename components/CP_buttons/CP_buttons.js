@@ -18,8 +18,8 @@ const CP_buttons = ({ disabled,onSave,buttonText="Save & Continue" }) => {
 
   return (
     <>
-      <div className="flex justify-between items-center gap-3 mt-[20.35px] fixed bottom-[23px] left-0 right-0">
-        <Button className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px]  mx-auto rounded-[8px] flex items-center justify-center w-[42%] h-[45px]" onClick={()=>{
+      <div className="bg-[#e8e6f7] flex justify-between items-center gap-3 fixed bottom-0 px-[17px] pb-[18px] left-0 right-0">
+        <Button className="border border-[#CC627B] bg-transparent text-[15px] font-[600] text-[#CC627B] py-[14.5px]  rounded-[8px] flex items-center justify-center w-[48%] h-[45px]" onClick={()=>{
           handleCancel()
         }}>
           Cancel
@@ -27,7 +27,7 @@ const CP_buttons = ({ disabled,onSave,buttonText="Save & Continue" }) => {
         <Button
           disabled={disabled}
           onClick={() => {onSave()}}
-          className="bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px]  mx-auto rounded-[8px] flex items-center justify-center w-[42%] h-[45px]"
+          className="bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white py-[14.5px]  rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
         >
           {buttonText}
         </Button>

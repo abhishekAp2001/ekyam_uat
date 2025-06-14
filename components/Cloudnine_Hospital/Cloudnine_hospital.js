@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import Select from "react-select";
 import axiosInstance from "@/lib/axiosInstance";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, MapPin } from "lucide-react";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 polyfillCountryFlagEmojis();
 
@@ -69,9 +69,9 @@ const Cloudnine_Hospital = ({ type }) => {
         payload
       );
       if (resposne?.data?.success) {
-        setCookie("sessions_selection",JSON.stringify(formData))
-        showSuccessToast("Patient Invited & Invoice Sent")
-        router.push(`/channel-partner/${type}/invoice_sent`)
+        setCookie("sessions_selection", JSON.stringify(formData));
+        showSuccessToast("Patient Invited & Invoice Sent");
+        router.push(`/channel-partner/${type}/invoice_sent`);
       }
     } catch (error) {
       showErrorToast(response?.data?.error?.message || "Something went wrong.");
@@ -253,15 +253,21 @@ const Cloudnine_Hospital = ({ type }) => {
     <>
       <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-screen flex flex-col">
         <Select_Header />
-        <div className="h-full overflow-auto mb-[40%] px-[17px] mt-[22px] bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
-          <div className="w-full h-[25px] text-[#776EA5] font-semibold text-[20px] leading-[25px] mb-6 text-center">
+        <div className="h-full overflow-auto pb-[28%] px-[17px] bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
+          <div className="w-full h-[25px] text-[#776EA5] font-semibold text-[20px] leading-[25px] mb-2 text-center">
             {channelPartnerData?.clinicName || "Greetings Hospital"}
           </div>
+          <div className="flex items-center justify-center gap-1">
+            <div className="bg-[#776EA5] rounded-full w-[16.78px] h-[16.78px] flex justify-center items-center">
+              <MapPin color="white" className="w-[12.15px] h-[12.15px]" />
+            </div>
+            <span className="text-sm text-[#776EA5] font-medium">Noida</span>
+          </div>
           {/* Patient Details */}
-          <div className="bg-[#ffffff66] rounded-[12px] p-5 mt-[45px] relative">
+          <div className="bg-[#ffffff66] rounded-[12px] p-5 mt-[25px] relative">
             {/* Patient Name Input */}
             <div>
-              <Label className="text-[14px] text-gray-500 mb-2">
+              <Label className="text-[15px] text-gray-500 mb-[7.59px]">
                 Patient Name<span className="text-red-500">*</span>
               </Label>
               <Input
@@ -269,12 +275,12 @@ const Cloudnine_Hospital = ({ type }) => {
                 value={fullName}
                 type="text"
                 placeholder="Enter First Name"
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]  opacity-50 cursor-not-allowed"
+                className="bg-white rounded-[7.26px] placeholder:text-[15px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]  opacity-50 cursor-not-allowed"
               />
             </div>
 
             <div>
-              <Label className="text-[14px] text-gray-500 font-medium mb-2 mt-[22px]">
+              <Label className="text-[15px] text-gray-500 font-medium mb-[7.59px] mt-[22px]">
                 Primary Mobile Number <span className="text-red-500">*</span>
               </Label>
               <div className="flex items-center gap-2 relative">
@@ -312,15 +318,15 @@ const Cloudnine_Hospital = ({ type }) => {
                   value={patientPreviousData.primaryMobileNumber}
                   disabled={true}
                   placeholder="Enter Mobile Number"
-                  className="bg-white border border-gray-300 rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-2 px-4 h-[38px] w-full"
+                  className="bg-white border border-gray-300 rounded-[7.26px] placeholder:text-[15px] placeholder:text-gray-500 font-semibold py-2 px-4 h-[38px] w-full"
                 />
               </div>
             </div>
           </div>
 
           {/* Sessions */}
-          <div className="mt-3 bg-[#FFFFFF80] rounded-[12px] p-4">
-            <strong className="text-[16px] font-[600] text-black block mb-4">
+          <div className="mt-3 bg-[#FFFFFF80] rounded-[12px] px-4 pt-4 pb-2">
+            <strong className="text-[15px] font-[600] text-black block mb-4">
               Select Number of Sessions
             </strong>
             {sessions.map((_session, _x) => {
@@ -336,7 +342,7 @@ const Cloudnine_Hospital = ({ type }) => {
                   />
                   <Label
                     htmlFor={`session${_session.count}`}
-                    className="text-[16px] text-gray-500 font-semibold"
+                    className="text-[15px] text-gray-500 font-semibold"
                   >
                     {`${_session.name}`}
                   </Label>
@@ -388,11 +394,11 @@ const Cloudnine_Hospital = ({ type }) => {
 
           {/* Session Fees */}
           <div className="my-3 bg-[#FFFFFF80] rounded-[12px] pl-4 pb-4 pt-4">
-            <strong className="text-[16px] font-[600] text-black block mb-3">
+            <strong className="text-[15px] font-[600] text-black block mb-3">
               Select Session Fees
             </strong>
             <div className="bg-white rounded-[12px] p-5">
-              <div className="text-[14px] text-gray-500 font-[500] mb-3">
+              <div className="text-[15px] text-gray-500 font-[500] mb-3">
                 Session Fee (Hourly):{" "}
                 <span className="font-[700]">
                   ₹{formData.sessionPrice || "None"} per session
@@ -410,7 +416,7 @@ const Cloudnine_Hospital = ({ type }) => {
                 className="w-full mt-4"
                 handleBlur={"sessionPrice"}
               />
-              <div className="flex justify-between mt-2 text-[14px] text-[#776EA5] font-[600]">
+              <div className="flex justify-between mt-2 text-[15px] text-[#776EA5] font-[600]">
                 <span>&#8377;{feesData.min}/-</span>
                 <span>&#8377;{feesData.max}/-</span>
               </div>
@@ -423,12 +429,12 @@ const Cloudnine_Hospital = ({ type }) => {
           </div>
         </div>
         {/* Buttons */}
-        <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex flex-col items-center gap-3 fixed bottom-0 py-[23px] px-[17px] left-0 right-0 ">
+        <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex flex-col items-center gap-3 fixed bottom-0 pb-[23px] px-[17px] left-0 right-0 ">
           <div className="w-full flex gap-[12.2px]">
             <Button
               onClick={handleCancel}
               disabled={cancelLoading}
-              className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
+              className="border border-[#CC627B] bg-transparent text-[15px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
             >
               {cancelLoading ? (
                 <Loader2Icon className="animate-spin" />
@@ -439,7 +445,7 @@ const Cloudnine_Hospital = ({ type }) => {
             <Button
               onClick={handleGenerateInvoice}
               disabled={loading || !isFormValid()}
-              className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white rounded-[8px] w-[48%] h-[45px]"
+              className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white rounded-[8px] w-[48%] h-[45px]"
             >
               {/* <Link
                 href={`/channel-partner/${type}/np_registration`}

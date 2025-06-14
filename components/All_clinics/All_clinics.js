@@ -76,7 +76,7 @@ const All_clinics = () => {
         alt={clinic.name}
       />
       <div className="flex flex-col">
-        <span className="text-[14px] text-black font-[400] whitespace-pre-line text-center">
+        <span className="text-[14px] text-black font-medium whitespace-pre-line text-center">
           {clinic.name} <br />
           {clinic.title}
         </span>

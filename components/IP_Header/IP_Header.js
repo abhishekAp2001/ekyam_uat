@@ -32,7 +32,7 @@ const IP_Header = ({ text }) => {
               handleBack();
             }}
           />
-          <div className="flex-1 text-[14px] font-semibold text-gray-800">
+          <div className="flex-1 text-[16px] font-semibold text-gray-800">
             {text}
           </div>
           <div className="h-6 w-6" /> {/* Space */}

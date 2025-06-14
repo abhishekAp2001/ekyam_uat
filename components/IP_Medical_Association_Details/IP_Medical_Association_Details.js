@@ -183,7 +183,7 @@ const IP_Medical_Association_Details = () => {
       <IP_Header text="Medical Association Details" />
       <div className="h-full mb-[26%] overflow-auto px-[17px] mt-1 bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
         <div>
-          <Label htmlFor="name" className="text-[14px] text-gray-500 mb-2">
+          <Label htmlFor="name" className="text-[15px] text-gray-500 mb-[7.59px]">
             Name of Medical Association *
           </Label>
           <Input
@@ -193,7 +193,7 @@ const IP_Medical_Association_Details = () => {
             value={formData.name}
             onChange={(e) => handleTextInputChange(e, "name")}
             onBlur={() => handleBlur("name")}
-            className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-gray-500 py-3 px-4 h-[39px]"
+            className="bg-white rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] placeholder:text-gray-500 py-3 px-4 h-[39px]"
           />
           {touched.name && !isNameValid() && (
             <span className="text-red-500 text-sm mt-1 block">
@@ -204,7 +204,7 @@ const IP_Medical_Association_Details = () => {
         <div>
           <Label
             htmlFor="medicalAssociationNumber"
-            className={`text-[14px] mb-2 mt-4 ${isNameValid() ? "text-gray-500" : "text-[#00000040]"}`}
+            className={`text-[15px] mb-[7.59px] mt-4 ${isNameValid() ? "text-gray-500" : "text-[#00000040]"}`}
           >
             Medical Association Number *
           </Label>
@@ -216,7 +216,7 @@ const IP_Medical_Association_Details = () => {
             onChange={(e) => handleTextInputChange(e, "medicalAssociationNumber")}
             onBlur={() => handleBlur("medicalAssociationNumber")}
             disabled={!isNameValid()}
-            className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+            className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-4 h-[39px] ${
               isNameValid()
                 ? "bg-white placeholder:text-gray-500"
                 : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -228,15 +228,16 @@ const IP_Medical_Association_Details = () => {
             </span>
           )}
         </div>
-        <div className="mt-[21px] bg-[#FFFFFF80] rounded-[12px] p-4">
+        <div className="mt-[21px] bg-[#FFFFFF80] rounded-[12px] p-4 h-[184px]">
           <div className="flex items-center justify-between">
-            <span className="text-[14px] font-semibold text-gray-800">
+            <span className="text-[15px] font-semibold text-gray-800">
               Upload Certificate *
             </span>
+            <div className="">
             <Drawer>
               <DrawerTrigger>
                 <Button
-                  className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] rounded-[8px] flex items-center justify-center w-[87px] h-[32px]"
+                  className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white py-[14.5px] rounded-[8px] flex items-center justify-center w-[87px] h-[32px]"
                   disabled={!isMedicalAssociationNumberValid()}
                 >
                   + Add
@@ -314,6 +315,7 @@ const IP_Medical_Association_Details = () => {
                 <DrawerFooter className="p-0"></DrawerFooter>
               </DrawerContent>
             </Drawer>
+            </div>
           </div>
           <div className="flex items-center gap-2 mt-4 overflow-x-auto">
             {formData.certificates.map((certificate, index) => (
@@ -362,9 +364,9 @@ const IP_Medical_Association_Details = () => {
           </div>
         </div>
       </div>
-      <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex justify-center items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-3">
+      <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex justify-center items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-[16px]">
         <Button
-          className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] rounded-[8px] flex items-center justify-center w-full h-[35px]"
+          className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white py-[14.5px] rounded-[8px] flex items-center justify-center w-full h-[45px]"
           onClick={handleSave}
           disabled={!isFormValid()}
         >

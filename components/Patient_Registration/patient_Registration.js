@@ -12,7 +12,7 @@ import Select from "react-select";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import axiosInstance from "@/lib/axiosInstance";
 import { useRouter } from "next/navigation";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, MapPin } from "lucide-react";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
 polyfillCountryFlagEmojis()
 
@@ -141,13 +141,20 @@ const Patient_Registration = ({ type }) => {
     <>
       <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-full flex flex-col">
         <PR_Header />
-        <div className="h-full overflow-auto px-[17px] mt-[22px]">
-          <div className="w-full h-[25px] text-[#776EA5] font-semibold text-[20px] leading-[25px] mb-6 text-center">
+        <div className="h-full overflow-auto px-[16px]">
+          <div className="w-full h-[25px] text-[#776EA5] font-semibold text-[20px] leading-[25px] mb-2 text-center">
             {channelPartnerData?.clinicName || "Greetings Hospital"}
           </div>
-          <div className="bg-[#FFFFFFB2] rounded-[12px] p-5 mt-[45px] relative">
+          <div className="flex items-center justify-center gap-1">
+           <div className="bg-[#776EA5] rounded-full w-[16.78px] h-[16.78px] flex justify-center items-center">
+              <MapPin color="white" className="w-[12.15px] h-[12.15px]"/></div>
+              <span className="text-sm text-[#776EA5] font-medium">
+                Noida
+              </span>
+              </div>
+          <div className="bg-[#FFFFFFB2] rounded-[12px] p-5 mt-[25px] relative">
             <div>
-              <Label className="text-[14px] text-gray-500 mb-2">
+              <Label className="text-[15px] text-gray-500 mb-[7.59px]">
                 First Name <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -158,7 +165,7 @@ const Patient_Registration = ({ type }) => {
                 }
                 onBlur={() => handleBlur("firstName")}
                 placeholder="Enter First Name"
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] placeholder:text-[15px] placeholder:text-gray-500 font-semibold placeholder:font-medium py-3 px-4 h-[39px]"
               />
             </div>
             {touched.firstName && !formData.firstName && (
@@ -167,7 +174,7 @@ const Patient_Registration = ({ type }) => {
               </span>
             )}
             <div>
-              <Label className="text-[14px] text-gray-500 font-medium mb-2 mt-[22px]">
+              <Label className="text-[15px] text-gray-500 font-medium mb-[7.59px] mt-[22px]">
                 Last Name <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
@@ -180,7 +187,7 @@ const Patient_Registration = ({ type }) => {
                   onBlur={() => handleBlur("lastName")}
                   type="text"
                   placeholder="Enter Last Name"
-                  className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
+                  className="bg-white rounded-[7.26px] placeholder:text-[15px] placeholder:text-gray-500 font-semibold placeholder:font-medium py-3 px-4 h-[39px]"
                 />
               </div>
               {touched.lastName && !formData.lastName && (
@@ -191,7 +198,7 @@ const Patient_Registration = ({ type }) => {
             </div>
 
             <div>
-              <Label className="text-[14px] text-gray-500 font-medium mb-2 mt-[22px]">
+              <Label className="text-[15px] text-gray-500 font-medium mb-[7.59px] mt-[22px]">
                 Email Address
               </Label>
               <Input
@@ -203,7 +210,7 @@ const Patient_Registration = ({ type }) => {
                 onBlur={() => handleBlur("email")}
                 type="text"
                 placeholder="Enter Email Address"
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]"
+                className="bg-white rounded-[7.26px] placeholder:text-[15px] placeholder:text-gray-500 placeholder:font-medium font-semibold py-3 px-4 h-[39px]"
               />
               {touched.email && !formData.email && (
                 <span className="text-red-500 text-sm mt-1 block">
@@ -213,7 +220,7 @@ const Patient_Registration = ({ type }) => {
             </div>
 
             <div>
-              <Label className="text-[14px] text-gray-500 font-medium mb-2 mt-[22px]">
+              <Label className="text-[15px] text-gray-500 font-medium mb-[7.59px] mt-[22px]">
                 Primary Mobile Number <span className="text-red-500">*</span>
               </Label>
               <div className="flex items-center gap-2 relative">
@@ -270,7 +277,7 @@ const Patient_Registration = ({ type }) => {
                   onBlur={() => handleBlur("primaryMobileNumber")}
                   disabled={!isEmailValid(formData.email)}
                   placeholder="Enter Mobile Number"
-                  className="bg-white border border-gray-300 rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-2 px-4 h-[38px] w-full"
+                  className="bg-white border border-gray-300 rounded-[7.26px] placeholder:text-[15px] placeholder:text-gray-500 placeholder:font-medium font-semibold py-2 px-4 h-[38px] w-full"
                 />
               </div>
               {touched.primaryMobileNumber &&
@@ -289,11 +296,11 @@ const Patient_Registration = ({ type }) => {
           </div>
 
           <div className="flex justify-center items-center gap-[18px] mt-[25px] px-1 ml-[31px] mr-[31px]">
-            <Button className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px]">
+            <Button className="border border-[#CC627B] bg-transparent text-[15px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px]">
               <Link
                 disabled={loading}
                 href={`/channel-partner/${type}/existing-patient`}
-                className="text-[14px] "
+                className="text-[15px] "
               >
                 Existing Patient
               </Link>
@@ -301,12 +308,12 @@ const Patient_Registration = ({ type }) => {
             <Button
               disabled={!isFormValid() || loading}
               type="button"
-              className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px] "
+              className="border border-[#CC627B] bg-transparent text-[15px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px] "
               onClick={handlePatientHistoryClick}
             >
               {/* <Link
                 href={`/channel-partner/${type}/patient-history`}
-                className="text-[14px] "
+                className="text-[15px] "
               > */}
               {loading ? (<Loader2Icon className="animate-spin" />) : '+ Patient History'}
               

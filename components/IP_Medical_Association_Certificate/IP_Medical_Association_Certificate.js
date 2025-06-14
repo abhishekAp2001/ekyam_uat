@@ -48,21 +48,21 @@ const IP_Medical_Association_Certificate = () => {
         {/* Practitioner details */}
         <div className="h-auto bg-[#FFFFFF80] rounded-[12px] py-4 px-[19px]">
           <div className="flex flex-col gap-2 justify-start relative">
-            <strong className="text-[14px] font-[700] text-black h-[16px]">
+            <strong className="text-[15px] font-[700] text-black h-[16px]">
               Name of the Medical Association
             </strong>
-            <span className="text-[14px] font-[500] text-gray-600">
+            <span className="text-[15px] font-[500] text-gray-600">
               {formData.name || "Not provided"}
             </span>
-            <strong className="text-[14px] font-[700] text-black mt-2">
+            <strong className="text-[15px] font-[700] text-black mt-2">
               Certificate Number
             </strong>
-            <span className="text-[14px] font-[500] text-gray-600">
+            <span className="text-[15px] font-[500] text-gray-600">
               {formData.medicalAssociationNumber || "Not provided"}
             </span>
           </div>
           <div className="flex flex-col mt-4 gap-2">
-            <span className="text-[14px] font-[500] text-black">
+            <span className="text-[15px] font-[500] text-black">
               Certificates:
             </span>
             {formData.certificates.length > 0 ? (
@@ -102,15 +102,15 @@ const IP_Medical_Association_Certificate = () => {
                 ))}
               </div>
             ) : (
-              <span className="text-[14px] font-[500] text-gray-600">
+              <span className="text-[15px] font-[500] text-gray-600">
                 No certificates available
               </span>
             )}
           </div>
         </div>
       </div>
-      <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex justify-center items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-3">
-        <Button className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] rounded-[8px] flex items-center justify-center w-full h-[35px]">
+      <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex justify-center items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-[16px]">
+        <Button className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white py-[14.5px] rounded-[8px] flex items-center justify-center w-full h-[45px]">
           <Link href="/sales/ip_single_session_fees">Continue</Link>
         </Button>
       </div>

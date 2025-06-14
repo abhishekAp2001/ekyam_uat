@@ -47,6 +47,26 @@
 .data-\[state\=checked\]\:bg-primary[data-state="checked"] {
   background-color: #776EA5 !important;
 }
+.data-\[state\=active\]\:shadow-sm[data-state="active"]{
+  box-shadow: none !important;
+}
+.css-1do6a5p-control{
+  border:none !important
+}
+.css-1knkcj9-control{
+  border: none !important;
+}
+.css-1u9des2-indicatorSeparator{
+  display: none !important;
+}
+.css-bkuhsc-control{
+  border: none !important;
+  box-shadow: none !important;
+  height: 38px !important;
+}
+.css-bkuhsc-control:hover{
+  border: none !important;
+}
 
 :root {
   --radius: 0.625rem;

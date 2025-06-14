@@ -223,15 +223,15 @@ const CP_bank_details = () => {
   return (
     <div className="bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5] h-full flex flex-col">
       <CP_Header />
-      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
+      <div className="h-full pt-[9%] pb-[4%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
         <div className="mt-[11.64px] bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
-          <strong className="text-[16px] text-black font-semibold">
+          <strong className="text-[15px] text-black font-semibold">
             Bank Details
           </strong>
           <div>
             <Label
               htmlFor="ifscCode"
-              className="text-[14px] text-gray-500 mb-2 mt-[22px]"
+              className="text-[15px] text-gray-500 mb-[7.59px] mt-[22px]"
             >
               IFSC Code *
             </Label>
@@ -242,7 +242,7 @@ const CP_bank_details = () => {
               value={formData.ifscCode}
               onChange={(e) => handleInputChange(e, "ifscCode")}
               onBlur={() => handleBlur("ifscCode")}
-              className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-gray-500 py-3 px-4 h-[39px]"
+              className="bg-white rounded-[7.26px] text-[15px]text-black font-semibold placeholder:text-[15px]placeholder:text-gray-500 py-3 px-4 h-[39px]"
             />
             {touched.ifscCode && !formData.ifscCode && (
               <span className="text-red-500 text-sm mt-1 block">
@@ -260,7 +260,7 @@ const CP_bank_details = () => {
           <div>
             <Label
               htmlFor="bankName"
-              className={`text-[14px] mb-2 mt-[22px] ${
+              className={`text-[15px] mb-[7.59px] mt-[22px] ${
                 isIfscValid(formData.ifscCode)
                   ? "text-gray-500"
                   : "text-[#00000040]"
@@ -274,7 +274,7 @@ const CP_bank_details = () => {
               placeholder="Add Bank Name"
               value={formData.bankName}
               disabled
-              className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+              className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px]py-3 px-4 h-[39px] ${
                 isIfscValid(formData.ifscCode)
                   ? "bg-white placeholder:text-gray-500"
                   : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -289,7 +289,7 @@ const CP_bank_details = () => {
           <div>
             <Label
               htmlFor="accountNumber"
-              className={`text-[14px] mb-2 mt-[22px] ${
+              className={`text-[15px] mb-[7.59px] mt-[22px] ${
                 formData.bankName ? "text-gray-500" : "text-[#00000040]"
               }`}
             >
@@ -304,7 +304,7 @@ const CP_bank_details = () => {
                 onChange={(e) => handleInputChange(e, "accountNumber")}
                 onBlur={() => handleBlur("accountNumber")}
                 disabled={!formData.bankName}
-                className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+                className={`rounded-[7.26px] text-[15px]text-black font-semibold placeholder:text-[15px]py-3 px-4 h-[39px] ${
                   formData.bankName
                     ? "bg-white placeholder:text-gray-500"
                     : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -337,7 +337,7 @@ const CP_bank_details = () => {
           <div>
             <Label
               htmlFor="confirmAccountNumber"
-              className={`text-[14px] mb-2 mt-[22px] ${
+              className={`text-[15px] mb-[7.59px] mt-[22px] ${
                 isAccountNumberValid(formData.accountNumber)
                   ? "text-gray-500"
                   : "text-[#00000040]"
@@ -354,7 +354,7 @@ const CP_bank_details = () => {
                 onChange={(e) => handleInputChange(e, "confirmAccountNumber")}
                 onBlur={() => handleBlur("confirmAccountNumber")}
                 disabled={!isAccountNumberValid(formData.accountNumber)}
-                className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+                className={`rounded-[7.26px] text-[15px]text-black font-semibold placeholder:text-[15px]py-3 px-4 h-[39px] ${
                   isAccountNumberValid(formData.accountNumber)
                     ? "bg-white placeholder:text-gray-500"
                     : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -398,7 +398,7 @@ const CP_bank_details = () => {
           <div>
             <Label
               htmlFor="accountHolderName"
-              className={`text-[14px] mb-2 mt-[22px] ${
+              className={`text-[15px] mb-[7.59px] mt-[22px] ${
                 isConfirmAccountNumberValid()
                   ? "text-gray-500"
                   : "text-[#00000040]"
@@ -419,7 +419,7 @@ const CP_bank_details = () => {
                   isConfirmAccountNumberValid()
                 )
               }
-              className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+              className={`rounded-[7.26px] text-[15px]text-black font-semibold placeholder:text-[15px]py-3 px-4 h-[39px] ${
                 isConfirmAccountNumberValid()
                   ? "bg-white placeholder:text-gray-500"
                   : "bg-[#ffffff10] placeholder:text-[#00000040]"

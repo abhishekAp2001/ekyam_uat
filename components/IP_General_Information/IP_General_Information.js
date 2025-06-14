@@ -140,28 +140,28 @@ const IP_General_Information = () => {
   return (
     <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-full flex flex-col">
       <IP_Header text="Add Individual Practitioner Details" />
-      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
+      <div className="h-full pb-[26%] overflow-auto px-[17px] bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
         {/* General Information */}
-        <div className="bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
-          <strong className="text-[16px] text-black font-semibold">
+        <div className="bg-[#FFFFFF80] rounded-[12px] p-4">
+          <strong className="text-[15px] text-black font-semibold">
             General Information
           </strong>
 
           {/* Experience */}
-          <div className="flex justify-between items-center">
-            <Label className="text-[14px] mb-2 mt-[22px] text-gray-500">
+          <div className="flex justify-between items-baseline">
+            <Label className="text-[15px] mb-2 mt-[22px] text-gray-500">
               Years of Experience *
             </Label>
             <div className="flex items-baseline gap-2">
               <Input
                 type="number"
                 placeholder="10"
-                className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-gray-500 py-3 px-3 w-[46px] h-[38px]"
+                className="bg-white rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] placeholder:text-gray-500 py-3 px-3 w-[46px] h-[38px]"
                 value={formData.yearsOfExperience}
                 onChange={(e) => handleInputChange(e, "yearsOfExperience")}
                 onBlur={() => handleBlur("yearsOfExperience")}
               />
-              <span className="text-[14px] text-gray-500">Years</span>
+              <span className="text-[15px] text-gray-500">Years</span>
             </div>
             {touched.yearsOfExperience && !formData.yearsOfExperience && (
               <span className="text-red-500 text-sm mt-1 block">Years of experience is required</span>
@@ -174,14 +174,14 @@ const IP_General_Information = () => {
           {/* Specialization selector */}
           <div className="w-full max-w-md mt-4">
             <div>
-              <Label className={`text-sm font-medium mb-2 ${isYearsOfExperienceValid() ? "text-gray-500" : "text-[#00000040]"}`}>
+              <Label className={`text-[15px] font-medium mb-[7.59px] ${isYearsOfExperienceValid() ? "text-gray-500" : "text-[#00000040]"}`}>
                 Specialisation <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
                   type="text"
-                  placeholder="Fertility"
-                  className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-3 h-[38px] ${isYearsOfExperienceValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  placeholder="Enter your specialisation"
+                  className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-3 h-[38px] ${isYearsOfExperienceValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
                   value={specialisationInput}
                   onChange={(e) => setSpecialisationInput(e.target.value)}
                   disabled={!isYearsOfExperienceValid()}
@@ -205,7 +205,7 @@ const IP_General_Information = () => {
                 {specialisationList.map((item, index) => (
                   <li
                     key={index}
-                    className="flex items-center gap-[5px] py-0 px-1 bg-white rounded-[5px] text-[14px] text-gray-500 hover:bg-gray-200"
+                    className="flex items-center gap-[5px] py-0 px-1 bg-white rounded-[5px] text-[15px] text-gray-500 hover:bg-gray-200"
                   >
                     {item}
                     <X
@@ -228,14 +228,14 @@ const IP_General_Information = () => {
             </div>
 
             <div className="mt-[22px]">
-              <Label className={`text-sm font-medium mb-2 ${isSpecializationValid() ? "text-gray-500" : "text-[#00000040]"}`}>
+              <Label className={`text-[15px] font-medium mb-[7.59px] ${isSpecializationValid() ? "text-gray-500" : "text-[#00000040]"}`}>
                 What I don’t Treat
               </Label>
               <div className="relative">
                 <Input
                   type="text"
-                  placeholder="Gambling"
-                  className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-3 h-[38px] ${isSpecializationValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  placeholder="Share your concerns..."
+                  className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-3 h-[38px] ${isSpecializationValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
                   value={dontTreatInput}
                   onChange={(e) => setDontTreatInput(e.target.value)}
                   disabled={!isSpecializationValid()}
@@ -259,7 +259,7 @@ const IP_General_Information = () => {
                 {dontTreatList.map((item, index) => (
                   <li
                     key={index}
-                    className="flex items-center gap-[5px] py-0 px-1 bg-white rounded-[5px] text-[14px] text-gray-500 hover:bg-gray-200"
+                    className="flex items-center gap-[5px] py-0 px-1 bg-white rounded-[5px] text-[15px] text-gray-500 hover:bg-gray-200"
                   >
                     {item}
                     <X
@@ -281,12 +281,12 @@ const IP_General_Information = () => {
 
           {/* textarea */}
           <div className="mt-4">
-            <Label className={`text-sm font-medium mb-2 ${isWhatIDontTreatValid() ? "text-gray-500" : "text-[#00000040]"}`}>
+            <Label className={`text-[15px] font-medium mb-[7.59px] ${isWhatIDontTreatValid() ? "text-gray-500" : "text-[#00000040]"}`}>
               What to Expect in the Session <span className="text-red-500">*</span>
             </Label>
             <Textarea
-              placeholder="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rem exercitationem harum id ab illum optio nisi nulla molestias assumenda recusandae, a facilis labore velit ficam, eligendi animi nostrum nam"
-              className={`text-[14px] text-black font-semibold ${isWhatIDontTreatValid() ? "bg-white" : "bg-[#ffffff10] text-[#00000040]"}`}
+              placeholder="Share your expectations or any specific concerns you have."
+              className={`text-[15px] text-black font-semibold ${isWhatIDontTreatValid() ? "bg-white" : "bg-[#ffffff10] text-[#00000040] placeholder:font-medium placeholder:text-gray-500"}`}
               value={formData.whatToExpectInSession}
               onChange={(e) => handleInputChange(e, "whatToExpectInSession")}
               onBlur={() => handleBlur("whatToExpectInSession")}
@@ -300,14 +300,14 @@ const IP_General_Information = () => {
           {/* select language */}
           <div className="w-full max-w-md mt-4">
             <div className="mt-[22px]">
-              <Label className={`text-sm font-medium mb-2 ${isWhatToExpectValid() ? "text-gray-500" : "text-[#00000040]"}`}>
+              <Label className={`text-[15px] font-medium mb-[7.59px] ${isWhatToExpectValid() ? "text-gray-500" : "text-[#00000040]"}`}>
                 Language Proficiency <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
                   type="text"
                   placeholder="Telugu"
-                  className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-3 h-[38px] ${isWhatToExpectValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-3 h-[38px] ${isWhatToExpectValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
                   value={languageInput}
                   onChange={(e) => setLanguageInput(e.target.value)}
                   disabled={!isWhatToExpectValid()}
@@ -331,7 +331,7 @@ const IP_General_Information = () => {
                 {languageListFinal.map((item, index) => (
                   <li
                     key={index}
-                    className="flex items-center gap-[5px] py-0 px-1 bg-white rounded-[5px] text-[14px] text-gray-500 hover:bg-gray-200"
+                    className="flex items-center gap-[5px] py-[2px] px-2 bg-white rounded-[5px] text-[15px] text-gray-500 hover:bg-gray-200"
                   >
                     {item}
                     <X
@@ -355,7 +355,7 @@ const IP_General_Information = () => {
             <div className="">
               <Label
                 htmlFor="text"
-                className="text-[14px] font-medium mb-2 mt-[22px] text-gray-500"
+                className="text-[15px] font-medium mb-2 mt-[22px] text-gray-500"
               >
                 Suggested Languages
               </Label>
@@ -363,7 +363,7 @@ const IP_General_Information = () => {
                 {languageList?.map((language, index) => (
                   <Button
                     key={index}
-                    className="bg-[#776EA5] rounded-[5px] h-6 flex items-center text-sm font-medium px-0"
+                    className="bg-[#776EA5] rounded-[5px] h-6 flex items-center text-[15px] font-medium px-0"
                     onClick={() =>
                       handleAddToList(
                         language,
@@ -387,21 +387,21 @@ const IP_General_Information = () => {
         </div>
 
         {/* in-person session */}
-        <div className="bg-[#FFFFFF80] rounded-[12px] p-4 px-3 mt-[17.9px]">
-          <strong className="text-[16px] text-black font-semibold">
+        <div className="bg-[#FFFFFF80] rounded-[12px] p-4 mt-[17.9px]">
+          <strong className="text-[15px] text-black font-semibold">
             In-Person Sessions (Optional)
           </strong>
-          <div className="mt-5">
+          <div className="mt-3">
             <Label
               htmlFor="text"
-              className="text-[14px] font-medium mb-2 text-gray-500"
+              className="text-[15px] font-medium mb-[7.59px] text-gray-500"
             >
               Address
             </Label>
             <Input
               type="text"
               placeholder="Type Full Address"
-              className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
+              className="bg-white rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
               value={formData.address}
               onChange={(e) => handleInputChange(e, "address")}
             />
@@ -409,14 +409,14 @@ const IP_General_Information = () => {
           <div className="mt-5">
             <Label
               htmlFor="text"
-              className="text-[14px] font-medium mb-2 text-gray-500"
+              className="text-[15px] font-medium mb-[7.59px] text-gray-500"
             >
               Add Google Maps
             </Label>
             <Input
               type="text"
               placeholder="Add Google Maps Link"
-              className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
+              className="bg-white rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
               value={formData.googleMapAddress}
               onChange={(e) => handleInputChange(e, "googleMapAddress")}
             />

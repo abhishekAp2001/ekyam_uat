@@ -189,9 +189,9 @@ const CP_doctor_details = () => {
   return (
     <div className="bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5] h-full flex flex-col">
       <CP_Header />
-      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
+      <div className="h-full pt-[10%] pb-[20%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
         <div className="mt-3 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
-          <strong className="text-[16px] text-black font-semibold">
+          <strong className="text-[15px] text-black font-semibold">
             Doctor’s Details
           </strong>
           <div className="flex gap-[6px] items-center mt-[8.8px]">
@@ -208,7 +208,7 @@ const CP_doctor_details = () => {
           </div>
           <div>
             <Label
-              className="text-[14px] text-gray-500 mb-2 mt-5"
+              className="text-[15px] text-gray-500 font-medium mb-2 mt-5"
             >
               Title & First Name *
             </Label>
@@ -218,7 +218,7 @@ const CP_doctor_details = () => {
                 onValueChange={handleTitleChange}
               >
                 <SelectTrigger
-                  className="w-[69px] bg-white rounded-[7.26px] text-[14px] text-black font-semibold h-[39px] px-3"
+                  className="w-[69px] bg-white rounded-[7.26px] text-[15px] text-black font-medium h-[39px] px-3"
                 >
                   <SelectValue placeholder="Dr." />
                 </SelectTrigger>
@@ -231,12 +231,12 @@ const CP_doctor_details = () => {
               <Input
                 id="firstName"
                 type="text"
-                placeholder="Ramesh"
+                placeholder="Enter your first name"
                 value={formData.firstName}
                 onChange={(e) => handleTextInputChange(e, "firstName")}
                 onBlur={() => handleBlur("firstName")}
                 disabled={!formData.title}
-                className={`flex-1 rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+                className={`flex-1 rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] placeholder:text-[#00000040] py-3 px-4 h-[39px] ${
                   formData.title
                     ? "bg-white placeholder:text-gray-500"
                     : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -257,7 +257,7 @@ const CP_doctor_details = () => {
           <div>
             <Label
               htmlFor="lastName"
-              className={`text-[14px] mb-2 mt-[22px] ${
+              className={`text-[15px] mb-2 mt-[22px] ${
                 formData.firstName ? "text-gray-500" : "text-[#00000040]"
               }`}
             >
@@ -266,13 +266,13 @@ const CP_doctor_details = () => {
             <Input
               id="lastName"
               type="text"
-              placeholder="Thakur"
+              placeholder="Enter last name"
               value={formData.lastName}
               onChange={(e) => handleTextInputChange(e, "lastName")}
               disabled={!formData.firstName}
-              className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+              className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-4 h-[39px] ${
                 formData.firstName
-                  ? "bg-white placeholder:text-gray-500"
+                  ? "bg-white placeholder:text-[#00000040]"
                   : "bg-[#ffffff10] placeholder:text-[#00000040]"
               }`}
             />
@@ -285,7 +285,7 @@ const CP_doctor_details = () => {
           <div>
             <Label
               htmlFor="email"
-              className={`text-[14px] mb-2 mt-[22px] ${
+              className={`text-[15px] mb-2 mt-[22px] ${
                 formData.lastName ? "text-gray-500" : "text-[#00000040]"
               }`}
             >
@@ -294,12 +294,12 @@ const CP_doctor_details = () => {
             <Input
               id="email"
               type="text"
-              placeholder="Case Sensitive"
+              placeholder="Enter your email"
               value={formData.email}
               onChange={(e) => handleTextInputChange(e, "email")}
               onBlur={() => handleBlur("email")}
               disabled={!formData.lastName}
-              className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+              className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-4 h-[39px] ${
                 formData.lastName
                   ? "bg-white placeholder:text-gray-500"
                   : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -321,7 +321,7 @@ const CP_doctor_details = () => {
           <div className="mt-[22px]">
             <Label
               htmlFor="primaryMobileNumber"
-              className={`text-[14px] mb-2 ${
+              className={`text-[15px] mb-2 ${
                 isEmailValid(formData.email)
                   ? "text-gray-500"
                   : "text-[#00000040]"
@@ -362,12 +362,12 @@ const CP_doctor_details = () => {
               <Input
                 id="primaryMobileNumber"
                 type="number"
-                placeholder="9876543210"
+                placeholder="Enter primary mobile no."
                 value={formData.primaryMobileNumber}
                 onChange={(e) => handleInputChange(e, "primaryMobileNumber")}
                 onBlur={() => handleBlur("primaryMobileNumber")}
                 disabled={!isEmailValid(formData.email)}
-                className={`border rounded-[7.26px] rounded-l-none border-l-0 text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 w-full h-[39px] ${
+                className={`border rounded-[7.26px] rounded-l-none border-l-0 text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-4 w-full h-[39px] ${
                   isEmailValid(formData.email)
                     ? "bg-white placeholder:text-gray-500"
                     : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -394,7 +394,7 @@ const CP_doctor_details = () => {
             <div className="flex items-center">
               <Label
                 htmlFor="whatsappNumber"
-                className={`text-[14px] w-[55%] mb-2 ${
+                className={`text-[15px] w-[55%] mb-2 ${
                   isMobileValid(formData.primaryMobileNumber)
                     ? "text-gray-500"
                     : "text-[#00000040]"
@@ -419,9 +419,14 @@ const CP_doctor_details = () => {
                       }));
                     }
                   }}
-                  className="w-4 h-4 border border-[#776EA5] rounded-[1.8px] ms-1"
+                  disabled={ !isMobileValid(formData.primaryMobileNumber)}
+                  className={`w-4 h-4 border border-[#776EA5] rounded-[1.8px] ms-1 ${
+                  isMobileValid(formData.primaryMobileNumber)
+                    ? "text-gray-500"
+                    : "text-[#00000040]"
+                }`}
                 />
-                <label className="text-[12px] text-gray-500">
+                <label className="text-[12px] text-gray-500 font-medium">
                   Same as Mobile Number
                 </label>
               </div>
@@ -457,12 +462,12 @@ const CP_doctor_details = () => {
               <Input
                 id="whatsappNumber"
                 type="number"
-                placeholder="9876543210"
+                placeholder="Enter whatsapp no."
                 value={formData.whatsappNumber}
                 onChange={(e) => handleInputChange(e, "whatsappNumber")}
                 onBlur={() => handleBlur("whatsappNumber")}
                 disabled={sameAsMobile || !isMobileValid(formData.primaryMobileNumber)}
-                className={`border rounded-[7.26px] rounded-l-none border-l-0 text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 w-full h-[39px] ${
+                className={`border rounded-[7.26px] rounded-l-none border-l-0 text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-4 w-full h-[39px] ${
                   sameAsMobile || !isMobileValid(formData.primaryMobileNumber)
                     ? "bg-[#ffffff10] placeholder:text-[#00000040]"
                     : "bg-white placeholder:text-gray-500"
@@ -488,7 +493,7 @@ const CP_doctor_details = () => {
           <div className="mt-[22px]">
             <Label
               htmlFor="emergencyNumber"
-              className={`text-[14px] mb-2 ${
+              className={`text-[15px] mb-2 ${
                 isMobileValid(formData.whatsappNumber)
                   ? "text-gray-500"
                   : "text-[#00000040]"
@@ -527,12 +532,12 @@ const CP_doctor_details = () => {
               <Input
                 id="emergencyNumber"
                 type="number"
-                placeholder="9876543210"
+                placeholder="Enter emergency no."
                 value={formData.emergencyNumber}
                 onChange={(e) => handleInputChange(e, "emergencyNumber")}
                 onBlur={() => handleBlur("emergencyNumber")}
                 disabled={!isMobileValid(formData.whatsappNumber)}
-                className={`border rounded-[7.26px] rounded-l-none border-l-0 text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 w-full h-[39px] ${
+                className={`border rounded-[7.26px] rounded-l-none border-l-0 text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-4 w-full h-[39px] ${
                   isMobileValid(formData.whatsappNumber)
                     ? "bg-white placeholder:text-gray-500"
                     : "bg-[#ffffff10] placeholder:text-[#00000040]"

@@ -18,7 +18,7 @@ const Patient_Header = ({ to = null, title = null }) => {
             className=" text-black-700"
             onClick={() => redirectHandler(to)}
           />
-          <div className="flex-1 text-[14px] font-semibold text-gray-800">
+          <div className="flex-1 text-[16px] font-semibold text-gray-800">
             {title}
           </div>
           <div className="h-6 w-6" /> {/* Space */}
