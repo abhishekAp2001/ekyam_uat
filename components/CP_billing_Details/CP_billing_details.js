@@ -217,13 +217,13 @@ const CP_billing_details = () => {
   return (
     <div className="bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5] h-full flex flex-col">
       <CP_Header />
-      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
-        <div className="mt-3 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
-          <strong className="text-[16px] text-black font-semibold">
+      <div className="h-full pt-[9%] pb-[4%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
+        <div className="mt-3 bg-[#FFFFFF80] rounded-[12px] p-4">
+          <strong className="text-[15px] text-black font-semibold">
             Billing Details
           </strong>
-          <div className="mt-5">
-            <Label className="text-[14px] text-gray-500">Billing Type *</Label>
+          <div className="mt-3">
+            <Label className="text-[15px] text-gray-500">Billing Type *</Label>
             <RadioGroup
               value={formData.billingType}
               onValueChange={(value) =>
@@ -232,33 +232,33 @@ const CP_billing_details = () => {
               onBlur={() => handleBlur("billingType")}
               className="mt-[10px]"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-[10px]">
                 <RadioGroupItem
                   value="monthly"
                   id="r1"
-                  className="w-5 h-5 flex items-center justify-center"
+                  className="w-[16px] h-[16px] flex items-center justify-center"
                 />
-                <Label htmlFor="r1" className="text-[16px]">
+                <Label htmlFor="r1" className="text-[15px] font-semibold">
                   Monthly Billing
                 </Label>
               </div>
-              <div className="flex items-center gap-3 my-1">
+              <div className="flex items-center gap-[10px] my-1">
                 <RadioGroupItem
                   value="onSpot"
                   id="r2"
-                  className="w-5 h-5 flex items-center justify-center"
+                  className="w-[16px] h-[16px] flex items-center justify-center"
                 />
-                <Label htmlFor="r2" className="text-[16px]">
+                <Label htmlFor="r2" className="text-[15px] font-semibold">
                   On-Spot Payment
                 </Label>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-[10px]">
                 <RadioGroupItem
                   value="patientPays"
                   id="r3"
-                  className="w-5 h-5 flex items-center justify-center"
+                  className="w-[16px] h-[16px] flex items-center justify-center"
                 />
-                <Label htmlFor="r3" className="text-[16px]">
+                <Label htmlFor="r3" className="text-[15px] font-semibold">
                   Patient Pays
                 </Label>
               </div>
@@ -272,7 +272,7 @@ const CP_billing_details = () => {
               <div className="mt-[22px]">
                 <Label
                   htmlFor="billingEmail"
-                  className={`text-[14px] mb-2 ${
+                  className={`text-[15px] mb-2 ${
                     formData.billingType ? "text-gray-500" : "text-[#00000040]"
                   }`}
                 >
@@ -286,7 +286,7 @@ const CP_billing_details = () => {
                   onChange={(e) => handleTextInputChange(e, "billingEmail")}
                   onBlur={() => handleBlur("billingEmail")}
                   disabled={!formData.billingType}
-                  className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+                  className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-4 h-[39px] ${
                     formData.billingType
                       ? "bg-white placeholder:text-gray-500"
                       : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -308,12 +308,12 @@ const CP_billing_details = () => {
             )}
           </div>
         </div>
-        <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
-          <strong className="text-[16px] text-black font-semibold">KYC</strong>
+        <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4">
+          <strong className="text-[15px] text-black font-semibold">KYC</strong>
           <div className="mt-5">
             <Label
               htmlFor="panCard"
-              className={`text-[14px] mb-2 ${
+              className={`text-[15px] mb-2 ${
                 formData.billingType ? "text-gray-500" : "text-[#00000040]"
               }`}
             >
@@ -322,12 +322,12 @@ const CP_billing_details = () => {
             <Input
               id="panCard"
               type="text"
-              placeholder="ABCDE1234F"
+              placeholder="Enter your PAN no."
               value={formData.panCard}
               onChange={handlePanCardChange}
               onBlur={() => handleBlur("panCard")}
               disabled={!formData.billingType}
-              className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+              className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-4 h-[39px] ${
                 formData.billingType
                   ? "bg-white placeholder:text-gray-500"
                   : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -350,7 +350,7 @@ const CP_billing_details = () => {
           <div className="mt-5">
             <Label
               htmlFor="gstNumber"
-              className={`text-[14px] mb-2 block ${
+              className={`text-[15px] mb-2 block ${
                 isPanCardValid(formData.panCard)
                   ? "text-gray-500"
                   : "text-[#00000040]"
@@ -366,7 +366,7 @@ const CP_billing_details = () => {
                 disabled={!isPanCardValid(formData.panCard)}
               >
                 <SelectTrigger
-                  className={`w-[60px] rounded-l-[7.26px] text-[14px] font-semibold h-[39px] px-2 ${
+                  className={`w-[60px] rounded-l-[7.26px] text-[15px] font-semibold h-[39px] px-2 ${
                     isPanCardValid(formData.panCard)
                       ? "bg-white text-gray-500"
                       : "bg-[#ffffff10] text-[#00000040]"
@@ -389,7 +389,7 @@ const CP_billing_details = () => {
                 type="text"
                 value={formData.panCard}
                 readOnly
-                className="bg-[#cecece] border-l border-r text-[14px] font-semibold py-3 h-[39px] px-2 text-gray-500 outline-none w-[180px]"
+                className="bg-[#cecece] border-l border-r text-[15px] font-semibold py-3 h-[39px] px-2 text-gray-500 outline-none w-[180px]"
               />
               <input
                 type="text"

@@ -12,6 +12,7 @@ import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { whatsappUrl } from "@/lib/constants";
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const axios = axiosInstance();
@@ -76,102 +77,106 @@ const Login = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-b from-[#DFDAFB] to-[#F9CCC5] h-full flex justify-center items-center">
-        <div className="border-2 bg-[#FFFFFF80] border-[#FFFFFF4D] rounded-4xl pt-5 px-6 pb-3 mx-4 text-center w-100">
-          <strong className="text-[16px] text-black font-[600] text-center">
-            Login to proceed
-          </strong>
-          <div className="pt-6">
-            <Input
-              type="text"
-              placeholder="Enter mobile number or email address"
-              className="bg-white rounded-[7.26px] placeholder:text-[12px] placeholder:text-gray-400 pt-3 pb-3.5 px-4 h-[39px]"
-              value={userName}
-              onChange={(e) => {
-                setUserName(e.target.value);
-              }}
-            />
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
-                className="bg-white rounded-[7.26px] placeholder:text-[12px] placeholder:text-gray-400 pt-3 pb-3.5 px-4 h-[39px] mt-6"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-              <Image
-                src="/images/visibility.png"
-                width={14}
-                height={10}
-                className="w-[14.67px] absolute top-4 right-[14.83px]"
-                alt="ekyamm"
-                onClick={() => {
-                  setShowPassword(!showPassword);
-                }}
-              />
-            </div>
-            <div className="flex justify-between mt-[11.72px]">
-              <div className="flex gap-[6px] items-center">
-                <Checkbox className="w-4 h-4 border border-[#776EA5] rounded-[1.8px]" />
-                <label htmlFor="" className="text-[12px] text-gray-500">
-                  Remember Me
-                </label>
-              </div>
-              <Link
-                href={"/forgot_password"}
-                className="text-[12px] text-gray-400"
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <Button
-              className="mt-6 bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] h-[45px] w-full rounded-[8px] flex items-center justify-center cursor-pointer"
-              onClick={() => {
-                handleLogin();
-              }}
-            >
-              Login
-            </Button>
-            {/* Error message display */}
-            {error && (
-              <p className="text-red-500 text-[12px] mt-2 text-center">
-                {error}
-              </p>
-            )}
-          </div>
-        </div>
+      <div className="bg-gradient-to-b from-[#DFDAFB] to-[#F9CCC5] h-full">
+        <div className="bg-gradient-to-b from-[#DFDAFB] to-[#F9CCC5] h-full flex  items-center mx-4">
+          <div className="w-full fixed left-0 right-0 translate-y-[-14%] px-[4%]">
+            <div className="border-2 bg-[#FFFFFF80] border-[#FFFFFF4D] rounded-4xl pt-5 px-6 pb-3 text-center w-full">
+              <strong className="text-[16px] text-black font-[600] text-center">
+                Login to proceed
+              </strong>
 
-        {/* footer */}
-        <div className="flex flex-col justify-center items-center gap-[4.75px] fixed bottom-20 left-0 right-0">
-          <div className="flex gap-1 items-center">
-            <span className="text-[10px] text-gray-500 font-medium">
-              Copyright © {new Date().getFullYear()}
-            </span>
-            <Image
-              src="/images/ekyamm.png"
-              width={100}
-              height={49}
-              className="w-[106px]"
-              alt="ekyamm"
-            />
+              <div className="pt-6">
+                <Input
+                  type="text"
+                  placeholder="Enter mobile number or email address"
+                  className="bg-white rounded-[7.26px] placeholder:text-[12px] placeholder:text-gray-400 pt-3 pb-3.5 px-4 h-[39px]"
+                  value={userName}
+                  onChange={(e) => {
+                    setUserName(e.target.value);
+                  }}
+                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter password"
+                    className="bg-white rounded-[7.26px] placeholder:text-[12px] placeholder:text-gray-400 pt-3 pb-3.5 px-4 h-[39px] mt-6"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                  />
+                  {showPassword ? (
+                      <Eye className="w-[14.67px] absolute top-2 right-[14.83px]"  onClick={() => {
+                        setShowPassword(!showPassword);
+                      }}/>
+                  ) : (
+                    <EyeOff  className="w-[14.67px] absolute top-2 right-[14.83px]"  onClick={() => {
+                        setShowPassword(!showPassword);
+                      }}/>
+                  )}
+                </div>
+                <div className="flex justify-between mt-[11.72px]">
+                  <div className="flex gap-[6px] items-center">
+                    <Checkbox className="w-4 h-4 border border-[#776EA5] rounded-[1.8px]" />
+                    <label htmlFor="" className="text-[12px] text-gray-500">
+                      Remember Me
+                    </label>
+                  </div>
+                  <Link
+                    href={"/forgot_password"}
+                    className="text-[12px] text-gray-400"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+                <Button
+                  className="mt-6 bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white py-[14.5px] h-[45px] w-full rounded-[8px] flex items-center justify-center cursor-pointer"
+                  onClick={() => {
+                    handleLogin();
+                  }}
+                >
+                  Login
+                </Button>
+                {/* Error message display */}
+                {error && (
+                  <p className="text-red-500 text-[12px] mt-2 text-center">
+                    {error}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
-          <div className="flex gap-2 items-center">
-            <span className="text-[10px] text-gray-500 font-medium">
-              Any technical support
-            </span>
-            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+            </div>
+          {/* footer */}
+          <div className="flex flex-col justify-center items-center gap-[4.75px] fixed bottom-0 pb-[26px] left-0 right-0">
+            <div className="flex gap-1 items-center">
+              <span className="text-[10px] text-gray-500 font-medium">
+                Copyright © {new Date().getFullYear()}
+              </span>
               <Image
-                src="/images/chat_icon.png"
-                width={54}
+                src="/images/ekyamm.png"
+                width={100}
                 height={49}
-                className="w-[54px]"
+                className="w-[106px] mix-blend-multiply"
                 alt="ekyamm"
               />
-            </a>
+            </div>
+            <div className="flex gap-2 items-center">
+              <span className="text-[10px] text-gray-500 font-medium">
+                Any technical support
+              </span>
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                <Image
+                  src="/images/chat_icon.png"
+                  width={54}
+                  height={49}
+                  className="w-[54px]"
+                  alt="ekyamm"
+                />
+              </a>
+            </div>
           </div>
-        </div>
+      
       </div>
     </>
   );

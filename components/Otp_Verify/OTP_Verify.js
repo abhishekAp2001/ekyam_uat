@@ -104,7 +104,7 @@ const OTP_Verify = ({ type }) => {
               src="/images/ekyamm.png"
               width={100}
               height={49}
-              className="w-[106px]"
+              className="w-[106px] mix-blend-multiply"
               alt="ekyamm"
             />
           </div>

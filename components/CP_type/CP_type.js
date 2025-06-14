@@ -219,10 +219,10 @@ const CP_type = () => {
   return (
     <div className="bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5] h-full flex flex-col">
       <CP_Header />
-      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
+      <div className="h-[90%] pt-[10%] pb-[4%] overflow-auto px-[17px] bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
         <div>
-          <Label htmlFor="type" className="text-[14px] text-gray-500 mb-2 mt-5">
-            Type of Channel Partner *
+          <Label htmlFor="type" className="text-[15px] text-gray-500 mb-2 mt-5">
+            Type of Channel Partner * 
           </Label>
           <CreatableSelect
             styles={{
@@ -247,7 +247,7 @@ const CP_type = () => {
                 // Error is already toasted in addChannelPartner
               }
             }}
-            className="text-[14px] rounded-[12px] font-semibold"
+            className="text-[15px] rounded-[12px] font-semibold border-none outline-none"
           />
           {touched.type && !formData.type && (
             <span className="text-red-500 text-sm mt-1 block">Type is required</span>
@@ -255,40 +255,40 @@ const CP_type = () => {
 
           {/* Clinic Details */}
           <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4">
-            <strong className="text-[16px] text-black font-semibold">Clinic Details</strong>
+            <strong className="text-[15px] text-black font-semibold">Clinic Details</strong>
             <div>
-              <Label htmlFor="clinicName" className={`text-[14px] mb-2 mt-5 ${formData.type ? "text-gray-500" : "text-[#00000040]"}`}>
+              <Label htmlFor="clinicName" className={`text-[15px] mb-2 mt-5 ${formData.type ? "text-gray-500" : "text-[#00000040]"}`}>
                 Clinic Name *
               </Label>
               <Input
                 id="clinicName"
                 type="text"
-                placeholder="Gyno Clinic"
+                placeholder="Enter clinic name"
                 value={formData.clinicName}
                 onChange={(e) => setFormData({ ...formData, clinicName: e.target.value })}
                 onBlur={() => handleBlur("clinicName")}
                 disabled={!formData.type}
-                className={`rounded-[7.26px] font-semibold py-3 px-4 h-[39px] ${formData.type ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                className={`rounded-[7.26px] font-semibold py-3 px-4 h-[39px] ${formData.type ? "bg-white placeholder:text-[15px] placeholder:text-gray-500" : "bg-[#ffffff10]"}`}
               />
               {touched.clinicName && !formData.clinicName && (
                 <span className="text-red-500 text-sm mt-1 block">Clinic name is required</span>
               )}
             </div>
             <div>
-              <Label htmlFor="userName" className={`text-[14px] mb-2 mt-[22px] ${formData.clinicName ? "text-gray-500" : "text-[#00000040]"}`}>
+              <Label htmlFor="userName" className={`text-[15px] mb-2 mt-[22px] ${formData.clinicName ? "text-gray-500" : "text-[#00000040]"}`}>
                 Unique URL *
               </Label>
               <div className="flex gap-[10px] items-center">
-                <span className="text-[14px] text-gray-600">ekyamm.com/</span>
+                <span className="text-[15px] text-gray-600">ekyamm.com/</span>
                 <Input
                   id="userName"
                   type="text"
-                  placeholder="Enter URL Name"
+                  placeholder="Enter URL name"
                   value={formData.userName}
                   onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
                   onBlur={() => handleBlur("userName")}
                   disabled={!formData.clinicName}
-                  className={`rounded-[7.26px] font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${formData.clinicName ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  className={`rounded-[7.26px] font-semibold placeholder:text-[15px] py-3 px-4 h-[39px] ${formData.clinicName ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
                 />
               </div>
               {touched.userName && isCheckingUserName && (
@@ -302,18 +302,18 @@ const CP_type = () => {
               )}
             </div>
             <div>
-              <Label htmlFor="email" className={`text-[14px] mb-2 mt-[22px] ${formData.userName && isUserNameAvailable === true ? "text-gray-500" : "text-[#00000040]"}`}>
+              <Label htmlFor="email" className={`text-[15px] mb-2 mt-[22px] ${formData.userName && isUserNameAvailable === true ? "text-gray-500" : "text-[#00000040]"}`}>
                 Clinic Primary Email Address *
               </Label>
               <Input
                 id="email"
                 type="text"
-                placeholder="Case Sensitive"
+                placeholder="Enter your email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 onBlur={() => handleBlur("email")}
                 disabled={!formData.userName || isUserNameAvailable !== true}
-                className={`rounded-[7.26px] font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${formData.userName && isUserNameAvailable === true ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                className={`rounded-[7.26px] font-semibold placeholder:text-[15px] py-3 px-4 h-[39px] ${formData.userName && isUserNameAvailable === true ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
               />
               {touched.email && formData.email && !isEmailValid(formData.email) && (
                 <span className="text-red-500 text-sm mt-1 block">Invalid email</span>
@@ -323,7 +323,7 @@ const CP_type = () => {
               )}
             </div>
             <div className="mt-[22px]">
-              <Label htmlFor="primaryMobileNumber" className={`text-[14px] mb-2 ${isEmailValid(formData.email) ? "text-gray-500" : "text-[#00000040]"}`}>
+              <Label htmlFor="primaryMobileNumber" className={`text-[15px] mb-2 ${isEmailValid(formData.email) ? "text-gray-500" : "text-[#00000040]"}`}>
                 Clinic Primary Mobile Number *
               </Label>
               <div className="flex items-center h-[39px]">
@@ -359,12 +359,12 @@ const CP_type = () => {
                 <Input
                   id="primaryMobileNumber"
                   type="number"
-                  placeholder="9876543210"
+                  placeholder="Enter primary mobile no."
                   value={formData.primaryMobileNumber}
                   onChange={(e) => handleInputChange(e, "primaryMobileNumber")}
                   onBlur={() => handleBlur("primaryMobileNumber")}
                   disabled={!isEmailValid(formData.email)}
-                  className={`border rounded-[7.26px] font-semibold rounded-l-none border-l-0 placeholder:text-[14px] py-3 px-4 w-full h-[39px] ${isEmailValid(formData.email) ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  className={`border rounded-[7.26px] font-semibold rounded-l-none border-l-0 placeholder:text-[15px] py-3 px-4 w-full h-[39px] ${isEmailValid(formData.email) ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
                 />
               </div>
               {touched.primaryMobileNumber && formData.primaryMobileNumber && !isMobileValid(formData.primaryMobileNumber) && (
@@ -376,7 +376,7 @@ const CP_type = () => {
             </div>
             <div className="mt-[22px]">
               <div className="flex items-center">
-                <Label htmlFor="whatsappNumber" className={`text-[14px] w-[55%] mb-2 ${isMobileValid(formData.primaryMobileNumber) ? "text-gray-500" : "text-[#00000040]"}`}>
+                <Label htmlFor="whatsappNumber" className={`text-[15px] w-[55%] mb-2 ${isMobileValid(formData.primaryMobileNumber) ? "text-gray-500" : "text-[#00000040]"}`}>
                   Clinic Whatsapp Number *
                 </Label>
                 <div className="flex gap-[6px] items-center w-[45%]">
@@ -393,6 +393,7 @@ const CP_type = () => {
                         setTouched((prev) => ({ ...prev, whatsappNumber: true }));
                       }
                     }}
+                    disabled={!isMobileValid(formData.primaryMobileNumber)}
                     className="w-4 h-4 border border-[#776EA5] rounded-[1.8px] ms-1"
                   />
                   <label className="text-[12px] text-gray-500">Same as Mobile Number</label>
@@ -429,12 +430,12 @@ const CP_type = () => {
                 <Input
                   id="whatsappNumber"
                   type="number"
-                  placeholder="9876543210"
+                  placeholder="Enter whatsapp no."
                   value={formData.whatsappNumber}
                   onChange={(e) => handleInputChange(e, "whatsappNumber")}
                   onBlur={() => handleBlur("whatsappNumber")}
                   disabled={sameAsMobile || !isMobileValid(formData.primaryMobileNumber)}
-                  className={`border rounded-[7.26px] font-semibold rounded-l-none border-l-0 placeholder:text-[14px] py-3 px-4 w-full h-[39px] ${sameAsMobile || !isMobileValid(formData.primaryMobileNumber) ? "bg-[#ffffff10] placeholder:text-[#00000040]" : "bg-white placeholder:text-gray-500"}`}
+                  className={`border rounded-[7.26px] font-semibold rounded-l-none border-l-0 placeholder:text-[15px] py-3 px-4 w-full h-[39px] ${sameAsMobile || !isMobileValid(formData.primaryMobileNumber) ? "bg-[#ffffff10] placeholder:text-[#00000040]" : "bg-white placeholder:text-gray-500"}`}
                 />
               </div>
               {touched.whatsappNumber && formData.whatsappNumber && !isMobileValid(formData.whatsappNumber) && (
@@ -445,7 +446,7 @@ const CP_type = () => {
               )}
             </div>
             <div className="mt-[22px]">
-              <Label htmlFor="emergencyNumber" className={`text-[14px] mb-2 ${isMobileValid(formData.whatsappNumber) ? "text-gray-500" : "text-[#00000040]"}`}>
+              <Label htmlFor="emergencyNumber" className={`text-[15px] mb-2 ${isMobileValid(formData.whatsappNumber) ? "text-gray-500" : "text-[#00000040]"}`}>
                 Clinic Emergency Number *
               </Label>
               <div className="flex items-center h-[39px]">
@@ -479,12 +480,12 @@ const CP_type = () => {
                 <Input
                   id="emergencyNumber"
                   type="number"
-                  placeholder="9876543210"
+                  placeholder="Enter emergency mobile no."
                   value={formData.emergencyNumber}
                   onChange={(e) => handleInputChange(e, "emergencyNumber")}
                   onBlur={() => handleBlur("emergencyNumber")}
                   disabled={!isMobileValid(formData.whatsappNumber)}
-                  className={`border rounded-[7.26px] font-semibold rounded-l-none border-l-0 placeholder:text-[14px] py-3 px-4 w-full h-[39px] ${isMobileValid(formData.whatsappNumber) ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  className={`border rounded-[7.26px] font-semibold rounded-l-none border-l-0 placeholder:text-[15px] py-3 px-4 w-full h-[39px] ${isMobileValid(formData.whatsappNumber) ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
                 />
               </div>
               {touched.emergencyNumber && formData.emergencyNumber && !isMobileValid(formData.emergencyNumber) && (
@@ -495,9 +496,9 @@ const CP_type = () => {
               )}
             </div>
           </div>
-          <CP_buttons disabled={!isFormValid()} onSave={handleSave} buttonText={"Save & Continue"} />
         </div>
       </div>
+          <CP_buttons disabled={!isFormValid()} onSave={handleSave} buttonText={"Save & Continue"} />
     </div>
   );
 };

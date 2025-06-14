@@ -12,7 +12,7 @@ import { deleteCookie, getCookie, setCookie } from "cookies-next";
 import Select from "react-select";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import axiosInstance from "@/lib/axiosInstance";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, MapPin } from "lucide-react";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
 polyfillCountryFlagEmojis();
 
@@ -193,15 +193,22 @@ const Patient_History = ({ type }) => {
     <>
       <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-full flex flex-col">
         <PR_Header />
-        <div className="h-full mt-[22px] mb-[40%] overflow-auto px-[17px] mt-3bg-gradient-to-t  from-[#fce8e5]  to-[#eeecfb]">
-          <div className="w-full h-[25px] text-[#776EA5] font-semibold text-[20px] leading-[25px] mb-6 text-center">
+        <div className="h-full pb-[40%] overflow-auto px-[16px] bg-gradient-to-t  from-[#fce8e5]  to-[#eeecfb]">
+          <div className="w-full h-[25px] text-[#776EA5] font-semibold text-[20px] leading-[25px] mb-2 text-center">
             {channelPartnerData?.clinicName || "Greetings Hospital"}
           </div>
+            <div className="flex items-center justify-center gap-1">
+                     <div className="bg-[#776EA5] rounded-full w-[16.78px] h-[16.78px] flex justify-center items-center">
+                        <MapPin color="white" className="w-[12.15px] h-[12.15px]"/></div>
+                        <span className="text-sm text-[#776EA5] font-medium">
+                          Noida
+                        </span>
+                        </div>
           {/* Patient Number and Mobile */}
-          <div className="bg-[#ffffff66] rounded-[12px] p-5 mt-[45px] relative">
+          <div className="bg-[#ffffff66] rounded-[12px] p-5 mt-[25px] relative">
             {/* Patient Name Input */}
             <div>
-              <Label className="text-[14px] text-gray-500 mb-2">
+              <Label className="text-[15px] text-gray-500 mb-[7.59px]">
                 Patient Name<span className="text-red-500">*</span>
               </Label>
               <Input
@@ -209,12 +216,12 @@ const Patient_History = ({ type }) => {
                 value={fullName}
                 type="text"
                 placeholder="Enter First Name"
-                className="bg-white rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-3 px-4 h-[39px]  opacity-50 cursor-not-allowed"
+                className="bg-white rounded-[7.26px] placeholder:text-[15px] placeholder:text-gray-500 placeholder:font-medium font-semibold py-3 px-4 h-[39px]  opacity-50 cursor-not-allowed"
               />
             </div>
 
             <div>
-              <Label className="text-[14px] text-gray-500 font-medium mb-2 mt-[22px]">
+              <Label className="text-[15px] text-gray-500 font-medium mb-[7.59px] mt-[22px]">
                 Primary Mobile Number <span className="text-red-500">*</span>
               </Label>
               <div className="flex items-center gap-2 relative">
@@ -249,10 +256,10 @@ const Patient_History = ({ type }) => {
 
                 <Input
                   type="text"
-                  value={patientPreviousData.primaryMobileNumber}
+                  value={patientPreviousData?.primaryMobileNumber}
                   disabled={true}
                   placeholder="Enter Mobile Number"
-                  className="bg-white border border-gray-300 rounded-[7.26px] placeholder:text-[14px] placeholder:text-gray-500 font-semibold py-2 px-4 h-[38px] w-full"
+                  className="bg-white border border-gray-300 rounded-[7.26px] placeholder:text-[15px] placeholder:text-gray-500 placeholder:font-medium font-semibold py-2 px-4 h-[38px] w-full"
                 />
               </div>
             </div>
@@ -261,7 +268,7 @@ const Patient_History = ({ type }) => {
           {/* Patient History box with 16px gap */}
           <div className="bg-[#FFFFFFB2] rounded-[12px] p-4 mt-4 mb-5">
             <div>
-              <Label className="text-[16px] text-[#000000] font-[600] leading-[16px] tracking-[0]  w-[114px] h-[16px] mb-4 font-['Quicksand'] py-2.5">
+              <Label className="text-[15px] text-[#000000] font-[600] leading-[16px] tracking-[0]  w-[114px] h-[16px] mb-4 font-['Quicksand'] py-2.5">
                 Patient History
               </Label>
               <div className="flex items-center justify-center ">
@@ -272,7 +279,7 @@ const Patient_History = ({ type }) => {
                   value={formData.history}
                   onBlur={() => handleBlur("history")}
                   placeholder="Patient History...."
-                  className=" bg-white text-[14px] text-[#000000] placeholder:text-gray-500 shadow-none"
+                  className=" bg-white text-[15px] text-[#000000] placeholder:text-gray-500 placeholder:font-medium shadow-none"
                 />
               </div>
               {touched.history && !formData.history && (
@@ -284,12 +291,12 @@ const Patient_History = ({ type }) => {
           </div>
 
           {/* Buttons */}
-          <div className="bg-gradient-to-t from-[#fce8e5] to-[#fce8e5] flex flex-col justify-between items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-4">
+          <div className="bg-gradient-to-t from-[#fce8e5] to-[#fce8e5] flex flex-col justify-between items-center gap-4 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-4">
             <div className="w-full flex gap-[12.2px]">
               <Button
                 onClick={handleCancel}
                 disabled={cancelLoading}
-                className="border border-[#CC627B] bg-transparent text-[14px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
+                className="border border-[#CC627B] bg-transparent text-[15px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
               >
                 {cancelLoading ? (
                   <Loader2Icon className="animate-spin" />
@@ -300,7 +307,7 @@ const Patient_History = ({ type }) => {
               <Button
                 onClick={handleSelectPackage}
                 disabled={loading}
-                className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] mx-auto rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
+                className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white py-[14.5px] mx-auto rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
               >
                 {/* <Link href={`/channel-partner/${type}/cloudnine_hospital`}> */}
                 {loading ? (

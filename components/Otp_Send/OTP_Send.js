@@ -292,7 +292,7 @@ const OTP_Send = ({ type }) => {
               {channelPartnerData?.clinicName || "Greetings Hospital"}
             </strong>
             <div className="border-2 bg-[#FFFFFF80] border-[#FFFFFF4D] rounded-4xl py-[17px] text-center w-full my-[64px]  px-5">
-              <strong className="text-[16px] text-black font-[600] text-center">
+              <strong className="text-[15px] text-black font-[600] text-center">
                 Send OTP to
               </strong>
               <div>
@@ -307,7 +307,7 @@ const OTP_Send = ({ type }) => {
                       className="hidden"
                     />
                     <div
-                      className={`border rounded-[8px] text-[14px] font-[600] flex items-center justify-center h-full py-[14.5px] transition-all duration-200 ${
+                      className={`border rounded-[8px] text-[15px] font-[600] flex items-center justify-center h-full py-[14.5px] transition-all duration-200 ${
                         selectedMethod === "email"
                           ? "bg-[#1DA563] text-white border-[#1DA563]"
                           : "bg-transparent text-[#CC627B] border-[#CC627B]"
@@ -327,7 +327,7 @@ const OTP_Send = ({ type }) => {
                       className="hidden"
                     />
                     <div
-                      className={`border rounded-[8px] text-[14px] font-[600] flex items-center justify-center h-full py-[14.5px] transition-all duration-200 ${
+                      className={`border rounded-[8px] text-[15px] font-[600] flex items-center justify-center h-full py-[14.5px] transition-all duration-200 ${
                         selectedMethod === "mobile"
                           ? "bg-[#1DA563] text-white border-[#1DA563]"
                           : "bg-transparent text-[#CC627B] border-[#CC627B]"
@@ -392,7 +392,7 @@ const OTP_Send = ({ type }) => {
                   disabled={
                     isLoading || (otpSendStatus && isResendDisabled && !otp)
                   }
-                  className="cursor-pointer bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white border py-[14.5px] rounded-[8px] flex items-center justify-center w-full h-[45px] mt-[15px]"
+                  className="cursor-pointer bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white border py-[14.5px] rounded-[8px] flex items-center justify-center w-full h-[45px] mt-[15px]"
                 >
                   {isLoading ? (
                     <Loader2Icon className="animate-spin" />
@@ -432,7 +432,7 @@ const OTP_Send = ({ type }) => {
               src="/images/ekyamm.png"
               width={100}
               height={49}
-              className="w-[106px]"
+              className="w-[106px] mix-blend-multiply"
               alt="ekyamm"
             />
           </div>

@@ -140,7 +140,7 @@ const CP_clinic_details = () => {
   return (
     <div className="bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5] h-full flex flex-col">
       <CP_Header />
-      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
+      <div className="h-full pt-[10%] pb-[4%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
         <div className="bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
           <strong className="text-[16px] text-black font-semibold">
             Clinic Address Details
@@ -148,7 +148,7 @@ const CP_clinic_details = () => {
           <div>
             <Label
               htmlFor="pincode"
-              className="text-[14px] text-gray-500 mb-2 mt-5"
+              className="text-[15px] text-gray-500 mb-2 mt-5"
             >
               Pincode *
             </Label>
@@ -156,7 +156,7 @@ const CP_clinic_details = () => {
               id="pincode"
               type="number"
               placeholder="400053"
-              className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-gray-500 pt-3 pb-3.5 px-4 h-[39px]"
+              className="bg-white rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] placeholder:text-gray-500 pt-3 pb-3.5 px-4 h-[39px]"
               value={formData.pincode}
               onChange={(e) => handlePincodeChange(e.target.value)}
               onBlur={() => handleBlur("pincode")}
@@ -177,7 +177,7 @@ const CP_clinic_details = () => {
           <div>
             <Label
               htmlFor="area"
-              className={`text-[14px] mb-2 mt-[22px] ${
+              className={`text-[15px] mb-2 mt-[22px] ${
                 isPincodeValid(formData.pincode)
                   ? "text-gray-500"
                   : "text-[#00000040]"
@@ -189,7 +189,7 @@ const CP_clinic_details = () => {
               id="area"
               type="text"
               placeholder="Pimple Saudagar"
-              className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] pt-3 pb-3.5 px-4 h-[39px] ${
+              className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] pt-3 pb-3.5 px-4 h-[39px] ${
                 isPincodeValid(formData.pincode)
                   ? "bg-white placeholder:text-gray-500"
                   : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -208,7 +208,7 @@ const CP_clinic_details = () => {
           <div>
             <Label
               htmlFor="city"
-              className={`text-[14px] mb-2 mt-[22px] ${
+              className={`text-[15px] mb-2 mt-[22px] ${
                 isPincodeValid(formData.pincode)
                   ? "text-gray-500"
                   : "text-[#00000040]"
@@ -220,7 +220,7 @@ const CP_clinic_details = () => {
               id="city"
               type="text"
               placeholder="Mumbai"
-              className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] pt-3 pb-3.5 px-4 h-[39px] ${
+              className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] pt-3 pb-3.5 px-4 h-[39px] ${
                 isPincodeValid(formData.pincode)
                   ? "bg-white placeholder:text-gray-500"
                   : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -239,7 +239,7 @@ const CP_clinic_details = () => {
           <div>
             <Label
               htmlFor="state"
-              className={`text-[14px] mb-2 mt-[22px] ${
+              className={`text-[15px] mb-2 mt-[22px] ${
                 isPincodeValid(formData.pincode)
                   ? "text-gray-500"
                   : "text-[#00000040]"
@@ -251,7 +251,7 @@ const CP_clinic_details = () => {
               id="state"
               type="text"
               placeholder="Maharashtra"
-              className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] pt-3 pb-3.5 px-4 h-[39px] ${
+              className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] pt-3 pb-3.5 px-4 h-[39px] ${
                 isPincodeValid(formData.pincode)
                   ? "bg-white placeholder:text-gray-500"
                   : "bg-[#ffffff10] placeholder:text-[#00000040]"

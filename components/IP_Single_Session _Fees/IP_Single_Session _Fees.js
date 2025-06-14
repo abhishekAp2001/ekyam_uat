@@ -163,27 +163,27 @@ const IP_Single_Session_Fees = () => {
   return (
     <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-full flex flex-col">
       <IP_Header text="Add Individual Practitioner Details" />
-      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
+      <div className="h-full pb-[22%] overflow-auto px-[17px] bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
         {/* Single Session Fees */}
-        <div className="bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
-          <strong className="text-[16px] text-black font-semibold">
+        <div className="bg-[#FFFFFF80] rounded-[12px] p-4">
+          <strong className="text-[15px] text-black font-semibold">
             Single Session Fees
           </strong>
           <div className="mt-5">
             <Label
               htmlFor="singleSession"
-              className="text-[14px] text-gray-500 font-medium mb-[7.59px]"
+              className="text-[15px] text-gray-500 font-medium mb-[7.59px]"
             >
               Session Fee (Hourly) *
             </Label>
             <Input
               id="singleSession"
               type="text"
-              placeholder="₹ 1,500/-"
+              placeholder="Enter fee per hour"
               value={formData.singleSession}
               onChange={handleSingleSessionChange}
               onBlur={() => handleBlur("singleSession")}
-              className="bg-white rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
+              className="bg-white rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] placeholder:text-[#00000066] py-3 px-4 h-[39px]"
             />
             {touched.singleSession && !formData.singleSession && (
               <span className="text-red-500 text-sm mt-1 block">
@@ -200,13 +200,13 @@ const IP_Single_Session_Fees = () => {
           </div>
         </div>
         {/* Package Sessions */}
-        <div className="bg-[#FFFFFF80] rounded-[12px] p-4 px-3 mt-[17.9px]">
+        <div className="bg-[#FFFFFF80] rounded-[12px] p-4 mt-[17.9px]">
           <strong className="text-[16px] text-black font-semibold">
             Package Sessions (Optional)
           </strong>
-          <div className="flex flex-col gap-[15px]">
+          <div className="flex flex-col gap-2 mt-2">
             {formData.packages.map((pkg, index) => (
-              <div key={index} className="flex items-center justify-between mt-5">
+              <div key={index} className="flex items-center justify-between">
                 <div className="flex gap-2 items-center">
                   <Checkbox
                     className="w-4 h-4 border-[1.5px] border-[#776EA5] rounded-[1.8px] ms-1"
@@ -229,7 +229,7 @@ const IP_Single_Session_Fees = () => {
                       handlePackageChange(index, "rate", e.target.value)
                     }
                     disabled={!pkg.enabled || !isAmountValid(formData.singleSession)}
-                    className={`bg-white rounded-[5px] text-[14px] text-black font-semibold placeholder:text-[14px] placeholder:text-[#00000066] py-3 px-2 w-[74px] h-[28px] ${
+                    className={`bg-white rounded-[5px] text-[15px] text-black font-semibold placeholder:text-[15px] placeholder:text-[#00000066] py-3 px-2 w-[74px] h-[28px] ${
                       !pkg.enabled || !isAmountValid(formData.singleSession)
                         ? "bg-[#ffffff10] placeholder:text-[#00000040]"
                         : ""
@@ -241,12 +241,12 @@ const IP_Single_Session_Fees = () => {
           </div>
         </div>
         {/* KYC */}
-        <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
-          <strong className="text-[16px] text-black font-semibold">KYC</strong>
-          <div className="mt-5">
+        <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4">
+          <strong className="text-[15px] text-black font-semibold">KYC</strong>
+          <div className="mt-3">
             <Label
               htmlFor="panCard"
-              className={`text-[14px] mb-2 ${
+              className={`text-[15px] mb-[7.59px] ${
                 isAmountValid(formData.singleSession)
                   ? "text-gray-500"
                   : "text-[#00000040]"
@@ -262,7 +262,7 @@ const IP_Single_Session_Fees = () => {
               onChange={handlePanChange}
               onBlur={() => handleBlur("panCard")}
               disabled={!isAmountValid(formData.singleSession)}
-              className={`rounded-[7.26px] text-[14px] text-black font-semibold placeholder:text-[14px] py-3 px-4 h-[39px] ${
+              className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-4 h-[39px] ${
                 isAmountValid(formData.singleSession)
                   ? "bg-white placeholder:text-gray-500"
                   : "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -282,10 +282,10 @@ const IP_Single_Session_Fees = () => {
                 </span>
               )}
           </div>
-          <div className="mt-5">
+          <div className="mt-3">
             <Label
               htmlFor="gstNumber"
-              className={`text-[14px] mb-2 block ${
+              className={`text-[15px] mb-[7.59px] block ${
                 isPanValid(formData.panCard) ? "text-gray-500" : "text-[#00000040]"
               }`}
             >
@@ -299,7 +299,7 @@ const IP_Single_Session_Fees = () => {
                 disabled={!isPanValid(formData.panCard)}
               >
                 <SelectTrigger
-                  className={`w-[60px] rounded-l-[7.26px] text-[14px] font-semibold h-[39px] px-2 ${
+                  className={`w-[60px] rounded-l-[7.26px] text-[15px] font-semibold h-[39px] px-2 ${
                     isPanValid(formData.panCard)
                       ? "bg-white text-gray-500"
                       : "bg-[#ffffff10] text-[#00000040]"
@@ -322,7 +322,7 @@ const IP_Single_Session_Fees = () => {
                 type="text"
                 value={formData.panCard}
                 readOnly
-                className="bg-[#cecece] border-l border-r text-[14px] font-semibold py-3 h-[39px] px-2 text-gray-500 outline-none w-[180px]"
+                className="bg-[#cecece] border-l border-r text-[15px] font-semibold py-3 h-[39px] px-2 text-gray-500 outline-none w-[180px]"
               />
               <input
                 type="text"
@@ -331,7 +331,7 @@ const IP_Single_Session_Fees = () => {
                 onBlur={() => handleBlur("gstNumber")}
                 disabled={!isPanValid(formData.panCard)}
                 placeholder="Z5G"
-                className={`text-[14px] font-semibold px-2 text-black outline-none w-[70px] ${
+                className={`text-[15px] font-semibold px-2 text-black outline-none w-[70px] ${
                   isPanValid(formData.panCard)
                     ? "bg-white placeholder:text-gray-500"
                     : "bg-[#ffffff10] placeholder:text-[#00000040]"

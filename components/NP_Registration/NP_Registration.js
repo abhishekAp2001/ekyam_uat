@@ -28,8 +28,8 @@ const NP_Registration = () => {
     <>
       <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-screen flex flex-col">
         <NP_Header />
-        <div className="h-full flex flex-col justify-between overflow-auto px-[13px] mt-[22px] bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
-          <div className="w-full h-[25px] text-[#776EA5] font-semibold text-[20px] leading-[25px] mb-6 text-center">
+        <div className="h-full flex flex-col justify-between overflow-auto px-[13px] bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
+          <div className="w-full text-[#776EA5] font-semibold text-[20px] leading-[25px] text-center">
             {channelPartnerData?.clinicName}
           </div>
 
@@ -38,37 +38,37 @@ const NP_Registration = () => {
               Package Credit Confirmation
             </strong>
             <div className="mb-3 bg-gradient-to-r from-[#BBA3E433] to-[#EDA19733] rounded-[12px] p-2">
-              <span className="text-[14px] font-medium text-[#000000] ml-1">
+              <span className="text-[15px] font-medium text-[#000000] ml-1">
                 Patient Name:
               </span>
-              <div className="text-[14px] font-[600] text-black ml-1">
+              <div className="text-[15px] font-[600] text-black ml-1">
                 {invitePatientInfo?.firstName} {invitePatientInfo?.lastName}
               </div>
             </div>
             <div className="mb-3 bg-gradient-to-r from-[#BBA3E433] to-[#EDA19733] rounded-[12px] p-2">
               <div className=" flex  justify-between  ">
-                <span className="text-[14px] font-[400] text-[#000000] ml-1 pb-2">
+                <span className="text-[15px] font-[400] text-[#000000] ml-1 pb-2">
                   Number of Sessions:
                 </span>
-                <span className="text-[14px] font-[600] text-black mr-1">
+                <span className="text-[15px] font-[600] text-black mr-1">
                   {sessions_selection?.sessionCreditCount}
                 </span>
               </div>
 
               <div className=" flex justify-between ">
-                <span className="text-[14px] font-[400] text-[#000000] ml-1">
+                <span className="text-[15px] font-[400] text-[#000000] ml-1">
                   Session Fee (Hourly): {sessions_selection?.sessionCreditCount}
                 </span>
-                <span className="text-[14px] font-[700] text-black mr-1">
+                <span className="text-[15px] font-[700] text-black mr-1">
                   <span className="mx-8">₹</span>{sessions_selection?.sessionPrice}
                 </span>
               </div>
             </div>
             <div className="flex justify-between mt-2  pt-2 bg-gradient-to-r from-[#BBA3E433] to-[#EDA19733] rounded-[12px] p-2">
-              <span className="text-[14px] font-[700] text-black ml-1">
+              <span className="text-[15px] font-[700] text-black ml-1">
                 Total:
               </span>
-              <span className="text-[14px] font-[700] text-black mr-1">
+              <span className="text-[15px] font-[700] text-black mr-1">
                 <span className="mx-8">₹</span>{Number(sessions_selection?.sessionPrice)*Number(sessions_selection?.sessionCreditCount)}
               </span>
             </div>
