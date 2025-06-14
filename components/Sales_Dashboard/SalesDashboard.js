@@ -126,12 +126,7 @@ const SalesDashboard = () => {
           </div>
         </div>
         <div className="">
-          {/* <Button
-            className="mt-[10.8px] bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[14px] font-[600] text-white py-[14.5px] h-[45px] mx-auto"
-            style={{ width: "100% !important" }}
-          >
-            Add User
-          </Button> */}
+         
           <Drawer className="pt-[9.97px]">
             <DrawerTrigger className="mt-[10.8px] bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white py-[14.5px] h-[45px]  rounded-[8px] flex items-center justify-center w-full">
               Add User
@@ -235,9 +230,6 @@ const SalesDashboard = () => {
               />
             </TabsTrigger>
           </TabsList>
-          {/* <TabsContent value="dashboard">Make changes to your account here.</TabsContent>
-      <TabsContent value="add">Make changes to your account here.</TabsContent>
-      <TabsContent value="search">Change your password here.</TabsContent> */}
         </Tabs>
       </div>
     </>

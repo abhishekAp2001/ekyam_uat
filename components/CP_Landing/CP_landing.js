@@ -53,13 +53,6 @@ const CP_landing = ({ type }) => {
               {channelPartnerData?.clinicName || "Greetings Hospital"} 
             </h1>
             <div className="flex justify-center items-center gap-[2px]">
-              {/* <Image
-                src="/images/location.png"
-                width={15}
-                height={15}
-                className="w-[15.78px]"
-                alt="location"
-              /> */}
               <div className="bg-[#776EA5] rounded-full w-[16.78px] h-[16.78px] flex justify-center items-center">
               <MapPin color="white" className="w-[12.15px] h-[12.15px]"/></div>
               <span className="text-sm text-[#776EA5] font-medium">

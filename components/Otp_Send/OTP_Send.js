@@ -96,12 +96,7 @@ const OTP_Send = ({ type }) => {
   };
 
   const changeOtpMethod = (method) => {
-    // if (otpSendStatus) {
-    //   const confirmChange = window.confirm(
-    //     `Changing to ${method} will reset the OTP process. Continue?`
-    //   );
-    //   if (!confirmChange) return;
-    // }
+   
     setSelectedMethod(method);
     setOtpSendStatus(false);
     setOtp("");

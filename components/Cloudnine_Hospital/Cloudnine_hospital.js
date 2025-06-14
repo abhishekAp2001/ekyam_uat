@@ -349,42 +349,7 @@ const Cloudnine_Hospital = ({ type }) => {
                 </div>
               );
             })}
-            {/* <div className="flex items-center gap-2 mb-4">
-              <Checkbox
-                id="session4"
-                className="h-4 w-[16.05px] border-[1.5px] border-[#776EA5] rounded-[1.5px]"
-              />
-              <Label
-                htmlFor="session4"
-                className="text-[16px] text-gray-500 font-semibold"
-              >
-                4 Sessions
-              </Label>
-            </div>
-            <div className="flex items-center gap-2 mb-4">
-              <Checkbox
-                id="session8"
-                className="h-4 w-[16.05px] border-[1.5px] border-[#776EA5] rounded-[1.5px]"
-              />
-              <Label
-                htmlFor="session8"
-                className="text-[16px] text-gray-500 font-semibold"
-              >
-                8 Sessions
-              </Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="session12"
-                className="h-4 w-[16.05px] border-[1.5px] border-[#776EA5] rounded-[1.5px]"
-              />
-              <Label
-                htmlFor="session12"
-                className="text-[16px] text-gray-500 font-semibold"
-              >
-                12 Sessions
-              </Label>
-            </div> */}
+            
             {touched.sessionCreditCount && !formData.sessionCreditCount && (
               <span className="text-red-500 text-sm mt-1 block">
                 Please Select Session
@@ -404,8 +369,7 @@ const Cloudnine_Hospital = ({ type }) => {
                   ₹{formData.sessionPrice || "None"} per session
                 </span>
               </div>
-              {/* <Slider defaultValue={[1000]} min={150} max={1500} step={500} /> */}
-              {/* <Slider defaultValue={[0]} min={0} max={0} step={0} /> */}
+             
               <Slider
                 value={[formData.sessionPrice]}
                 onValueChange={handleFeeChange}
@@ -447,10 +411,6 @@ const Cloudnine_Hospital = ({ type }) => {
               disabled={loading || !isFormValid()}
               className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white rounded-[8px] w-[48%] h-[45px]"
             >
-              {/* <Link
-                href={`/channel-partner/${type}/np_registration`}
-                className="text-[12px] "
-              > */}
               {loading ? (
                 <Loader2Icon className="animate-spin" />
               ) : (

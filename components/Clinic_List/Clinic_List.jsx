@@ -18,20 +18,7 @@ const Clinic_List = () => {
           </div>
         </div>
         <div className="bg-[#FFFFFF80] pt-[8.21px] pb-3.5 border=[1.47px] border-[#FFFFFF4D] rounded-2xl">
-          <div className="flex justify-between items-center ps-2 pe-[16.93px]">
-            {/* <div className="flex items-center gap-1">
-              <Image
-                src="/images/bx_clinic.png"
-                width={24}
-                height={24}
-                className="w-[24px]"
-                alt="ekyamm"
-              />
-              <span className="text-[15px] text-black font-semibold">
-                Channel Partner
-              </span>
-            </div> */}
-            
+          <div className="flex justify-between items-center ps-2 pe-[16.93px]">            
           </div>
           <div className="px-[10px] ">
             <All_clinics />
