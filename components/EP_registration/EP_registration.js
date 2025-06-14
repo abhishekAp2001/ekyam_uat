@@ -99,10 +99,7 @@ const EP_registration = ({ type }) => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        // Assuming showErrorToast is defined elsewhere
-        // console.error(
-        //   error?.response?.data?.error?.message || "Something Went Wrong"
-        // );
+       
       }
     }
   };
@@ -135,11 +132,7 @@ const EP_registration = ({ type }) => {
         }
       );
       if (response?.data?.success === true) {
-        // const users = response?.data?.data?.map((user) => ({
-        //   name: `${user.firstName} ${user.lastName}`,
-        //   image: user.image || "/default-profile.png",
-        //   primaryMobileNumber: `${user.countryCode_primary} ${user.primaryMobileNumber}`,
-        // }));
+       
         setSearchUsers(response?.data?.data);
       } else {
         setSearchUsers([]);
@@ -411,21 +404,14 @@ const EP_registration = ({ type }) => {
               New Patient
             </Link>
           </Button>
-          {/* <Button className="border border-[#CC627B] bg-transparent text-[15px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[141px] h-[45px] opacity-30">
-            <Link href={`/channel-partner/${type}/patient-history`}>
-              + Patient History
-            </Link>
-          </Button> */}
+         
           <Button
             disabled={!isFormValid() || loading}
             type="button"
             className="border border-[#CC627B] bg-transparent text-[15px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px] "
             onClick={handlePatientHistoryClick}
           >
-            {/* <Link
-                          href={`/channel-partner/${type}/patient-history`}
-                          className="text-[15px] "
-                        > */}
+           
             {loading ? (
               <Loader2Icon className="animate-spin" />
             ) : (

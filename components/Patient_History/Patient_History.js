@@ -309,7 +309,6 @@ const Patient_History = ({ type }) => {
                 disabled={loading}
                 className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white py-[14.5px] mx-auto rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
               >
-                {/* <Link href={`/channel-partner/${type}/cloudnine_hospital`}> */}
                 {loading ? (
                   <Loader2Icon className="animate-spin" />
                 ) : (
