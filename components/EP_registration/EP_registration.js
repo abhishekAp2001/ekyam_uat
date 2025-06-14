@@ -246,7 +246,9 @@ const EP_registration = ({ type }) => {
           <div className="bg-[#776EA5] rounded-full w-[16.78px] h-[16.78px] flex justify-center items-center">
             <MapPin color="white" className="w-[12.15px] h-[12.15px]" />
           </div>
-          <span className="text-sm text-[#776EA5] font-medium">Noida</span>
+          <span className="text-sm text-[#776EA5] font-medium">
+            {channelPartnerData?.area}
+          </span>
         </div>
         <div className="bg-[#FFFFFFB2] rounded-[12px] p-5 mt-[25px] relative">
           {/* Mobile number */}

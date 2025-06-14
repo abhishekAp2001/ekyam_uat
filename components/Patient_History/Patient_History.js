@@ -201,7 +201,7 @@ const Patient_History = ({ type }) => {
                      <div className="bg-[#776EA5] rounded-full w-[16.78px] h-[16.78px] flex justify-center items-center">
                         <MapPin color="white" className="w-[12.15px] h-[12.15px]"/></div>
                         <span className="text-sm text-[#776EA5] font-medium">
-                          Noida
+                          {channelPartnerData?.area}
                         </span>
                         </div>
           {/* Patient Number and Mobile */}

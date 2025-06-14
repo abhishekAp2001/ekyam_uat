@@ -374,13 +374,6 @@ const OTP_Send = ({ type }) => {
                             className="w-[42px] h-[42px] border-[1.54px] border-[#776EA5] rounded-[9.23px] text-[16px] text-gray-500"
                           />
                         </InputOTPGroup>
-                        <Image
-                          src="/images/visibility.png"
-                          width={14}
-                          height={10}
-                          className="w-[14.67px] absolute top-4 right-0"
-                          alt="ekyamm"
-                        />
                       </InputOTP>
                     </div>
                   </>

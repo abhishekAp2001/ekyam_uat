@@ -396,7 +396,7 @@ const CP_type = () => {
                     disabled={!isMobileValid(formData.primaryMobileNumber)}
                     className="w-4 h-4 border border-[#776EA5] rounded-[1.8px] ms-1"
                   />
-                  <label className="text-[12px] text-gray-500">Same as Mobile Number</label>
+                  <label className={`text-[12px] ${isMobileValid(formData.primaryMobileNumber) ? "text-gray-500" : "text-[#00000040]"}`}>Same as Mobile Number</label>
                 </div>
               </div>
               <div className="flex items-center h-[39px]">

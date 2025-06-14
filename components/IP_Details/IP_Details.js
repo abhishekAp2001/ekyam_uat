@@ -561,8 +561,9 @@ const IP_Details = () => {
                       }));
                     }
                   }}
+                  disabled={!isMobileValid(formData.primaryMobileNumber)}
                 />
-                <label className="text-[12px] text-gray-500">
+                <label className={`text-[12px] ${isMobileValid(formData.primaryMobileNumber) ? "text-gray-500" : "text-[#00000040]"}`}>
                   Same as Mobile Number
                 </label>
               </div>

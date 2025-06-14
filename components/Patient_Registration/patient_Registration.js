@@ -53,7 +53,6 @@ const Patient_Registration = ({ type }) => {
       formData.firstName &&
       formData.lastName &&
       formData.countryCode_primary &&
-      isEmailValid(formData.email) &&
       isMobileValid(formData.primaryMobileNumber)
     );
   };
@@ -149,7 +148,7 @@ const Patient_Registration = ({ type }) => {
            <div className="bg-[#776EA5] rounded-full w-[16.78px] h-[16.78px] flex justify-center items-center">
               <MapPin color="white" className="w-[12.15px] h-[12.15px]"/></div>
               <span className="text-sm text-[#776EA5] font-medium">
-                Noida
+                {channelPartnerData?.area}
               </span>
               </div>
           <div className="bg-[#FFFFFFB2] rounded-[12px] p-5 mt-[25px] relative">
@@ -212,11 +211,6 @@ const Patient_Registration = ({ type }) => {
                 placeholder="Enter Email Address"
                 className="bg-white rounded-[7.26px] placeholder:text-[15px] placeholder:text-gray-500 placeholder:font-medium font-semibold py-3 px-4 h-[39px]"
               />
-              {touched.email && !formData.email && (
-                <span className="text-red-500 text-sm mt-1 block">
-                  Email is required
-                </span>
-              )}
             </div>
 
             <div>
@@ -243,7 +237,7 @@ const Patient_Registration = ({ type }) => {
                       countryCode_primary: true,
                     }));
                   }}
-                  isDisabled={!isEmailValid(formData.email)}
+                  isDisabled={!formData.lastName}
                   className="w-[100px]"
                   styles={{
                     control: (base) => ({
@@ -275,7 +269,7 @@ const Patient_Registration = ({ type }) => {
                   }
                   
                   onBlur={() => handleBlur("primaryMobileNumber")}
-                  disabled={!isEmailValid(formData.email)}
+                  disabled={!formData.lastName}
                   placeholder="Enter Mobile Number"
                   className="bg-white border border-gray-300 rounded-[7.26px] placeholder:text-[15px] placeholder:text-gray-500 placeholder:font-medium font-semibold py-2 px-4 h-[38px] w-full"
                 />
