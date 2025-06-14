@@ -152,8 +152,7 @@ const SalesDashboard = () => {
                 >
                   View All
                 </Link>
-              </div>
-
+              </div> 
                <div className="bg-[#FFFFFF80] text-black text-[16px] font-[600] py-[17px] p-[8px] flex  justify-between items-center w-full h-[44px] rounded-[8.62px]">
                 <div className="flex items-center gap-[7px]">
                 <Image
