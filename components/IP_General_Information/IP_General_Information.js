@@ -68,7 +68,7 @@ const IP_General_Information = () => {
         setLanguageList(response?.data?.data);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       if (error.forceLogout) {
         router.push("/login");
       } else {

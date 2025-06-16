@@ -63,7 +63,7 @@ const Login = () => {
         }
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       if (error.forceLogout) {
         router.push("/login");
       } else {

@@ -33,7 +33,7 @@ const CP_landing = ({ type }) => {
           );
         }
       } catch (err) {
-        console.log(err);
+        // console.log(err);
         showErrorToast(
           err?.response?.data?.error?.message ||
             "An error occurred while verifying"

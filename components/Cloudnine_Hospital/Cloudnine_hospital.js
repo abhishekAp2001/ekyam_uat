@@ -15,6 +15,11 @@ import axiosInstance from "@/lib/axiosInstance";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
 import { Loader2Icon, MapPin } from "lucide-react";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import {
+  calculatePaymentDetails,
+  clinicSharePercent,
+  formatAmount,
+} from "@/lib/utils";
 polyfillCountryFlagEmojis();
 
 const Cloudnine_Hospital = ({ type }) => {
@@ -26,6 +31,8 @@ const Cloudnine_Hospital = ({ type }) => {
   const [loading, setLoading] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [feeLoading, setFeeLoading] = useState(false);
+  const [billingType, setBillingType] = useState("");
+  const [totalPayable, setTotalPayable] = useState(0);
   const [patientPreviousData, setPatientPreviousData] = useState({
     _id: "",
     firstName: "",
@@ -47,7 +54,7 @@ const Cloudnine_Hospital = ({ type }) => {
   });
 
   const isFormValid = () => {
-    console.log("formData", formData);
+    // console.log("formData", formData);
     return (
       formData.channelPartnerUsername &&
       formData.cp_patientId &&
@@ -64,14 +71,20 @@ const Cloudnine_Hospital = ({ type }) => {
         sessionCreditCount: formData?.sessionCreditCount,
         sessionPrice: String(formData?.sessionPrice),
       };
-      const resposne = await axios.post(
-        `v2/cp/patient/sessionCredits`,
-        payload
-      );
-      if (resposne?.data?.success) {
+
+      if (billingType === "onSpot") {
         setCookie("sessions_selection", JSON.stringify(formData));
-        showSuccessToast("Patient Invited & Invoice Sent");
-        router.push(`/channel-partner/${type}/invoice_sent`);
+        router.push(`/channel-partner/${type}/pay-for-sessions`);
+      } else {
+        const response = await axios.post(
+          `v2/cp/patient/sessionCredits`,
+          payload
+        );
+        if (response?.data?.success) {
+          setCookie("sessions_selection", JSON.stringify(formData));
+          showSuccessToast("Patient Invited & Invoice Sent");
+          router.push(`/channel-partner/${type}/invoice_sent`);
+        }
       }
     } catch (error) {
       showErrorToast(response?.data?.error?.message || "Something went wrong.");
@@ -92,18 +105,22 @@ const Cloudnine_Hospital = ({ type }) => {
   ];
 
   const handleFeeChange = (value) => {
+    setLoading(true);
     const closestFee = feesData?.fees?.reduce((prev, curr) =>
       Math.abs(curr - value[0]) < Math.abs(prev - value[0]) ? curr : prev
     );
-    console.log(closestFee);
+    // console.log(closestFee);
     setFormData((prev) => ({
       ...prev,
       sessionPrice: closestFee,
     }));
+
+    setLoading(false);
   };
 
   const handleSessionChange = async (count) => {
     setFeeLoading(true);
+    setLoading(true);
     setFormData((prev) => ({
       ...prev,
       sessionCreditCount: prev.sessionCreditCount === count ? null : count,
@@ -122,6 +139,7 @@ const Cloudnine_Hospital = ({ type }) => {
             min: response?.data?.data.min,
             max: response?.data?.data.max,
           });
+
           setFormData((prev) => ({
             ...prev,
             sessionPrice:
@@ -135,13 +153,49 @@ const Cloudnine_Hospital = ({ type }) => {
         );
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       showErrorToast(
         err?.response?.data?.error?.message ||
           "An error occurred while fees fetching"
       );
     } finally {
       setFeeLoading(false);
+    }
+    try {
+      const response = await axios.post(`v2/practitioner/fees/range`, {
+        username: type,
+        sessions: count,
+      });
+
+      if (response?.data?.success === true) {
+        if (Array.isArray(response?.data?.data.fees)) {
+          setFeesData({
+            fees: response?.data?.data.fees,
+            min: response?.data?.data.min,
+            max: response?.data?.data.max,
+          });
+
+          setFormData((prev) => ({
+            ...prev,
+            sessionPrice:
+              response?.data?.data.fees[0] || response?.data?.data.min,
+          }));
+        }
+        // showSuccessToast(response?.data?.data?.message || "Patient added.");
+      } else {
+        showErrorToast(
+          response?.data?.error?.message || "Something went wrong."
+        );
+      }
+    } catch (err) {
+      // console.log(err);
+      showErrorToast(
+        err?.response?.data?.error?.message ||
+          "An error occurred while fees fetching"
+      );
+    } finally {
+      setFeeLoading(false);
+      setLoading(false);
     }
   };
 
@@ -175,7 +229,7 @@ const Cloudnine_Hospital = ({ type }) => {
         );
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       showErrorToast(
         err?.response?.data?.error?.message || "An error occurred while cancel"
       );
@@ -201,7 +255,7 @@ const Cloudnine_Hospital = ({ type }) => {
           setCountryList(response?.data?.data);
         }
       } catch (error) {
-        console.log("error", error);
+        // console.log("error", error);
         if (error.forceLogout) {
           router.push("/login");
         } else {
@@ -220,8 +274,8 @@ const Cloudnine_Hospital = ({ type }) => {
     if (cookieData) {
       try {
         const parsedData = JSON.parse(cookieData);
-        console.log("parsedData", parsedData);
         setChannelPartnerData(parsedData);
+        setBillingType(parsedData?.billingType);
       } catch (error) {
         setChannelPartnerData(null);
       }
@@ -239,7 +293,7 @@ const Cloudnine_Hospital = ({ type }) => {
           ...prev,
           cp_patientId: parsedData?._id || "",
         }));
-        console.log("patient", parsedData);
+        // console.log("patient", parsedData);
       } catch (error) {
         setPatientPreviousData(null);
       }
@@ -248,6 +302,18 @@ const Cloudnine_Hospital = ({ type }) => {
       router.push(`/channel-partner/${type}`);
     }
   }, [type]);
+
+  useEffect(() => {
+    const calculatePrice = () => {
+      const result = calculatePaymentDetails(
+        formData.sessionPrice,
+        formData.sessionCreditCount,
+        clinicSharePercent
+      );
+      setTotalPayable(result?.totalPayable || 0);
+    };
+    calculatePrice();
+  }, [formData.sessionPrice, formData.sessionCreditCount]);
 
   return (
     <>
@@ -261,7 +327,9 @@ const Cloudnine_Hospital = ({ type }) => {
             <div className="bg-[#776EA5] rounded-full w-[16.78px] h-[16.78px] flex justify-center items-center">
               <MapPin color="white" className="w-[12.15px] h-[12.15px]" />
             </div>
-            <span className="text-sm text-[#776EA5] font-medium">{channelPartnerData?.area}</span>
+            <span className="text-sm text-[#776EA5] font-medium">
+              {channelPartnerData?.area}
+            </span>
           </div>
           {/* Patient Details */}
           <div className="bg-[#ffffff66] rounded-[12px] p-5 mt-[25px] relative">
@@ -349,7 +417,7 @@ const Cloudnine_Hospital = ({ type }) => {
                 </div>
               );
             })}
-            
+
             {touched.sessionCreditCount && !formData.sessionCreditCount && (
               <span className="text-red-500 text-sm mt-1 block">
                 Please Select Session
@@ -369,7 +437,7 @@ const Cloudnine_Hospital = ({ type }) => {
                   ₹{formData.sessionPrice || "None"} per session
                 </span>
               </div>
-             
+
               <Slider
                 value={[formData.sessionPrice]}
                 onValueChange={handleFeeChange}
@@ -409,15 +477,20 @@ const Cloudnine_Hospital = ({ type }) => {
             <Button
               onClick={handleGenerateInvoice}
               disabled={loading || !isFormValid()}
-              className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white rounded-[8px] w-[48%] h-[45px]"
+              className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white rounded-[8px] w-[48%] h-[45px] flex items-center justify-center text-center"
             >
               {loading ? (
                 <Loader2Icon className="animate-spin" />
+              ) : billingType === "onSpot" ? (
+                <div className="leading-tight">
+                  <div>Pay {totalPayable}/-</div>
+                  <div className="text-[12px] font-normal">
+                    ({formData?.sessionCreditCount} Sessions)
+                  </div>
+                </div>
               ) : (
                 "Generate Invoice"
               )}
-
-              {/* </Link> */}
             </Button>
           </div>
           <Footer_bar />

@@ -286,7 +286,7 @@ const IP_bank_details = () => {
           bankName: formData?.bankName,
         },
       };
-      console.log("payload", payload);
+      // console.log("payload", payload);
       const response = await axios.post(
         `v2/sales/invite/individualPractitioner`,
         payload
