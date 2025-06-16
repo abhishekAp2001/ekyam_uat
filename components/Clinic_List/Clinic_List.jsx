@@ -32,4 +32,5 @@ const Clinic_List = () => {
   );
 };
 
+
 export default Clinic_List;
