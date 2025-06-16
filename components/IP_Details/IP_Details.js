@@ -85,7 +85,7 @@ const IP_Details = () => {
         setCountryList(response?.data?.data);
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       if (error.forceLogout) {
         router.push("/login");
       } else {

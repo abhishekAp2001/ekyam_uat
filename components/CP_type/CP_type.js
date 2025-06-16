@@ -98,7 +98,7 @@ const CP_type = () => {
         setCp_List(response?.data?.data);
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       if (error.forceLogout) {
         router.push("/login");
       } else {
@@ -116,7 +116,7 @@ const CP_type = () => {
         await channelPartnerList(search);
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       if (error.forceLogout) {
         router.push("/login");
       } else {
@@ -135,7 +135,7 @@ const CP_type = () => {
         setIsUserNameAvailable(response?.data?.data?.available);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       if (error.forceLogout) {
         router.push("/login");
       } else {
@@ -163,7 +163,7 @@ const CP_type = () => {
         setCountryList(response?.data?.data);
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       if (error.forceLogout) {
         router.push("/login");
       } else {

@@ -74,7 +74,7 @@ const CP_doctor_details = () => {
         setCountryList(response?.data?.data);
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       if (error.forceLogout) {
         router.push("/login");
       } else {
