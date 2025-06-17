@@ -218,7 +218,7 @@ const CP_billing_details = () => {
     <div className="bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5] h-full flex flex-col">
       <CP_Header />
       <div className="h-full pt-[9%] pb-[4%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
-        <div className="mt-3 bg-[#FFFFFF80] rounded-[12px] p-4">
+        <div className="mt-3 lg:mt-0 bg-[#FFFFFF80] rounded-[12px] p-4">
           <strong className="text-[15px] text-black font-semibold">
             Billing Details
           </strong>

@@ -63,7 +63,7 @@ const Login = () => {
         }
       }
     } catch (error) {
-      // console.log("error", error);
+      console.log("error", error);
       if (error.forceLogout) {
         router.push("/login");
       } else {
@@ -77,9 +77,9 @@ const Login = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-b from-[#DFDAFB] to-[#F9CCC5] h-full">
-        <div className="bg-gradient-to-b from-[#DFDAFB] to-[#F9CCC5] h-full flex  items-center mx-4">
-          <div className="w-full fixed left-0 right-0 translate-y-[-14%] px-[4%]">
+      <div className="bg-gradient-to-b from-[#DFDAFB] to-[#F9CCC5] h-screen relative">
+        <div className=" h-full flex  items-center px-4">
+          <div className="w-full">
             <div className="border-2 bg-[#FFFFFF80] border-[#FFFFFF4D] rounded-4xl pt-5 px-6 pb-3 text-center w-full">
               <strong className="text-[16px] text-black font-[600] text-center">
                 Login to proceed
@@ -148,7 +148,7 @@ const Login = () => {
           </div>
             </div>
           {/* footer */}
-          <div className="flex flex-col justify-center items-center gap-[4.75px] fixed bottom-0 pb-[26px] left-0 right-0">
+          <div className="flex flex-col justify-center items-center gap-[4.75px] fixed bottom-0 pb-[26px] left-0 right-0 max-w-[574px] mx-auto">
             <div className="flex gap-1 items-center">
               <span className="text-[10px] text-gray-500 font-medium">
                 Copyright © {new Date().getFullYear()}

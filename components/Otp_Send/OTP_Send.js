@@ -343,7 +343,7 @@ const OTP_Send = ({ type }) => {
                         value={otp}
                         onChange={(otp) => setOtp(otp)}
                       >
-                        <InputOTPGroup className="flex justify-between gap-2 items-center w-[90%]">
+                        <InputOTPGroup className="flex justify-between gap-2 items-center w-full">
                           <InputOTPSlot
                             index={0}
                             className="w-[42px] h-[42px] border-[1.54px] border-[#776EA5] rounded-[9.23px] text-[16px] text-gray-500"

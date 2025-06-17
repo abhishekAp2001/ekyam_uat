@@ -179,9 +179,9 @@ const IP_Medical_Association_Details = () => {
   };
 
   return (
-    <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-screen flex flex-col">
+    <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-screen flex flex-col max-w-[576px] mx-auto ">
       <IP_Header text="Medical Association Details" />
-      <div className="h-full mb-[26%] overflow-auto px-[17px] mt-1 bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
+      <div className="h-full mb-[26%] overflow-auto px-[17px] bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
         <div>
           <Label htmlFor="name" className="text-[15px] text-gray-500 mb-[7.59px]">
             Name of Medical Association *
@@ -364,7 +364,7 @@ const IP_Medical_Association_Details = () => {
           </div>
         </div>
       </div>
-      <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex justify-center items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-[16px]">
+      <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex justify-center items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-[16px] max-w-[576px] mx-auto">
         <Button
           className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white py-[14.5px] rounded-[8px] flex items-center justify-center w-full h-[45px]"
           onClick={handleSave}

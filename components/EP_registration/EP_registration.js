@@ -404,7 +404,6 @@ const EP_registration = ({ type }) => {
               New Patient
             </Link>
           </Button>
-
           <Button
             disabled={!isFormValid() || loading}
             type="button"
@@ -421,7 +420,7 @@ const EP_registration = ({ type }) => {
           </Button>
         </div>
       </div>
-      <div className="bg-gradient-to-t from-[#fce8e5] to-[#fce8e5] flex flex-col justify-between items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-4">
+      <div className="bg-gradient-to-t from-[#fce8e5] to-[#fce8e5] flex flex-col justify-between items-center gap-3 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-4 max-w-[576px] mx-auto">
         <Footer_bar />
       </div>
     </div>

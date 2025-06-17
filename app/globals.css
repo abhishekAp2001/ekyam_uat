@@ -2,7 +2,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @custom-variant dark (&:is(.dark *));
-
+ 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -43,31 +43,52 @@
   --radius-xl: calc(var(--radius) + 4px);
   --toastify-toast-min-height: 41px;
 }
-
+ 
 .data-\[state\=checked\]\:bg-primary[data-state="checked"] {
   background-color: #776EA5 !important;
 }
-.data-\[state\=active\]\:shadow-sm[data-state="active"]{
+ 
+.data-\[state\=active\]\:shadow-sm[data-state="active"] {
   box-shadow: none !important;
 }
-.css-1do6a5p-control{
-  border:none !important
+ 
+.css-1do6a5p-control {
+  border: none !important
 }
-.css-1knkcj9-control{
+ 
+.css-1knkcj9-control {
   border: none !important;
 }
-.css-1u9des2-indicatorSeparator{
+ 
+.css-1u9des2-indicatorSeparator {
   display: none !important;
 }
-.css-bkuhsc-control{
+ 
+.css-bkuhsc-control {
   border: none !important;
   box-shadow: none !important;
   height: 38px !important;
 }
-.css-bkuhsc-control:hover{
+ 
+.css-bkuhsc-control:hover {
   border: none !important;
 }
-
+ 
+[data-vaul-drawer] {
+  max-width: 576px;
+  margin: auto;
+}
+ 
+body[data-scroll-locked] {
+ padding-left: 0px !important;
+  padding-right: 0px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  overflow: hidden !important;
+  position: relative !important;
+  max-width: 100% !important;
+}
+ 
 :root {
   --radius: 0.625rem;
   /* --background: oklch(1 0 0); */
@@ -102,7 +123,7 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 }
-
+ 
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -136,28 +157,29 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
-
+ 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-
+ 
   body {
     @apply bg-background text-foreground;
   }
 }
-
+ 
 body {
   font-family: "Twemoji Country Flags", "Quicksand", sans-serif;
   font-optical-sizing: auto;
 }
-
+ 
 .Toastify__toast {
   --toastify-toast-width: 95%;
 }
-
+ 
 @media only screen and (max-width: 480px) {
   .Toastify__toast {
     --toastify-toast-width: 95%;
   }
 }
+ 

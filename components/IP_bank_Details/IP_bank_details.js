@@ -540,7 +540,7 @@ const IP_bank_details = () => {
               )}
           </div>
         </div>
-        <div className="flex justify-between items-center gap-3 mt-[20.35px] fixed bottom-[23px] left-0 right-0 px-4">
+        <div className="flex justify-between items-center gap-3 mt-[20.35px] fixed bottom-[23px] left-0 right-0 px-4 max-w-[576px] mx-auto">
           <Button
             className="border border-[#CC627B] bg-transparent text-[15px] font-[600] text-[#CC627B] py-[14.5px]  rounded-[8px] flex items-center justify-center w-[48%] h-[45px]"
             onClick={() => {

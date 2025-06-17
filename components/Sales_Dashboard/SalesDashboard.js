@@ -19,10 +19,9 @@ import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const SalesDashboard = () => {
-
   return (
     <>
-      <div className="bg-gradient-to-r  from-[#B0A4F5] to-[#EDA197] rounded-bl-3xl rounded-br-3xl px-3 py-5 mb-0">
+      <div className="bg-gradient-to-r  from-[#B0A4F5] to-[#EDA197] rounded-bl-3xl rounded-br-3xl px-3 py-5 mb-0 fixed top-0 left-0 right-0 max-w-[576px] mx-auto">
         <div className="flex justify-between items-center">
           <Menu color="white" width={24} />
           <Image
@@ -38,7 +37,7 @@ const SalesDashboard = () => {
           </Avatar>
         </div>
       </div>
-      <div className="px-3 h-[81%] pb-[13%] overflow-auto pt-3">
+      <div className="px-3 h-full  overflow-auto pt-[20%] lg:pt-[15%]">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className="text-[12px] text-gray-500">Good morning,</span>
@@ -62,21 +61,19 @@ const SalesDashboard = () => {
 
         {/* Channel Partner */}
         <div className="mt-[12.35px] pt-[8.21px] pb-3.5 border=[1.47px] border-[#FFFFFF4D] rounded-2xl">
-          <div className="flex justify-between items-center ps-2 pe-[16.93px]">
-            
-          </div>
+          <div className="flex justify-between items-center ps-2 pe-[16.93px]"></div>
           <div className="">
             <div className=" flex flex-col gap-3">
               <div className="bg-[#FFFFFF80] text-black text-[16px] font-[600] py-[17px] p-[8px] flex  justify-between items-center w-full h-[44px] rounded-[8.62px]">
                 <div className="flex items-center gap-[7px]">
-                <Image
-                  src="/images/bx_clinic.png"
-                  width={24}
-                  height={24}
-                  className="w-[24px]"
-                  alt="ekyamm"
-                />
-                Channel Partner
+                  <Image
+                    src="/images/bx_clinic.png"
+                    width={24}
+                    height={24}
+                    className="w-[24px]"
+                    alt="ekyamm"
+                  />
+                  Channel Partner
                 </div>
                 <Link
                   href={"/sales/cp_list"}
@@ -86,16 +83,16 @@ const SalesDashboard = () => {
                 </Link>
               </div>
 
-               <div className="bg-[#FFFFFF80] text-black text-[16px] font-[600] py-[17px] p-[8px] flex  justify-between items-center w-full h-[44px] rounded-[8.62px]">
+              <div className="bg-[#FFFFFF80] text-black text-[16px] font-[600] py-[17px] p-[8px] flex  justify-between items-center w-full h-[44px] rounded-[8.62px]">
                 <div className="flex items-center gap-[7px]">
-                <Image
-                  src="/images/bx_clinic.png"
-                  width={24}
-                  height={24}
-                  className="w-[24px]"
-                  alt="ekyamm"
-                />
-                Individual Practitioner
+                  <Image
+                    src="/images/bx_clinic.png"
+                    width={24}
+                    height={24}
+                    className="w-[24px]"
+                    alt="ekyamm"
+                  />
+                  Individual Practitioner
                 </div>
                 <Link
                   href={"/sales/ip_list"}
@@ -103,17 +100,17 @@ const SalesDashboard = () => {
                 >
                   View All
                 </Link>
-              </div> 
-               <div className="bg-[#FFFFFF80] text-black text-[16px] font-[600] py-[17px] p-[8px] flex  justify-between items-center w-full h-[44px] rounded-[8.62px]">
+              </div>
+              <div className="bg-[#FFFFFF80] text-black text-[16px] font-[600] py-[17px] p-[8px] flex  justify-between items-center w-full h-[44px] rounded-[8.62px]">
                 <div className="flex items-center gap-[7px]">
-                <Image
-                  src="/images/bx_clinic.png"
-                  width={24}
-                  height={24}
-                  className="w-[24px]"
-                  alt="ekyamm"
-                />
-                Clinic
+                  <Image
+                    src="/images/bx_clinic.png"
+                    width={24}
+                    height={24}
+                    className="w-[24px]"
+                    alt="ekyamm"
+                  />
+                  Clinic
                 </div>
                 <Link
                   href={"/sales/clinic_list"}
@@ -126,8 +123,7 @@ const SalesDashboard = () => {
           </div>
         </div>
         <div className="">
-         
-          <Drawer className="pt-[9.97px]">
+          <Drawer className="pt-[9.97px] max-w-[576px] m-auto">
             <DrawerTrigger className="mt-[10.8px] bg-gradient-to-r  from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white py-[14.5px] h-[45px]  rounded-[8px] flex items-center justify-center w-full">
               Add User
             </DrawerTrigger>
@@ -190,9 +186,10 @@ const SalesDashboard = () => {
       </div>
 
       {/* footer */}
-      <div className="footer_bar bg-[#FFFFFFB2] h-[58px] fixed bottom-0 left-0 right-0 flex items-center">
-        <Tabs defaultValue="account" className="">
-          <TabsList className="w-100 bg-transparent p-0  h-[58px]">
+      <div className="footer_bar bg-[#FFFFFFB2] max-w-[576px] h-[58px] fixed bottom-0 left-0 right-0 flex items-center m-auto">
+      {/* <div className="footer_bar bg-[#FFFFFFB2] h-[58px] absolute bottom-0 left-0 right-0 flex items-center"> */}
+        <Tabs defaultValue="account" className="w-full">
+          <TabsList className="w-full bg-transparent p-0  h-[58px]">
             <TabsTrigger
               value="dashboard"
               className=" shadow-none active:shadow-none focus:shadow-none"
@@ -237,3 +234,5 @@ const SalesDashboard = () => {
 };
 
 export default SalesDashboard;
+ 
+ 

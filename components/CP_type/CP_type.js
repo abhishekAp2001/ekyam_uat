@@ -94,9 +94,7 @@ const CP_type = () => {
   // Fetch channel partner types based on search
   const channelPartnerList = async (searchTerm) => {
     try {
-      const response = await axios.get(
-        `v2/cp/channelPartner/types?search=${searchTerm}`
-      );
+      const response = await axios.get(`v2/cp/channelPartner/types?search=${searchTerm}`);
       if (response?.data?.success === true) {
         setCp_List(response?.data?.data);
       }
@@ -105,9 +103,7 @@ const CP_type = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        showErrorToast(
-          error?.response?.data?.error?.message || "Something Went Wrong"
-        );
+        showErrorToast(error?.response?.data?.error?.message || "Something Went Wrong");
       }
     }
   };
@@ -115,9 +111,7 @@ const CP_type = () => {
   // Add new channel partner type
   const addChannelPartner = async (newType) => {
     try {
-      const response = await axios.post("v2/cp/channelPartner/types", {
-        type: newType,
-      });
+      const response = await axios.post("v2/cp/channelPartner/types", { type: newType });
       if (response?.data?.success === true) {
         showSuccessToast("Channel Partner Type Added");
         await channelPartnerList(search);
@@ -127,10 +121,7 @@ const CP_type = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        showErrorToast(
-          error?.response?.data?.error?.message ||
-            "Failed to add new channel partner type"
-        );
+        showErrorToast(error?.response?.data?.error?.message || "Failed to add new channel partner type");
         throw error;
       }
     }
@@ -140,9 +131,7 @@ const CP_type = () => {
   const checkUserNameAvailability = async (userName) => {
     try {
       setIsCheckingUserName(true);
-      const response = await axios.post(`v2/cp/channelPartner/check`, {
-        username: userName,
-      });
+      const response = await axios.post(`v2/cp/channelPartner/check`, { username: userName });
       if (response?.data?.success) {
         setIsUserNameAvailable(response?.data?.data?.available);
       }
@@ -179,9 +168,7 @@ const CP_type = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        showErrorToast(
-          error?.response?.data?.error?.message || "Something Went Wrong"
-        );
+        showErrorToast(error?.response?.data?.error?.message || "Something Went Wrong");
       }
     }
   };
@@ -194,10 +181,7 @@ const CP_type = () => {
   // Check username availability with debounce
   useEffect(() => {
     if (formData.userName && touched.userName) {
-      const timer = setTimeout(
-        () => checkUserNameAvailability(formData.userName),
-        500
-      );
+      const timer = setTimeout(() => checkUserNameAvailability(formData.userName), 500);
       return () => clearTimeout(timer);
     }
   }, [formData.userName, touched.userName]);
@@ -225,20 +209,18 @@ const CP_type = () => {
   }));
 
   // Country options for Select
-  const countryOptions = useMemo(
-    () =>
-      countryList.map((country) => ({
-        value: `${country.flag} ${country.code}`,
-        label: `${country.flag} ${country.code}`,
-        name: country.name,
-      })),
-    [countryList]
-  );
+  const countryOptions = useMemo(() =>
+    countryList.map((country) => ({
+      value: `${country.flag} ${country.code}`,
+      label: `${country.flag} ${country.code}`,
+      name: country.name,
+    })), [countryList]);
+   
 
   return (
     <div className="bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5] h-full flex flex-col">
       <CP_Header />
-      <div className="h-[90%] pt-[10%] pb-[4%] overflow-auto px-[17px] bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
+      <div className="min-h-screen pt-[8%] lg:pt-[8%] pb-[20%] lg:pb-[14%] overflow-auto px-[17px] bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
         <div>
           <Label htmlFor="type" className="text-[15px] text-gray-500 mb-2 mt-5">
             Type of Channel Partner *
@@ -248,16 +230,9 @@ const CP_type = () => {
               control: (base) => ({ ...base, borderRadius: "7.26px" }),
             }}
             options={options}
-            value={
-              formData.type
-                ? { value: formData.type, label: formData.type }
-                : null
-            }
+            value={formData.type ? { value: formData.type, label: formData.type } : null}
             onChange={(selectedOption) =>
-              setFormData({
-                ...formData,
-                type: selectedOption ? selectedOption.value : "",
-              })
+              setFormData({ ...formData, type: selectedOption ? selectedOption.value : "" })
             }
             onInputChange={(inputValue) => setSearch(inputValue)}
             onBlur={() => handleBlur("type")}
@@ -276,23 +251,14 @@ const CP_type = () => {
             className="text-[15px] rounded-[12px] font-semibold border-none outline-none"
           />
           {touched.type && !formData.type && (
-            <span className="text-red-500 text-sm mt-1 block">
-              Type is required
-            </span>
+            <span className="text-red-500 text-sm mt-1 block">Type is required</span>
           )}
 
           {/* Clinic Details */}
           <div className="mt-5 bg-[#FFFFFF80] rounded-[12px] p-4">
-            <strong className="text-[15px] text-black font-semibold">
-              Clinic Details
-            </strong>
+            <strong className="text-[15px] text-black font-semibold">Clinic Details</strong>
             <div>
-              <Label
-                htmlFor="clinicName"
-                className={`text-[15px] mb-2 mt-5 ${
-                  formData.type ? "text-gray-500" : "text-[#00000040]"
-                }`}
-              >
+              <Label htmlFor="clinicName" className={`text-[15px] mb-2 mt-5 ${formData.type ? "text-gray-500" : "text-[#00000040]"}`}>
                 Clinic Name *
               </Label>
               <Input
@@ -300,31 +266,18 @@ const CP_type = () => {
                 type="text"
                 placeholder="Enter clinic name"
                 value={formData.clinicName}
-                onChange={(e) =>
-                  setFormData({ ...formData, clinicName: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, clinicName: e.target.value })}
                 onBlur={() => handleBlur("clinicName")}
                 disabled={!formData.type}
-                className={`rounded-[7.26px] font-semibold py-3 px-4 h-[39px] ${
-                  formData.type
-                    ? "bg-white placeholder:text-[15px] placeholder:text-gray-500"
-                    : "bg-[#ffffff10]"
-                }`}
+                className={`rounded-[7.26px] font-semibold py-3 px-4 h-[39px] ${formData.type ? "bg-white placeholder:text-[15px] placeholder:text-gray-500" : "bg-[#ffffff10]"}`}
               />
               {touched.clinicName && !formData.clinicName && (
-                <span className="text-red-500 text-sm mt-1 block">
-                  Clinic name is required
-                </span>
+                <span className="text-red-500 text-sm mt-1 block">Clinic name is required</span>
               )}
             </div>
             <div>
-              <Label
-                htmlFor="userName"
-                className={`text-[15px] mb-2 mt-[22px] ${
-                  formData.clinicName ? "text-gray-500" : "text-[#00000040]"
-                }`}
-              >
-                Unique URL2 *
+              <Label htmlFor="userName" className={`text-[15px] mb-2 mt-[22px] ${formData.clinicName ? "text-gray-500" : "text-[#00000040]"}`}>
+                Unique URL *
               </Label>
               <div className="flex gap-[10px] items-center">
                 <span className="text-[15px] text-gray-600">ekyamm.com/</span>
@@ -403,9 +356,7 @@ const CP_type = () => {
                 type="text"
                 placeholder="Enter your email"
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 onBlur={() => handleBlur("email")}
                 disabled={!formData.userName || isUserNameAvailable !== true}
                 className={`rounded-[7.26px] font-semibold placeholder:text-[15px] py-3 px-4 h-[39px] ${

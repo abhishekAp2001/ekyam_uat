@@ -49,7 +49,7 @@ const CP_landing = ({ type }) => {
       <div className="bg-white h-screen">
         <div className="flex flex-col items-center h-full text-center">
           <div className="">
-            <h1 className="text-[32px] text-[#776EA5] font-semibold max-[431px]:mt-[34%] mt-[22%] sm:mt-[28%] md:mt-[28%] lg:mt-[28%]">
+            <h1 className="text-[32px] text-[#776EA5] font-semibold max-[431px]:mt-[34%] mt-[22%] sm:mt-[28%] md:mt-[28%] lg:mt-[8%]">
               {channelPartnerData?.clinicName || "Greetings Hospital"} 
             </h1>
             <div className="flex justify-center items-center gap-[2px]">
@@ -60,7 +60,7 @@ const CP_landing = ({ type }) => {
               </span>
             </div>
           </div>
-          <div className="max-[431px]:my-[40px] min-[567px]:my-[50px] flex flex-col items-center gap-[23px]">
+          <div className="max-[431px]:my-[40px] min-[567px]:my-[50px] lg:my-4 flex flex-col items-center gap-[23px]">
             <div className="flex flex-col text-center">
               <div className="">
                 <strong className="text-[36px] text-[#776EA5] font-bold leading-[34px]">
@@ -106,7 +106,7 @@ const CP_landing = ({ type }) => {
               />
             </div>
           </div>
-          <div className="bg-[url(/images/relaxed-feminine-woman.png)] bg-contain sm:bg-cover md:bg-cover bg-bottom bg-no-repeat w-full h-full"></div>
+          <div className="bg-[url(/images/relaxed-feminine-woman.png)] bg-contain sm:bg-cover md:bg-cover lg:bg-auto bg-bottom bg-no-repeat w-full h-full"></div>
         </div>
       </div>
     </>

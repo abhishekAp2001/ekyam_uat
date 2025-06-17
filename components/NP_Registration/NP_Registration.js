@@ -82,7 +82,7 @@ const NP_Registration = () => {
               </span>
             </div>
           </div>
-          <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex flex-col items-center gap-3  py-[23px] px-[17px] left-0 right-0 ">
+          <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex flex-col items-center gap-3  py-[23px] px-[17px] left-0 right-0 max-w-[576px] mx-auto">
             <Footer_bar />
           </div>
         </div>

@@ -461,7 +461,7 @@ const Cloudnine_Hospital = ({ type }) => {
           </div>
         </div>
         {/* Buttons */}
-        <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex flex-col items-center gap-3 fixed bottom-0 pb-[23px] px-[17px] left-0 right-0 ">
+        <div className="bg-gradient-to-b from-[#fce8e5] to-[#fce8e5] flex flex-col items-center gap-3 fixed bottom-0 pb-[23px] px-[17px] left-0 right-0 max-w-[576px] mx-auto">
           <div className="w-full flex gap-[12.2px]">
             <Button
               onClick={handleCancel}
@@ -477,7 +477,7 @@ const Cloudnine_Hospital = ({ type }) => {
             <Button
               onClick={handleGenerateInvoice}
               disabled={loading || !isFormValid()}
-              className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white rounded-[8px] w-[48%] h-[45px] flex items-center justify-center text-center"
+              className="bg-gradient-to-r from-[#BBA3E4] to-[#E7A1A0] text-[15px] font-[600] text-white rounded-[8px] w-[48%] h-[45px]"
             >
               {loading ? (
                 <Loader2Icon className="animate-spin" />

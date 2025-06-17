@@ -89,9 +89,7 @@ const IP_Details = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        showErrorToast(
-          error?.response?.data?.error?.message || "Something Went Wrong"
-        );
+        showErrorToast(error?.response?.data?.error?.message || "Something Went Wrong");
       }
     }
   };
@@ -259,9 +257,9 @@ const IP_Details = () => {
   );
 
   return (
-    <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-full flex flex-col">
+    <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-full flex flex-col max-w-[576px] mx-auto">
       <IP_Header text="Add Individual Practitioner Details" />
-      <div className="h-full pb-[26%] overflow-auto px-[17px] bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
+      <div className="h-full pb-[22%] overflow-auto px-[17px] bg-gradient-to-t from-[#fce8e5] to-[#eeecfb]">
         <div className="flex justify-center w-[140.8px] h-fit rounded-[17.63px] mx-auto relative mb-6">
           <Image
             src={formData.profileImageBase64 || "/images/profile.png"}
@@ -473,9 +471,7 @@ const IP_Details = () => {
             <div className="flex items-center h-[39px]">
               <Select
                 options={countryOptions}
-                value={countryOptions.find(
-                  (option) => option.value === formData.countryCode_primary
-                )}
+                value={countryOptions.find(option => option.value === formData.countryCode_primary)}
                 onChange={(selectedOption) => {
                   const newCountryCode = selectedOption
                     ? selectedOption.value

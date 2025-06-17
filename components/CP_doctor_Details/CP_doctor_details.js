@@ -78,9 +78,7 @@ const CP_doctor_details = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        showErrorToast(
-          error?.response?.data?.error?.message || "Something Went Wrong"
-        );
+        showErrorToast(error?.response?.data?.error?.message || "Something Went Wrong");
       }
     }
   };
@@ -181,21 +179,18 @@ const CP_doctor_details = () => {
   };
 
   // Country options for Select
-  const countryOptions = useMemo(
-    () =>
-      countryList.map((country) => ({
-        value: `${country.flag} ${country.code}`,
-        label: `${country.flag} ${country.code}`,
-        name: country.name,
-      })),
-    [countryList]
-  );
+  const countryOptions = useMemo(() =>
+    countryList.map((country) => ({
+      value: `${country.flag} ${country.code}`,
+      label: `${country.flag} ${country.code}`,
+      name: country.name,
+    })), [countryList]);
 
   return (
     <div className="bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5] h-full flex flex-col">
       <CP_Header />
-      <div className="h-full pt-[10%] pb-[20%] overflow-auto px-[17px] mt-3 bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
-        <div className="mt-3 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
+      <div className="min-h-screen pt-[10%] pb-[20%] overflow-auto px-[17px] bg-gradient-to-t from-[#e5e3f5] via-[#f1effd] via-50% to-[#e5e3f5]">
+        <div className="mt-3 lg:mt-0 bg-[#FFFFFF80] rounded-[12px] p-4 px-3">
           <strong className="text-[15px] text-black font-semibold">
             Doctor’s Details
           </strong>
@@ -212,7 +207,9 @@ const CP_doctor_details = () => {
             </label>
           </div>
           <div>
-            <Label className="text-[15px] text-gray-500 font-medium mb-2 mt-5">
+            <Label
+              className="text-[15px] text-gray-500 font-medium mb-2 mt-5"
+            >
               Title & First Name *
             </Label>
             <div className="flex gap-2 items-center">
@@ -220,7 +217,9 @@ const CP_doctor_details = () => {
                 value={formData.title}
                 onValueChange={handleTitleChange}
               >
-                <SelectTrigger className="w-[69px] bg-white rounded-[7.26px] text-[15px] text-black font-medium h-[39px] px-3">
+                <SelectTrigger
+                  className="w-[69px] bg-white rounded-[7.26px] text-[15px] text-black font-medium h-[39px] px-3"
+                >
                   <SelectValue placeholder="Dr." />
                 </SelectTrigger>
                 <SelectContent>
@@ -333,19 +332,13 @@ const CP_doctor_details = () => {
             <div className="flex items-center h-[39px]">
               <Select
                 options={countryOptions}
-                value={countryOptions.find(
-                  (option) => option.value === formData.countryCode_primary
-                )}
+                value={countryOptions.find(option => option.value === formData.countryCode_primary)}
                 onChange={(selectedOption) => {
-                  const newCountryCode = selectedOption
-                    ? selectedOption.value
-                    : "🇮🇳 +91";
-                  setFormData((prev) => ({
+                  const newCountryCode = selectedOption ? selectedOption.value : "🇮🇳 +91";
+                  setFormData(prev => ({
                     ...prev,
                     countryCode_primary: newCountryCode,
-                    ...(sameAsMobile && {
-                      countryCode_whatsapp: newCountryCode,
-                    }),
+                    ...(sameAsMobile && { countryCode_whatsapp: newCountryCode }),
                   }));
                 }}
                 isDisabled={!isEmailValid(formData.email)}
@@ -357,14 +350,12 @@ const CP_doctor_details = () => {
                     borderRightWidth: 0,
                     height: "39px",
                     minHeight: "39px",
-                    width: "max-content",
+                    width: "max-content"
                   }),
                   menu: (base) => ({ ...base, width: "200px" }),
                 }}
                 formatOptionLabel={(option, { context }) =>
-                  context === "menu"
-                    ? `${option.label} - ${option.name}`
-                    : option.label
+                  context === "menu" ? `${option.label} - ${option.name}` : option.label
                 }
                 menuPlacement="top"
               />
@@ -430,10 +421,10 @@ const CP_doctor_details = () => {
                   }}
                   disabled={!isMobileValid(formData.primaryMobileNumber)}
                   className={`w-4 h-4 border border-[#776EA5] rounded-[1.8px] ms-1 ${
-                    isMobileValid(formData.primaryMobileNumber)
-                      ? "text-gray-500"
-                      : "text-[#00000040]"
-                  }`}
+                  isMobileValid(formData.primaryMobileNumber)
+                    ? "text-gray-500"
+                    : "text-[#00000040]"
+                }`}
                 />
                 <label className="text-[12px] text-gray-500 font-medium">
                   Same as Mobile Number
@@ -443,20 +434,14 @@ const CP_doctor_details = () => {
             <div className="flex items-center h-[39px]">
               <Select
                 options={countryOptions}
-                value={countryOptions.find(
-                  (option) => option.value === formData.countryCode_whatsapp
-                )}
+                value={countryOptions.find(option => option.value === formData.countryCode_whatsapp)}
                 onChange={(selectedOption) =>
                   setFormData({
                     ...formData,
-                    countryCode_whatsapp: selectedOption
-                      ? selectedOption.value
-                      : "🇮🇳 +91",
+                    countryCode_whatsapp: selectedOption ? selectedOption.value : "🇮🇳 +91",
                   })
                 }
-                isDisabled={
-                  sameAsMobile || !isMobileValid(formData.primaryMobileNumber)
-                }
+                isDisabled={sameAsMobile || !isMobileValid(formData.primaryMobileNumber)}
                 className="w-[100px]"
                 styles={{
                   control: (base) => ({
@@ -465,14 +450,12 @@ const CP_doctor_details = () => {
                     borderRightWidth: 0,
                     height: "39px",
                     minHeight: "39px",
-                    width: "max-content",
+                    width: "max-content"
                   }),
                   menu: (base) => ({ ...base, width: "200px" }),
                 }}
                 formatOptionLabel={(option, { context }) =>
-                  context === "menu"
-                    ? `${option.label} - ${option.name}`
-                    : option.label
+                  context === "menu" ? `${option.label} - ${option.name}` : option.label
                 }
                 menuPlacement="top"
               />
@@ -485,9 +468,7 @@ const CP_doctor_details = () => {
                 value={formData.whatsappNumber}
                 onChange={(e) => handleInputChange(e, "whatsappNumber")}
                 onBlur={() => handleBlur("whatsappNumber")}
-                disabled={
-                  sameAsMobile || !isMobileValid(formData.primaryMobileNumber)
-                }
+                disabled={sameAsMobile || !isMobileValid(formData.primaryMobileNumber)}
                 className={`border rounded-[7.26px] rounded-l-none border-l-0 text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-4 w-full h-[39px] ${
                   sameAsMobile || !isMobileValid(formData.primaryMobileNumber)
                     ? "bg-[#ffffff10] placeholder:text-[#00000040]"
@@ -523,15 +504,11 @@ const CP_doctor_details = () => {
             <div className="flex items-center h-[39px]">
               <Select
                 options={countryOptions}
-                value={countryOptions.find(
-                  (option) => option.value === formData.countryCode_emergency
-                )}
+                value={countryOptions.find(option => option.value === formData.countryCode_emergency)}
                 onChange={(selectedOption) =>
                   setFormData({
                     ...formData,
-                    countryCode_emergency: selectedOption
-                      ? selectedOption.value
-                      : "🇮🇳 +91",
+                    countryCode_emergency: selectedOption ? selectedOption.value : "🇮🇳 +91",
                   })
                 }
                 isDisabled={!isMobileValid(formData.whatsappNumber)}
@@ -543,14 +520,12 @@ const CP_doctor_details = () => {
                     borderRightWidth: 0,
                     height: "39px",
                     minHeight: "39px",
-                    width: "max-content",
+                    width: "max-content"
                   }),
                   menu: (base) => ({ ...base, width: "200px" }),
                 }}
                 formatOptionLabel={(option, { context }) =>
-                  context === "menu"
-                    ? `${option.label} - ${option.name}`
-                    : option.label
+                  context === "menu" ? `${option.label} - ${option.name}` : option.label
                 }
                 menuPlacement="top"
               />

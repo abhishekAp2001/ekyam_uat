@@ -291,7 +291,7 @@ const Patient_History = ({ type }) => {
           </div>
 
           {/* Buttons */}
-          <div className="bg-gradient-to-t from-[#fce8e5] to-[#fce8e5] flex flex-col justify-between items-center gap-4 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-4">
+          <div className="bg-gradient-to-t from-[#fce8e5] to-[#fce8e5] flex flex-col justify-between items-center gap-4 mt-[20.35px] fixed bottom-0 pb-[23px] left-0 right-0 px-4 max-w-[576px] mx-auto">
             <div className="w-full flex gap-[12.2px]">
               <Button
                 onClick={handleCancel}
