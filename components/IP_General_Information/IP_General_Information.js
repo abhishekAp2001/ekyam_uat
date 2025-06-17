@@ -47,14 +47,27 @@ const IP_General_Information = () => {
       try {
         const parsedData = JSON.parse(savedData);
         setFormData(parsedData);
-        setSpecialisationList(parsedData.specialization ? parsedData.specialization.split(", ") : []);
-        setDontTreatList(parsedData.whatIDontTreat ? parsedData.whatIDontTreat.split(", ") : []);
-        setLanguageListFinal(parsedData.languageProficiency ? parsedData.languageProficiency.split(", ") : []);
-        if (parsedData.yearsOfExperience) setTouched((prev) => ({ ...prev, yearsOfExperience: true }));
-        if (parsedData.specialization) setTouched((prev) => ({ ...prev, specialization: true }));
-        if (parsedData.whatIDontTreat) setTouched((prev) => ({ ...prev, whatIDontTreat: true }));
-        if (parsedData.whatToExpectInSession) setTouched((prev) => ({ ...prev, whatToExpectInSession: true }));
-        if (parsedData.languageProficiency) setTouched((prev) => ({ ...prev, languageProficiency: true }));
+        setSpecialisationList(
+          parsedData.specialization ? parsedData.specialization.split(", ") : []
+        );
+        setDontTreatList(
+          parsedData.whatIDontTreat ? parsedData.whatIDontTreat.split(", ") : []
+        );
+        setLanguageListFinal(
+          parsedData.languageProficiency
+            ? parsedData.languageProficiency.split(", ")
+            : []
+        );
+        if (parsedData.yearsOfExperience)
+          setTouched((prev) => ({ ...prev, yearsOfExperience: true }));
+        if (parsedData.specialization)
+          setTouched((prev) => ({ ...prev, specialization: true }));
+        if (parsedData.whatIDontTreat)
+          setTouched((prev) => ({ ...prev, whatIDontTreat: true }));
+        if (parsedData.whatToExpectInSession)
+          setTouched((prev) => ({ ...prev, whatToExpectInSession: true }));
+        if (parsedData.languageProficiency)
+          setTouched((prev) => ({ ...prev, languageProficiency: true }));
       } catch (error) {
         console.error("Error parsing ip_general_information cookie:", error);
       }
@@ -72,7 +85,9 @@ const IP_General_Information = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        showErrorToast(error?.response?.data?.error?.message || "Something Went Wrong");
+        showErrorToast(
+          error?.response?.data?.error?.message || "Something Went Wrong"
+        );
       }
     }
   };
@@ -113,7 +128,9 @@ const IP_General_Information = () => {
   };
 
   // Validation functions
-  const isYearsOfExperienceValid = () => /^\d+$/.test(formData.yearsOfExperience) && formData.yearsOfExperience !== "";
+  const isYearsOfExperienceValid = () =>
+    /^\d+$/.test(formData.yearsOfExperience) &&
+    formData.yearsOfExperience !== "";
   const isSpecializationValid = () => formData.specialization !== "";
   const isWhatIDontTreatValid = () => formData.whatIDontTreat !== ""; // Valid if at least one item
   const isWhatToExpectValid = () => formData.whatToExpectInSession !== "";
@@ -155,6 +172,8 @@ const IP_General_Information = () => {
             <div className="flex items-baseline gap-2">
               <Input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder="10"
                 className="bg-white rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] placeholder:text-gray-500 py-3 px-3 w-[46px] h-[38px]"
                 value={formData.yearsOfExperience}
@@ -164,31 +183,51 @@ const IP_General_Information = () => {
               <span className="text-[15px] text-gray-500">Years</span>
             </div>
             {touched.yearsOfExperience && !formData.yearsOfExperience && (
-              <span className="text-red-500 text-sm mt-1 block">Years of experience is required</span>
+              <span className="text-red-500 text-sm mt-1 block">
+                Years of experience is required
+              </span>
             )}
-            {touched.yearsOfExperience && formData.yearsOfExperience && !isYearsOfExperienceValid() && (
-              <span className="text-red-500 text-sm mt-1 block">Must be a valid number</span>
-            )}
+            {touched.yearsOfExperience &&
+              formData.yearsOfExperience &&
+              !isYearsOfExperienceValid() && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  Must be a valid number
+                </span>
+              )}
           </div>
 
           {/* Specialization selector */}
           <div className="w-full max-w-md mt-4">
             <div>
-              <Label className={`text-[15px] font-medium mb-[7.59px] ${isYearsOfExperienceValid() ? "text-gray-500" : "text-[#00000040]"}`}>
+              <Label
+                className={`text-[15px] font-medium mb-[7.59px] ${
+                  isYearsOfExperienceValid()
+                    ? "text-gray-500"
+                    : "text-[#00000040]"
+                }`}
+              >
                 Specialisation <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
                   type="text"
                   placeholder="Enter your specialisation"
-                  className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-3 h-[38px] ${isYearsOfExperienceValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-3 h-[38px] ${
+                    isYearsOfExperienceValid()
+                      ? "bg-white placeholder:text-gray-500"
+                      : "bg-[#ffffff10] placeholder:text-[#00000040]"
+                  }`}
                   value={specialisationInput}
                   onChange={(e) => setSpecialisationInput(e.target.value)}
                   disabled={!isYearsOfExperienceValid()}
                 />
                 <CirclePlus
                   size={20}
-                  className={`w-5 h-5 absolute top-2 right-2 ${isYearsOfExperienceValid() ? "text-gray-500" : "text-[#00000040]"}`}
+                  className={`w-5 h-5 absolute top-2 right-2 ${
+                    isYearsOfExperienceValid()
+                      ? "text-gray-500"
+                      : "text-[#00000040]"
+                  }`}
                   onClick={() =>
                     isYearsOfExperienceValid() &&
                     handleAddToList(
@@ -223,26 +262,40 @@ const IP_General_Information = () => {
                 ))}
               </ul>
               {touched.specialization && !formData.specialization && (
-                <span className="text-red-500 text-sm mt-1 block">At least one specialisation is required</span>
+                <span className="text-red-500 text-sm mt-1 block">
+                  At least one specialisation is required
+                </span>
               )}
             </div>
 
             <div className="mt-[22px]">
-              <Label className={`text-[15px] font-medium mb-[7.59px] ${isSpecializationValid() ? "text-gray-500" : "text-[#00000040]"}`}>
+              <Label
+                className={`text-[15px] font-medium mb-[7.59px] ${
+                  isSpecializationValid() ? "text-gray-500" : "text-[#00000040]"
+                }`}
+              >
                 What I don’t Treat
               </Label>
               <div className="relative">
                 <Input
                   type="text"
                   placeholder="Share your concerns..."
-                  className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-3 h-[38px] ${isSpecializationValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-3 h-[38px] ${
+                    isSpecializationValid()
+                      ? "bg-white placeholder:text-gray-500"
+                      : "bg-[#ffffff10] placeholder:text-[#00000040]"
+                  }`}
                   value={dontTreatInput}
                   onChange={(e) => setDontTreatInput(e.target.value)}
                   disabled={!isSpecializationValid()}
                 />
                 <CirclePlus
                   size={20}
-                  className={`w-5 h-5 absolute top-2 right-2 ${isSpecializationValid() ? "text-gray-500" : "text-[#00000040]"}`}
+                  className={`w-5 h-5 absolute top-2 right-2 ${
+                    isSpecializationValid()
+                      ? "text-gray-500"
+                      : "text-[#00000040]"
+                  }`}
                   onClick={() =>
                     isSpecializationValid() &&
                     handleAddToList(
@@ -281,40 +334,62 @@ const IP_General_Information = () => {
 
           {/* textarea */}
           <div className="mt-4">
-            <Label className={`text-[15px] font-medium mb-[7.59px] ${isWhatIDontTreatValid() ? "text-gray-500" : "text-[#00000040]"}`}>
-              What to Expect in the Session <span className="text-red-500">*</span>
+            <Label
+              className={`text-[15px] font-medium mb-[7.59px] ${
+                isWhatIDontTreatValid() ? "text-gray-500" : "text-[#00000040]"
+              }`}
+            >
+              What to Expect in the Session{" "}
+              <span className="text-red-500">*</span>
             </Label>
             <Textarea
               placeholder="Share your expectations or any specific concerns you have."
-              className={`text-[15px] text-black font-semibold ${isWhatIDontTreatValid() ? "bg-white" : "bg-[#ffffff10] text-[#00000040] placeholder:font-medium placeholder:text-gray-500"}`}
+              className={`text-[15px] text-black font-semibold ${
+                isWhatIDontTreatValid()
+                  ? "bg-white"
+                  : "bg-[#ffffff10] text-[#00000040] placeholder:font-medium placeholder:text-gray-500"
+              }`}
               value={formData.whatToExpectInSession}
               onChange={(e) => handleInputChange(e, "whatToExpectInSession")}
               onBlur={() => handleBlur("whatToExpectInSession")}
               disabled={!isWhatIDontTreatValid()}
             />
-            {touched.whatToExpectInSession && !formData.whatToExpectInSession && (
-              <span className="text-red-500 text-sm mt-1 block">Session expectations are required</span>
-            )}
+            {touched.whatToExpectInSession &&
+              !formData.whatToExpectInSession && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  Session expectations are required
+                </span>
+              )}
           </div>
 
           {/* select language */}
           <div className="w-full max-w-md mt-4">
             <div className="mt-[22px]">
-              <Label className={`text-[15px] font-medium mb-[7.59px] ${isWhatToExpectValid() ? "text-gray-500" : "text-[#00000040]"}`}>
+              <Label
+                className={`text-[15px] font-medium mb-[7.59px] ${
+                  isWhatToExpectValid() ? "text-gray-500" : "text-[#00000040]"
+                }`}
+              >
                 Language Proficiency <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
                   type="text"
                   placeholder="Telugu"
-                  className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-3 h-[38px] ${isWhatToExpectValid() ? "bg-white placeholder:text-gray-500" : "bg-[#ffffff10] placeholder:text-[#00000040]"}`}
+                  className={`rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] py-3 px-3 h-[38px] ${
+                    isWhatToExpectValid()
+                      ? "bg-white placeholder:text-gray-500"
+                      : "bg-[#ffffff10] placeholder:text-[#00000040]"
+                  }`}
                   value={languageInput}
                   onChange={(e) => setLanguageInput(e.target.value)}
                   disabled={!isWhatToExpectValid()}
                 />
                 <CirclePlus
                   size={20}
-                  className={`w-5 h-5 absolute top-2 right-2 ${isWhatToExpectValid() ? "text-gray-500" : "text-[#00000040]"}`}
+                  className={`w-5 h-5 absolute top-2 right-2 ${
+                    isWhatToExpectValid() ? "text-gray-500" : "text-[#00000040]"
+                  }`}
                   onClick={() =>
                     isWhatToExpectValid() &&
                     handleAddToList(
@@ -349,7 +424,9 @@ const IP_General_Information = () => {
                 ))}
               </ul>
               {touched.languageProficiency && !formData.languageProficiency && (
-                <span className="text-red-500 text-sm mt-1 block">At least one language is required</span>
+                <span className="text-red-500 text-sm mt-1 block">
+                  At least one language is required
+                </span>
               )}
             </div>
             <div className="">
@@ -424,7 +501,11 @@ const IP_General_Information = () => {
         </div>
 
         {/* Button footer */}
-        <IP_Buttons disabled={!isFormValid()} onSave={handleSave} buttonText="Save & Continue" />
+        <IP_Buttons
+          disabled={!isFormValid()}
+          onSave={handleSave}
+          buttonText="Save & Continue"
+        />
       </div>
     </div>
   );

@@ -99,7 +99,6 @@ const EP_registration = ({ type }) => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-       
       }
     }
   };
@@ -132,7 +131,6 @@ const EP_registration = ({ type }) => {
         }
       );
       if (response?.data?.success === true) {
-       
         setSearchUsers(response?.data?.data);
       } else {
         setSearchUsers([]);
@@ -289,6 +287,8 @@ const EP_registration = ({ type }) => {
               />
               <Input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={formData.primaryMobileNumber}
                 onChange={handleMobileNumberChange}
                 onBlur={() => handleBlur("primaryMobileNumber")}
@@ -404,14 +404,13 @@ const EP_registration = ({ type }) => {
               New Patient
             </Link>
           </Button>
-         
+
           <Button
             disabled={!isFormValid() || loading}
             type="button"
             className="border border-[#CC627B] bg-transparent text-[15px] font-[600] text-[#CC627B] py-[14.5px] rounded-[8px] flex items-center justify-center w-[48%] h-[45px] "
             onClick={handlePatientHistoryClick}
           >
-           
             {loading ? (
               <Loader2Icon className="animate-spin" />
             ) : (
