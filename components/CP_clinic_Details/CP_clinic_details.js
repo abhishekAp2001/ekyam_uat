@@ -61,7 +61,7 @@ const CP_clinic_details = () => {
   const handlePincodeChange = async (value) => {
     const digitsOnly = value.replace(/\D/g, "").slice(0, 6);
     setFormData((prev) => ({ ...prev, pincode: digitsOnly }));
-    
+
     if (digitsOnly.length === 6 && isPincodeValid(digitsOnly)) {
       try {
         const response = await axios.get(
@@ -155,6 +155,7 @@ const CP_clinic_details = () => {
             <Input
               id="pincode"
               type="number"
+              inputMode="numeric"
               placeholder="400053"
               className="bg-white rounded-[7.26px] text-[15px] text-black font-semibold placeholder:text-[15px] placeholder:text-gray-500 pt-3 pb-3.5 px-4 h-[39px]"
               value={formData.pincode}

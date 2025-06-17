@@ -260,6 +260,8 @@ const Patient_Registration = ({ type }) => {
 
                 <Input
                   type="number"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   value={formData.primaryMobileNumber}
                   onChange={(e) =>
                     setFormData({

@@ -89,7 +89,9 @@ const IP_Details = () => {
       if (error.forceLogout) {
         router.push("/login");
       } else {
-        showErrorToast(error?.response?.data?.error?.message || "Something Went Wrong");
+        showErrorToast(
+          error?.response?.data?.error?.message || "Something Went Wrong"
+        );
       }
     }
   };
@@ -246,12 +248,15 @@ const IP_Details = () => {
   };
 
   // Country options for Select
-  const countryOptions = useMemo(() =>
-    countryList.map((country) => ({
-      value: `${country.flag} ${country.code}`,
-      label: `${country.flag} ${country.code}`,
-      name: country.name,
-    })), [countryList]);
+  const countryOptions = useMemo(
+    () =>
+      countryList.map((country) => ({
+        value: `${country.flag} ${country.code}`,
+        label: `${country.flag} ${country.code}`,
+        name: country.name,
+      })),
+    [countryList]
+  );
 
   return (
     <div className="bg-gradient-to-t from-[#fce8e5] to-[#eeecfb] h-full flex flex-col">
@@ -337,8 +342,7 @@ const IP_Details = () => {
                   />
                 </DrawerDescription>
               </DrawerHeader>
-              <DrawerFooter className="p-0">
-              </DrawerFooter>
+              <DrawerFooter className="p-0"></DrawerFooter>
             </DrawerContent>
           </Drawer>
         </div>
@@ -347,9 +351,7 @@ const IP_Details = () => {
             Practitioner Details
           </strong>
           <div>
-            <Label
-              className="text-[15px] text-gray-500 mb-[7.59px] mt-3"
-            >
+            <Label className="text-[15px] text-gray-500 mb-[7.59px] mt-3">
               Title & First Name *
             </Label>
             <div className="flex gap-2 items-center">
@@ -357,9 +359,7 @@ const IP_Details = () => {
                 value={formData.title}
                 onValueChange={handleTitleChange}
               >
-                <SelectTrigger
-                  className="w-[69px] bg-white rounded-[7.26px] text-[15px] text-black font-semibold h-[39px] px-3"
-                >
+                <SelectTrigger className="w-[69px] bg-white rounded-[7.26px] text-[15px] text-black font-semibold h-[39px] px-3">
                   <SelectValue placeholder="Dr." />
                 </SelectTrigger>
                 <SelectContent>
@@ -473,13 +473,19 @@ const IP_Details = () => {
             <div className="flex items-center h-[39px]">
               <Select
                 options={countryOptions}
-                value={countryOptions.find(option => option.value === formData.countryCode_primary)}
+                value={countryOptions.find(
+                  (option) => option.value === formData.countryCode_primary
+                )}
                 onChange={(selectedOption) => {
-                  const newCountryCode = selectedOption ? selectedOption.value : "🇮🇳 +91";
-                  setFormData(prev => ({
+                  const newCountryCode = selectedOption
+                    ? selectedOption.value
+                    : "🇮🇳 +91";
+                  setFormData((prev) => ({
                     ...prev,
                     countryCode_primary: newCountryCode,
-                    ...(sameAsMobile && { countryCode_whatsapp: newCountryCode }),
+                    ...(sameAsMobile && {
+                      countryCode_whatsapp: newCountryCode,
+                    }),
                   }));
                 }}
                 isDisabled={!isEmailValid(formData.email)}
@@ -491,18 +497,22 @@ const IP_Details = () => {
                     borderRightWidth: 0,
                     height: "39px",
                     minHeight: "39px",
-                    width: "max-content"
+                    width: "max-content",
                   }),
                   menu: (base) => ({ ...base, width: "200px" }),
                 }}
                 formatOptionLabel={(option, { context }) =>
-                  context === "menu" ? `${option.label} - ${option.name}` : option.label
+                  context === "menu"
+                    ? `${option.label} - ${option.name}`
+                    : option.label
                 }
                 menuPlacement="top"
               />
               <Input
                 id="primaryMobileNumber"
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder="Enter primary mobile no."
                 value={formData.primaryMobileNumber}
                 onChange={(e) => handleInputChange(e, "primaryMobileNumber")}
@@ -513,9 +523,7 @@ const IP_Details = () => {
                     ? "bg-white placeholder:text-gray-500"
                     : "bg-[#ffffff10] placeholder:text-[#00000040]"
                 }`}
-                maxLength={10}
-                inputMode="numeric"
-                pattern="\d*"
+                maxLength={10}                
               />
             </div>
             {touched.primaryMobileNumber && !formData.primaryMobileNumber && (
@@ -563,7 +571,13 @@ const IP_Details = () => {
                   }}
                   disabled={!isMobileValid(formData.primaryMobileNumber)}
                 />
-                <label className={`text-[12px] ${isMobileValid(formData.primaryMobileNumber) ? "text-gray-500" : "text-[#00000040]"}`}>
+                <label
+                  className={`text-[12px] ${
+                    isMobileValid(formData.primaryMobileNumber)
+                      ? "text-gray-500"
+                      : "text-[#00000040]"
+                  }`}
+                >
                   Same as Mobile Number
                 </label>
               </div>
@@ -571,14 +585,20 @@ const IP_Details = () => {
             <div className="flex items-center h-[39px]">
               <Select
                 options={countryOptions}
-                value={countryOptions.find(option => option.value === formData.countryCode_whatsapp)}
+                value={countryOptions.find(
+                  (option) => option.value === formData.countryCode_whatsapp
+                )}
                 onChange={(selectedOption) =>
                   setFormData({
                     ...formData,
-                    countryCode_whatsapp: selectedOption ? selectedOption.value : "🇮🇳 +91",
+                    countryCode_whatsapp: selectedOption
+                      ? selectedOption.value
+                      : "🇮🇳 +91",
                   })
                 }
-                isDisabled={sameAsMobile || !isMobileValid(formData.primaryMobileNumber)}
+                isDisabled={
+                  sameAsMobile || !isMobileValid(formData.primaryMobileNumber)
+                }
                 className="w-[100px]"
                 styles={{
                   control: (base) => ({
@@ -587,31 +607,35 @@ const IP_Details = () => {
                     borderRightWidth: 0,
                     height: "39px",
                     minHeight: "39px",
-                    width: "max-content"
+                    width: "max-content",
                   }),
                   menu: (base) => ({ ...base, width: "200px" }),
                 }}
                 formatOptionLabel={(option, { context }) =>
-                  context === "menu" ? `${option.label} - ${option.name}` : option.label
+                  context === "menu"
+                    ? `${option.label} - ${option.name}`
+                    : option.label
                 }
                 menuPlacement="top"
               />
               <Input
                 id="whatsappNumber"
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder="Enter whatsapp no."
                 value={formData.whatsappNumber}
                 onChange={(e) => handleInputChange(e, "whatsappNumber")}
                 onBlur={() => handleBlur("whatsappNumber")}
-                disabled={sameAsMobile || !isMobileValid(formData.primaryMobileNumber)}
+                disabled={
+                  sameAsMobile || !isMobileValid(formData.primaryMobileNumber)
+                }
                 className={`border rounded-[7.26px] rounded-l-none border-l-0 text-[15px]text-black font-semibold placeholder:text-[15px]py-3 px-4 w-full h-[39px] ${
                   sameAsMobile || !isMobileValid(formData.primaryMobileNumber)
                     ? "bg-[#ffffff10] placeholder:text-[#00000040]"
                     : "bg-white placeholder:text-gray-500"
                 }`}
                 maxLength={10}
-                inputMode="numeric"
-                pattern="\d*"
               />
             </div>
             {touched.whatsappNumber && !formData.whatsappNumber && (
@@ -641,11 +665,15 @@ const IP_Details = () => {
             <div className="flex items-center h-[39px]">
               <Select
                 options={countryOptions}
-                value={countryOptions.find(option => option.value === formData.countryCode_emergency)}
+                value={countryOptions.find(
+                  (option) => option.value === formData.countryCode_emergency
+                )}
                 onChange={(selectedOption) =>
                   setFormData({
                     ...formData,
-                    countryCode_emergency: selectedOption ? selectedOption.value : "🇮🇳 +91",
+                    countryCode_emergency: selectedOption
+                      ? selectedOption.value
+                      : "🇮🇳 +91",
                   })
                 }
                 isDisabled={!isMobileValid(formData.whatsappNumber)}
@@ -657,12 +685,14 @@ const IP_Details = () => {
                     borderRightWidth: 0,
                     height: "39px",
                     minHeight: "39px",
-                    width: "max-content"
+                    width: "max-content",
                   }),
                   menu: (base) => ({ ...base, width: "200px" }),
                 }}
                 formatOptionLabel={(option, { context }) =>
-                  context === "menu" ? `${option.label} - ${option.name}` : option.label
+                  context === "menu"
+                    ? `${option.label} - ${option.name}`
+                    : option.label
                 }
                 menuPlacement="top"
               />
@@ -681,7 +711,7 @@ const IP_Details = () => {
                 }`}
                 maxLength={10}
                 inputMode="numeric"
-                pattern="\d*"
+                pattern="[0-9]*"
               />
             </div>
             {touched.emergencyNumber && !formData.emergencyNumber && (
